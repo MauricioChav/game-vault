@@ -1,0 +1,40 @@
+.short-description {
+  margin-bottom: 20px;
+}
+
+.mainBox {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px black solid;
+}
+
+.review-body{
+    padding: 15px 0;
+}
+
+.new-review-button {
+  width: 100%;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.review-form {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px black solid;
+}
+
+.review-textarea {
+  width: 100%;
+  height: 100px;
+}
+
+.score-selectors{
+    margin-top: 20px;
+}
+
+.selector{
+    margin: 0 10px;
+}

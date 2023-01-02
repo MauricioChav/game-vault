@@ -1,0 +1,19 @@
+.slide {
+  text-align: left;
+  padding: 20px 0;
+}
+
+.slide_element img {
+  width: 100%;
+}
+
+.slide a {
+  text-decoration: none;
+  padding: 0.5rem;
+  color: black;
+}
+
+.slide a:hover {
+  text-decoration: none;
+  color: blue;
+}
