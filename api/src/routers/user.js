@@ -22,7 +22,7 @@ router.get("/users/:id", async (req, res) => {
   const _id = req.params.id;
 
   try {
-    const user = User.findById(_id);
+    const user = await User.findById(_id);
 
     if (!user) {
       return res.status(404).send();
@@ -35,7 +35,7 @@ router.get("/users/:id", async (req, res) => {
 });
 
 //POST A USER
-router.post("/users", async (req, res) => {
+router.post("/users/", async (req, res) => {
   const user = new User(req.body);
 
   try {
@@ -67,7 +67,7 @@ router.patch("/users/:id", async (req, res) => {
   }
 
   try {
-    const user = User.findByIdAndUpdate(_id, req.body, {
+    const user = await User.findByIdAndUpdate(_id, req.body, {
       new: true,
       runValidators: true,
     });
