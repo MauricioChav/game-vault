@@ -1,29 +1,16 @@
 const express = require("express");
 //Loads mongoose to connect to db
 require("./db/mongoose");
-const User = require("./models/user");
+const userRouter = require('./routers/user');
 
+//Express Port
 const app = express();
 const port = process.env.PORT || 9000;
 
-
 //Automatically parse JSON to object
 app.use(express.json());
-
-
-
-app.post("/users", (req, res) => {
-  const user = new User(req.body);
-
-  user
-    .save()
-    .then(() => {
-      res.send(user);
-    })
-    .catch((e) => {
-      res.statusCode(400).send(e);
-    });
-});
+//App Routers
+app.use(userRouter);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
