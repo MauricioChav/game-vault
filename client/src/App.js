@@ -6,7 +6,7 @@ import "./App.css";
 
 import { Route, HashRouter, Routes } from "react-router-dom";
 import { nav_routes } from "./routes";
-import ScrollToTop from "./Components/Common/Helpers/ScrollToTop";
+import ScrollToTop from "./Components/Helpers/ScrollToTop";
 import Home from "./Views/Home";
 import Login from "./Views/Login-Signup/Login";
 import SignUp from "./Views/Login-Signup/SignUp";
