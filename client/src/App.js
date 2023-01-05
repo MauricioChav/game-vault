@@ -7,15 +7,15 @@ import "./App.css";
 import { Route, HashRouter, Routes } from "react-router-dom";
 import { nav_routes } from "./routes";
 import ScrollToTop from "./Components/Common/Helpers/ScrollToTop";
-import Home from "./Components/Views/Home";
-import Login from "./Components/Views/Login-Signup/Login";
-import SignUp from "./Components/Views/Login-Signup/SignUp";
-import Game from "./Components/Views/Game/Game";
-import Reviews from "./Components/Views/Reviews/Reviews";
-import ProfileDev from "./Components/Views/ProfileDev/ProfileDev";
+import Home from "./Views/Home";
+import Login from "./Views/Login-Signup/Login";
+import SignUp from "./Views/Login-Signup/SignUp";
+import Game from "./Views/Game/Game";
+import Reviews from "./Views/Reviews/Reviews";
+import ProfileDev from "./Views/ProfileDev/ProfileDev";
 
-import Menu from "./Components/Views/Common/Menu";
-import Footer from "./Components/Views/Common/Footer";
+import Menu from "./Views/Header-Footer/Menu";
+import Footer from "./Views/Header-Footer/Footer";
 
 class App extends Component {
   render() {

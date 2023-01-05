@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { nav_routes } from "../../../routes";
+import { nav_routes } from "../../routes";
 
 import "./ImageSlide.css";
 

@@ -1,6 +1,6 @@
 import React from "react";
-import Card from "../Common/Card/Card";
-import ImageSlide from "../Common/ImageSlide/ImageSlide";
+import Card from "../Components/Card/Card";
+import ImageSlide from "../Components/ImageSlide/ImageSlide";
 
 import GameTableTest from "../DB/GameTableTest";
 

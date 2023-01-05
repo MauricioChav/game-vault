@@ -1,12 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { nav_routes } from "../../../routes";
+import { nav_routes } from "../../routes";
 
-import Card from "../../Common/Card/Card";
-import ImageSlide from "../../Common/ImageSlide/ImageSlide";
-import ReviewBox from "../../Common/ReviewComponents/ReviewBox";
-import NewReview from "../../Common/ReviewComponents/NewReview";
+import Card from "../../Components/Card/Card";
+import ImageSlide from "../../Components/ImageSlide/ImageSlide";
+import ReviewBox from "../../Components/ReviewComponents/ReviewBox";
+import NewReview from "../../Components/ReviewComponents/NewReview";
 
 import "./Game.css";
 

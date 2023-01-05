@@ -1,7 +1,7 @@
 import React from "react";
-import Card from "../../Common/Card/Card";
+import Card from "../../Components/Card/Card";
 import { NavLink } from "react-router-dom";
-import { nav_routes } from "../../../routes";
+import { nav_routes } from "../../routes";
 
 import "./Login-Signup.css";
 

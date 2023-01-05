@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import Card from "../../Common/Card/Card";
-import ProfilePicture from "../../Common/ProfilePicture/ProfilePicture";
-import ImageSlide from "../../Common/ImageSlide/ImageSlide";
+import Card from "../../Components/Card/Card";
+import ProfilePicture from "../../Components/ProfilePicture/ProfilePicture";
+import ImageSlide from "../../Components/ImageSlide/ImageSlide";
 
 import DevTableTest from "../../DB/DevTableTest";
 import GameTableTest from "../../DB/GameTableTest";
