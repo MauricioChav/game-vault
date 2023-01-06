@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 //Loads mongoose to connect to db
 require("./db/mongoose");
 const userRouter = require('./routers/user');
@@ -6,6 +7,8 @@ const userRouter = require('./routers/user');
 //Express Port
 const app = express();
 const port = process.env.PORT || 9000;
+
+app.use(cors());
 
 //Automatically parse JSON to object
 app.use(express.json());

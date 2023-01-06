@@ -22,7 +22,7 @@ class App extends Component {
     return (
       <HashRouter>
         <ScrollToTop />
-        <body>
+        <div className="body-div">
           <Menu />
 
           <div className="content">
@@ -44,7 +44,7 @@ class App extends Component {
           </div>
 
           <Footer />
-        </body>
+        </div>
       </HashRouter>
     );
   }

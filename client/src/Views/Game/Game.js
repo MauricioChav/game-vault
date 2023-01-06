@@ -51,8 +51,8 @@ function Game(props) {
 
   return (
     <Card>
-      <div class="container">
-        <div class="row">
+      <div className="container">
+        <div className="row">
           <div className="col-4">
             <img
               className="cover-img"
