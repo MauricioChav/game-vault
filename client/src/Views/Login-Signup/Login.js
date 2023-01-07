@@ -23,10 +23,10 @@ function Login() {
         <h6>Not registered yet? Create an account</h6>
         <ul>
           <li>
-            <NavLink to={nav_routes.SIGNUP}>Create a reviewer account</NavLink>
+            <NavLink to={nav_routes.SIGNUP + "reviewer"}>Create a reviewer account</NavLink>
           </li>
           <li>
-            <NavLink to={nav_routes.SIGNUP}>Create a company account</NavLink>
+            <NavLink to={nav_routes.SIGNUP + "company"}>Create a company account</NavLink>
           </li>
         </ul>
       </form>

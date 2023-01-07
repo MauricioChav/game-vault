@@ -29,7 +29,7 @@ class App extends Component {
             <Routes>
               <Route exact path={nav_routes.HOME} element={<Home />} />
               <Route path={nav_routes.LOGIN} element={<Login />} />
-              <Route path={nav_routes.SIGNUP} element={<SignUp />} />
+              <Route path={nav_routes.SIGNUP + ":type"} element={<SignUp />} />
               <Route path={nav_routes.GAME + ":name/"} element={<Game />} />
               <Route
                 path={nav_routes.REVIEWS + ":name/"}
