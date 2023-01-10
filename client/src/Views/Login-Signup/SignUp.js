@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../Components/Card/Card";
+import NotificationCard, {
+  NotificationMessage,
+} from "../../Components/NotificationCard/NotificationCard";
 import { NavLink, useParams } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
-import {useCreateUserMutation} from '../../Api/apiSlice';
+import { useCreateUserMutation } from "../../Api/apiSlice";
 
 import "./Login-Signup.css";
 
 function SignUp() {
+  const [alert, setAlert] = useState({});
 
   const [createUser] = useCreateUserMutation();
 
@@ -15,45 +19,74 @@ function SignUp() {
   const route = useParams();
   let userType = 0;
 
-  if(route.type === "company")
-  userType = 1;
+  if (route.type === "company") userType = 1;
 
-  const submitHandler = (event) =>{
+  const submitHandler = async (event) => {
     event.preventDefault();
 
     //Populate data
     const user_type = userType;
-    const user_name = event.target.elements.user_name.value;
-    const email = event.target.elements.email.value;
+
     const password = event.target.elements.password.value;
     const password_confirm = event.target.password_confirm.value;
 
-    createUser({
-      user_type,
-      user_name,
-      email,
-      password
-    });
+    //Verify password
+    if (password !== password_confirm)
+      return setAlert(
+        NotificationMessage(
+          "error",
+          "Please verify that the passwords fields are the same"
+        )
+      );
 
-    //console.log(user_type, user_name, email, password, password_confirm);
-  }
+    const user_name = event.target.elements.user_name.value;
+    const email = event.target.elements.email.value;
+
+    try {
+      await createUser({
+        user_type,
+        user_name,
+        email,
+        password,
+      }).unwrap();
+
+      setAlert(NotificationMessage("success", "User registered succesfully!"));
+    } catch (e) {
+      if (e.data.message !== undefined) {
+        setAlert(NotificationMessage("error", e.data.message));
+      } else {
+        setAlert(
+          NotificationMessage(
+            "error",
+            "Error. The user could not be registered!"
+          )
+        );
+      }
+    }
+  };
 
   return (
     <Card className="gray-round-border" width="380px">
+      <NotificationCard notification={alert} />
+
       <form className="user-form" onSubmit={submitHandler}>
+        <h3 className="form-title">Create a {route.type} account</h3>
+        <label className="fname">Username:</label>
+        <input type="text" id="user_name" name="user_name" required={true} />
 
-        <h3 className="form-title">Create an account</h3>
-        <label for="fname">Username:</label>
-        <input type="text" id="user_name" name="user_name" required={true}/>
+        <label className="fname">Email:</label>
+        <input type="email" id="email" name="email" required={true} />
 
-        <label for="fname">Email:</label>
-        <input type="email" id="email" name="email" required={true}/>
+        <label className="fname">Password:</label>
+        <input type="text" id="password" name="password" required={true} />
 
-        <label for="fname">Password:</label>
-        <input type="text" id="password" name="password" required={true}/>
-
-        <label for="fname">Confirm Password:</label>
-        <input type="text" id="password_confirm" name="password_confirm" required={true}/>
+        <label className="fname">Confirm Password:</label>
+        <input
+          type="text"
+          id="password_confirm"
+          name="password_confirm"
+          required={true}
+        />
 
         <button className="submit-btn" type="submit">
           Create account

@@ -10,11 +10,11 @@ function Login() {
     <Card className="gray-round-border" width="380px">
       <form className="user-form">
         <h3 className="form-title">Log into your account</h3>
-        <label for="fname">Username:</label>
-        <input type="text" id="username" name="username" value="" />
+        <label className="fname">Email:</label>
+        <input type="email" id="email" name="email" />
 
-        <label for="fname">Password:</label>
-        <input type="text" id="password" name="password" value="" />
+        <label className="fname">Password:</label>
+        <input type="text" id="password" name="password" />
 
         <button className="submit-btn" type="submit">
           Log in
@@ -23,10 +23,14 @@ function Login() {
         <h6>Not registered yet? Create an account</h6>
         <ul>
           <li>
-            <NavLink to={nav_routes.SIGNUP + "reviewer"}>Create a reviewer account</NavLink>
+            <NavLink to={nav_routes.SIGNUP + "reviewer"}>
+              Create a reviewer account
+            </NavLink>
           </li>
           <li>
-            <NavLink to={nav_routes.SIGNUP + "company"}>Create a company account</NavLink>
+            <NavLink to={nav_routes.SIGNUP + "company"}>
+              Create a company account
+            </NavLink>
           </li>
         </ul>
       </form>

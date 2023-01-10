@@ -1,0 +1,25 @@
+.notification-card{
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    display: none;
+}
+
+.n-success{
+    background-color: #23a60f;
+    color: white;
+}
+
+.n-warning{
+    background-color: #d97925;
+    color: white;
+}
+
+.n-error{
+    background-color: #c93030;
+    color: white;
+}
+
+.visible{
+    display: block !important;
+}
