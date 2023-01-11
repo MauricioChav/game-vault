@@ -61,6 +61,17 @@ const userSchema = mongoose.Schema({
   },
 });
 
+//Hide important information in the response
+userSchema.methods.toJSON= function(){
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+}
+
 //Generate an Auth token
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
