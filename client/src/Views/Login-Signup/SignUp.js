@@ -43,16 +43,26 @@ function SignUp() {
     const email = event.target.elements.email.value;
 
     try {
-      await createUser({
-        user_type,
-        user_name,
-        email,
-        password,
+      const newUser = await createUser({
+        data: {
+          user_type,
+          user_name,
+          email,
+          password,
+        },
       }).unwrap();
+
+      //Register cookie
+      document.cookie = `apitoken=${newUser.token}; max-age=${
+        60 * 3
+      }; path=/; samesite=strict`;
+      console.log(document.cookie);
+      console.log(document.cookie.token);
+      console.log("TOKEN IS: " + newUser.token);
 
       setAlert(NotificationMessage("success", "User registered succesfully!"));
     } catch (e) {
-      if (e.data.message !== undefined) {
+      if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));
       } else {
         setAlert(
