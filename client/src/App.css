@@ -46,6 +46,16 @@ nav a:hover {
   height: 3.5rem;
 }
 
+.form-control{
+  width: 82%;
+  margin: 0 2%;
+  float: left;
+}
+
+.btn-search{
+  width: 10%;
+  margin: 0 2%;
+}
 
 /*General styles*/
 
@@ -98,6 +108,15 @@ nav a:hover {
 
 .btn-cancel:hover{
   background-color: #941616;
+}
+
+.btn-login{
+  background-color: #2370eb;
+  color: white;
+}
+
+.btn-login:hover{
+background-color: #0949b0;
 }
 
 /*Profile*/

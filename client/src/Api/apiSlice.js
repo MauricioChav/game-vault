@@ -6,27 +6,51 @@ export const apiSlice = createApi({
         baseUrl: 'http://localhost:9000'
     }),
     endpoints: (builder) => ({
-        getUsers: builder.query({
-            query: () => '/users'
-        }),
-
         createUser: builder.mutation({
-            query: (newUser) => ({
+            query: (user) => ({
                 url: "/users/",
                 method: "POST",
-                body: newUser.data
+                body: user.data
             })
         }),
 
         loginUser: builder.mutation({
-            query: (logUser) => ({
+            query: (user) => ({
                 url: "/users/login",
                 method: "POST",
-                body: logUser.data
+                body: user.data
             })
-        })
+        }),
+
+        logoutUser: builder.mutation({
+            query: (user) => ({
+                url: "/users/logout",
+                method: "POST",
+                headers: {
+                    'Authorization' : 'Bearer ' + user.token,
+                },
+                body: user.data,
+            })
+        }),
+
+        getOwnUser: builder.mutation({
+            query: (user) => ({
+                url: "/users/me",
+                method: 'GET',
+                headers: {
+                    'Authorization' : 'Bearer ' + user.token,
+                },
+            })
+        }),
+
+        getUsers: builder.query({
+            query: () => '/users'
+        }),
 
     })
 });
 
-export const {useGetUsersQuery, useCreateUserMutation, useLoginUserMutation} = apiSlice;
+// Note:
+// GetOwnUser configured as mutation to allow being called inside useEffect
+
+export const {useCreateUserMutation, useLoginUserMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;

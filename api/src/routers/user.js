@@ -46,7 +46,6 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
-
 //LOG OUT FROM ALL USERS
 router.post("/users/logoutAll", auth, async (req, res) => {
   try {
@@ -57,6 +56,11 @@ router.post("/users/logoutAll", auth, async (req, res) => {
   } catch (e) {
     req.status(500).send();
   }
+});
+
+//GET OWN PROFILE
+router.get("/users/me", auth, async (req, res) => {
+  res.send(req.user);
 });
 
 //GET ALL USERS

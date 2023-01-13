@@ -32,11 +32,12 @@ function Login() {
 
       //Register cookie
       document.cookie = `apitoken=${logUser.token}; max-age=${
-        60 * 3
+        30
       }; path=/; samesite=strict`;
       console.log(document.cookie);
       let str = document.cookie;
       str = str.slice(str.indexOf("apitoken="));
+      str = str.split(" ")[0];
       console.log("TOKEN IS: " + str);
 
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
@@ -48,6 +49,14 @@ function Login() {
       }
     }
   };
+
+  //CUT cookie
+  // let strTest = "information:apart:token=isosmsomosmso apitoken=21616161616161561135da5d1a51wd51 yes=46dsasdad";
+  // console.log("Has an apiToken: " + strTest.includes("apitoken="));
+  // let cutTest = strTest.slice(strTest.indexOf("apitoken="));
+  // cutTest = cutTest.split(" ")[0];
+  // console.log("ORIGINAL: " + strTest);
+  // console.log("CUT: " + cutTest);
 
   return (
     <Card className="gray-round-border" width="380px">
