@@ -62,7 +62,7 @@ const userSchema = mongoose.Schema({
 });
 
 //Hide important information in the response
-userSchema.methods.toJSON= function(){
+userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
 
@@ -70,14 +70,16 @@ userSchema.methods.toJSON= function(){
   delete userObject.tokens;
 
   return userObject;
-}
+};
 
 //Generate an Auth token
+//Token duration set in "expiresIn"
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
     { _id: user._id.toString() },
-    "PasscurrentSecretActive"
+    "PasscurrentSecretActive",
+    { expiresIn: "1d" }
   );
 
   user.tokens = user.tokens.concat({ token });

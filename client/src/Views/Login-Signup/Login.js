@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+// import { Buffer } from "buffer";
+
 import Card from "../../Components/Card/Card";
 import NotificationCard, {
   NotificationMessage,
@@ -30,18 +32,24 @@ function Login() {
         },
       }).unwrap();
 
-      //Register cookie
-      document.cookie = `apitoken=${logUser.token}; max-age=${
-        30
-      }; path=/; samesite=strict`;
-      console.log(document.cookie);
-      let str = document.cookie;
-      str = str.slice(str.indexOf("apitoken="));
-      str = str.split(" ")[0];
-      console.log("TOKEN IS: " + str);
+      //Register the user in the local storage
+      console.log(logUser);
+      localStorage.setItem('user', JSON.stringify(logUser));
+
+      const token = logUser.token;
+      console.log(token);
+      // const tokenStamp = token.split(".")[1];
+      // console.log(tokenStamp);
+
+      // const buff = new Buffer.from(tokenStamp, 'base64');
+      // const str = JSON.parse(buff.toString('utf-8'));
+      // console.log(str);
+      // console.log(str.exp * 1000);
+      // console.log(Date.now());
 
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
     } catch (e) {
+      console.log(e);
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));
       } else {
@@ -49,14 +57,6 @@ function Login() {
       }
     }
   };
-
-  //CUT cookie
-  // let strTest = "information:apart:token=isosmsomosmso apitoken=21616161616161561135da5d1a51wd51 yes=46dsasdad";
-  // console.log("Has an apiToken: " + strTest.includes("apitoken="));
-  // let cutTest = strTest.slice(strTest.indexOf("apitoken="));
-  // cutTest = cutTest.split(" ")[0];
-  // console.log("ORIGINAL: " + strTest);
-  // console.log("CUT: " + cutTest);
 
   return (
     <Card className="gray-round-border" width="380px">

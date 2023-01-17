@@ -4,9 +4,11 @@ import React, { Component } from "react";
 //Components
 import "./App.css";
 
+import ScrollToTop from "./Components/Helpers/ScrollToTop";
+import AuthVerify from "./Components/Helpers/AuthVerify";
+
 import { Route, HashRouter, Routes } from "react-router-dom";
 import { nav_routes } from "./routes";
-import ScrollToTop from "./Components/Helpers/ScrollToTop";
 import Home from "./Views/Home";
 import Login from "./Views/Login-Signup/Login";
 import SignUp from "./Views/Login-Signup/SignUp";
@@ -18,10 +20,16 @@ import Menu from "./Views/Header-Footer/Menu";
 import Footer from "./Views/Header-Footer/Footer";
 
 class App extends Component {
+  
   render() {
+    const logOut = () =>{
+      console.log("LOGOUT SUCCESFUL!");
+    }
+
     return (
       <HashRouter>
         <ScrollToTop />
+        <AuthVerify logOut={logOut}/>
         <div className="body-div">
           <Menu />
 
@@ -40,7 +48,6 @@ class App extends Component {
                 element={<ProfileDev />}
               />
             </Routes>
-
           </div>
 
           <Footer />
