@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Buffer } from "buffer";
 
+import { useGetOwnUserMutation } from "../../Api/apiSlice";
+
 const parseJwt = (token) => {
   try {
     const buff = new Buffer.from(token.split(".")[1], "base64");
@@ -12,20 +14,38 @@ const parseJwt = (token) => {
 };
 
 function AuthVerify(props) {
+  //Verify auth
+  const [authUser] = useGetOwnUserMutation();
 
   let location = useLocation();
 
   useEffect(() => {
+    async function validateToken() {
+      //Verify auth
+      try {
+        const auth = await authUser({
+          token: user.token,
+        }).unwrap();
+
+        console.log("AUTH SUCCESSFUL ", auth);
+      } catch (e) {
+        console.log("AUTH FAILED ", e);
+        props.logOut();
+      }
+    }
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (user) {
-        const decodedJwt = parseJwt(user.token);
+      const decodedJwt = parseJwt(user.token);
 
-        console.log(decodedJwt);
+      //Validate if the token is still valid
+      validateToken();
 
-        if(decodedJwt.exp * 1000 < Date.now()){
-            props.logOut();
-        }
+      //Validate if the token has expired
+      //The date validation is 3 seconds earlier to eliminate the token from the DB
+      if (decodedJwt.exp * 1000 - 3000 < Date.now()) {
+        props.logOut();
+      }
     }
   }, [location, props]);
 

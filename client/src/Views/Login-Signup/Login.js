@@ -26,18 +26,16 @@ function Login() {
 
     try {
       const logUser = await loginUser({
-        data: {
-          email,
-          password,
-        },
+        email,
+        password,
       }).unwrap();
 
-      //Register the user in the local storage
-      console.log(logUser);
-      localStorage.setItem('user', JSON.stringify(logUser));
+      //Register the user in the localStorage
+      localStorage.setItem("user", JSON.stringify(logUser));
+      console.log(localStorage.getItem("user"));
 
-      const token = logUser.token;
-      console.log(token);
+      // const token = logUser.token;
+      // console.log(token);
       // const tokenStamp = token.split(".")[1];
       // console.log(tokenStamp);
 
@@ -49,7 +47,6 @@ function Login() {
 
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
     } catch (e) {
-      console.log(e);
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));
       } else {

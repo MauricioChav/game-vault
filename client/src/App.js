@@ -1,5 +1,5 @@
 //import logo from './logo.svg';
-import React, { Component } from "react";
+import React from "react";
 
 //Components
 import "./App.css";
@@ -16,45 +16,61 @@ import Game from "./Views/Game/Game";
 import Reviews from "./Views/Reviews/Reviews";
 import ProfileDev from "./Views/ProfileDev/ProfileDev";
 
+import { useLogoutUserMutation } from "./Api/apiSlice";
+
 import Menu from "./Views/Header-Footer/Menu";
 import Footer from "./Views/Header-Footer/Footer";
 
-class App extends Component {
-  
-  render() {
-    const logOut = () =>{
+function App() {
+  const [logoutUser] = useLogoutUserMutation();
+
+  const logOut = async () => {
+    console.log("EXECUTE LOG OUT")
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      //Logout on DB works fine, but it is called more times than it is needed
+      // const logUser = await logoutUser({
+      //   token: user.token
+      // }).unwrap();
+
+      // console.log("MESSAGE LOGUSER: " , logUser);
+
+      //Remove from the localStorage
+      localStorage.removeItem("user");
+
       console.log("LOGOUT SUCCESFUL!");
+    } catch (e) {
+      console.log("AN ERROR OCCURED: " , e);
     }
+    
+  };
 
-    return (
-      <HashRouter>
-        <ScrollToTop />
-        <AuthVerify logOut={logOut}/>
-        <div className="body-div">
-          <Menu />
+  return (
+    <HashRouter>
+      <ScrollToTop />
+      <AuthVerify logOut={logOut} />
+      <div className="body-div">
+        <Menu />
 
-          <div className="content">
-            <Routes>
-              <Route exact path={nav_routes.HOME} element={<Home />} />
-              <Route path={nav_routes.LOGIN} element={<Login />} />
-              <Route path={nav_routes.SIGNUP + ":type"} element={<SignUp />} />
-              <Route path={nav_routes.GAME + ":name/"} element={<Game />} />
-              <Route
-                path={nav_routes.REVIEWS + ":name/"}
-                element={<Reviews />}
-              />
-              <Route
-                path={nav_routes.PROFILE_DEV + ":name/"}
-                element={<ProfileDev />}
-              />
-            </Routes>
-          </div>
-
-          <Footer />
+        <div className="content">
+          <Routes>
+            <Route exact path={nav_routes.HOME} element={<Home />} />
+            <Route path={nav_routes.LOGIN} element={<Login />} />
+            <Route path={nav_routes.SIGNUP + ":type"} element={<SignUp />} />
+            <Route path={nav_routes.GAME + ":name/"} element={<Game />} />
+            <Route path={nav_routes.REVIEWS + ":name/"} element={<Reviews />} />
+            <Route
+              path={nav_routes.PROFILE_DEV + ":name/"}
+              element={<ProfileDev />}
+            />
+          </Routes>
         </div>
-      </HashRouter>
-    );
-  }
+
+        <Footer />
+      </div>
+    </HashRouter>
+  );
 }
 
 export default App;

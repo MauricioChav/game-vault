@@ -18,7 +18,7 @@ export const apiSlice = createApi({
             query: (user) => ({
                 url: "/users/login",
                 method: "POST",
-                body: user.data
+                body: user
             })
         }),
 
@@ -28,8 +28,7 @@ export const apiSlice = createApi({
                 method: "POST",
                 headers: {
                     'Authorization' : 'Bearer ' + user.token,
-                },
-                body: user.data,
+                }
             })
         }),
 
@@ -53,4 +52,4 @@ export const apiSlice = createApi({
 // Note:
 // GetOwnUser configured as mutation to allow being called inside useEffect
 
-export const {useCreateUserMutation, useLoginUserMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;
+export const {useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;

@@ -1,10 +1,24 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
 import "../../App.css";
 
 function Menu() {
+
+  let location = useLocation();
+  const [userContent, setUserContent] = useState(<div>NO content</div>);
+  //let userContent = <div>No content</div>;
+  
+  useEffect(()=>{
+    if(localStorage.getItem('user') !== null){
+      setUserContent(<div>Content</div>);
+    }else{
+      setUserContent(<div>NO Content</div>);
+    }
+
+  }, [location]);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       {/* <NavLink className="navbar-brand" to={nav_routes.HOME}>
@@ -48,13 +62,14 @@ function Menu() {
         </div>
 
         <div className="col-2">
+          {userContent}
           <NavLink
             className="btn btn-small btn-login my-2 my-sm-0"
             to={nav_routes.LOGIN}
           >
             Login
           </NavLink>
-          <p style={{ color: "white" }}>Username:</p>
+
         </div>
       </div>
     </nav>
