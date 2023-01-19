@@ -7,7 +7,7 @@ import "./App.css";
 import ScrollToTop from "./Components/Helpers/ScrollToTop";
 import AuthVerify from "./Components/Helpers/AuthVerify";
 
-import { Route, HashRouter, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { nav_routes } from "./routes";
 import Home from "./Views/Home";
 import Login from "./Views/Login-Signup/Login";
@@ -16,40 +16,14 @@ import Game from "./Views/Game/Game";
 import Reviews from "./Views/Reviews/Reviews";
 import ProfileDev from "./Views/ProfileDev/ProfileDev";
 
-import { useLogoutUserMutation } from "./Api/apiSlice";
-
 import Menu from "./Views/Header-Footer/Menu";
 import Footer from "./Views/Header-Footer/Footer";
 
 function App() {
-  const [logoutUser] = useLogoutUserMutation();
-
-  const logOut = async () => {
-    console.log("EXECUTE LOG OUT")
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      //Logout on DB works fine, but it is called more times than it is needed
-      // const logUser = await logoutUser({
-      //   token: user.token
-      // }).unwrap();
-
-      // console.log("MESSAGE LOGUSER: " , logUser);
-
-      //Remove from the localStorage
-      localStorage.removeItem("user");
-
-      console.log("LOGOUT SUCCESFUL!");
-    } catch (e) {
-      console.log("AN ERROR OCCURED: " , e);
-    }
-    
-  };
-
   return (
-    <HashRouter>
+    <>
       <ScrollToTop />
-      <AuthVerify logOut={logOut} />
+      <AuthVerify />
       <div className="body-div">
         <Menu />
 
@@ -69,7 +43,7 @@ function App() {
 
         <Footer />
       </div>
-    </HashRouter>
+    </>
   );
 }
 

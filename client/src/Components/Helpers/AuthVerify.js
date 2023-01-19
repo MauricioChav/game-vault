@@ -1,53 +1,82 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Buffer } from "buffer";
+import { useLocation, useNavigate } from "react-router-dom";
+import { nav_routes } from "../../routes";
+// import { Buffer } from "buffer";
 
-import { useGetOwnUserMutation } from "../../Api/apiSlice";
+import {
+  useGetOwnUserMutation,
+  useDeleteDBTokenMutation,
+} from "../../Api/apiSlice";
 
-const parseJwt = (token) => {
-  try {
-    const buff = new Buffer.from(token.split(".")[1], "base64");
-    return JSON.parse(buff.toString("utf-8"));
-  } catch (e) {
-    return null;
-  }
-};
+//Parse the user/duration token info
+// const parseJwt = (token) => {
+//   try {
+//     const buff = new Buffer.from(token.split(".")[1], "base64");
+//     return JSON.parse(buff.toString("utf-8"));
+//   } catch (e) {
+//     return null;
+//   }
+// };
 
-function AuthVerify(props) {
-  //Verify auth
+function AuthVerify() {
+  let navigate = useNavigate();
+  const [logoutUser] = useDeleteDBTokenMutation();
   const [authUser] = useGetOwnUserMutation();
 
   let location = useLocation();
 
   useEffect(() => {
-    async function validateToken() {
-      //Verify auth
+    
+    //Log Out
+    const logOut = () => {
+      console.log("EXECUTE LOG OUT");
+
+      //Remove from the localStorage
+      localStorage.removeItem("user");
+      console.log("LOGOUT SUCCESFUL!");
+
+      //Redirect to home
+      navigate(nav_routes.HOME);
+    };
+
+    //Validate token with auth
+    async function validateToken(user) {
       try {
         const auth = await authUser({
           token: user.token,
         }).unwrap();
 
-        console.log("AUTH SUCCESSFUL ", auth);
+        return console.log("AUTH SUCCESSFUL ", auth);
       } catch (e) {
         console.log("AUTH FAILED ", e);
-        props.logOut();
+
+        //Verify the token in the DB
+        try{
+          const dbToken = await logoutUser({
+            _id: user.user._id,
+            token: user.token
+          }).unwrap();
+
+          console.log(dbToken);
+          console.log("CLIENT TOKEN NOT IN THE DB ANYMORE");
+
+        }catch(e){
+          console.log(e);
+          console.log("FAILED TO DELETE TOKEN");
+
+        }
+        logOut();
       }
     }
+
+    //VALIDATION FUNCTION END
+
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (user) {
-      const decodedJwt = parseJwt(user.token);
-
-      //Validate if the token is still valid
-      validateToken();
-
-      //Validate if the token has expired
-      //The date validation is 3 seconds earlier to eliminate the token from the DB
-      if (decodedJwt.exp * 1000 - 3000 < Date.now()) {
-        props.logOut();
-      }
+      validateToken(user);
     }
-  }, [location, props]);
+  }, [location, authUser, logoutUser, navigate]);
 
   return <div></div>;
 }

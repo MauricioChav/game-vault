@@ -67,20 +67,20 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
 
   delete userObject.password;
-  delete userObject.tokens;
+  //***Find a way to get tokens in request
+  //delete userObject.tokens;
 
   return userObject;
 };
 
 //Generate an Auth token
 //Token duration set in "expiresIn"
-//Right now, because of AuthVerify, timer recommended to be greater than 3 seconds
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
     { _id: user._id.toString() },
     "PasscurrentSecretActive",
-    { expiresIn: "1d" }
+    { expiresIn: "15s" }
   );
 
   user.tokens = user.tokens.concat({ token });

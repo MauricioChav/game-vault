@@ -5,7 +5,7 @@ import Card from "../../Components/Card/Card";
 import NotificationCard, {
   NotificationMessage,
 } from "../../Components/NotificationCard/NotificationCard";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
 import { useLoginUserMutation } from "../../Api/apiSlice";
@@ -13,8 +13,9 @@ import { useLoginUserMutation } from "../../Api/apiSlice";
 import "./Login-Signup.css";
 
 function Login() {
-  const [loginUser] = useLoginUserMutation();
 
+  let navigate = useNavigate();
+  const [loginUser] = useLoginUserMutation();
   const [alert, setAlert] = useState({});
 
   const loginHandler = async (event) => {
@@ -33,19 +34,10 @@ function Login() {
       //Register the user in the localStorage
       localStorage.setItem("user", JSON.stringify(logUser));
       console.log(localStorage.getItem("user"));
-
-      // const token = logUser.token;
-      // console.log(token);
-      // const tokenStamp = token.split(".")[1];
-      // console.log(tokenStamp);
-
-      // const buff = new Buffer.from(tokenStamp, 'base64');
-      // const str = JSON.parse(buff.toString('utf-8'));
-      // console.log(str);
-      // console.log(str.exp * 1000);
-      // console.log(Date.now());
-
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
+
+      //Redirect to home
+      navigate(nav_routes.HOME);
     } catch (e) {
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));
@@ -54,6 +46,24 @@ function Login() {
       }
     }
   };
+
+  // const array = [
+  //   {
+  //     token: "THIS IS 1 TOKEN",
+  //     id: "01"
+  //   },{
+  //     token: "THIS IS 2 TOKEN",
+  //     id: "02"
+  //   }
+  // ];
+
+  // const checkToken1 = (token)=>{
+  //   return token.token !== "THIS IS 1 TOKEN";
+  // }
+  // console.log("ARRAYTEST");
+  // console.log(array);
+  // //If it returns false, the token still exists
+  // console.log("TOKEN NON EXISTANT: ", array.every(checkToken1));
 
   return (
     <Card className="gray-round-border" width="380px">

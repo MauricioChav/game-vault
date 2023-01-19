@@ -42,7 +42,33 @@ router.post("/users/logout", auth, async (req, res) => {
     await req.user.save();
     res.send();
   } catch (e) {
-    req.status(500).send();
+    res.status(500).send();
+  }
+});
+
+//ELIMINATE TOKEN IF IT IS ON DB
+router.post("/users/deletedbtoken", async (req, res) => {
+  const user = await User.findById(req.body._id);
+  const token = req.body.token;
+
+  //Function to verify if the token is on the DB
+  const checkToken = (tokenCheck) =>{
+    return tokenCheck.token !== token;
+  }
+
+  try {
+    //If it returns false, the token still exists
+    if(!user.tokens.every(checkToken)){
+      //Eliminate token from DB
+      user.tokens = user.tokens.filter(checkToken);
+      await user.save();
+      res.send({message: "Token eliminated"});
+    }else{
+      res.send({message: "Token not on DB"});
+    }
+    
+  } catch (e) {
+    res.status(500).send(e);
   }
 });
 

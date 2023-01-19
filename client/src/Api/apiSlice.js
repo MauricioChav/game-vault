@@ -42,6 +42,14 @@ export const apiSlice = createApi({
             })
         }),
 
+        deleteDBToken: builder.mutation({
+            query: (user) => ({
+                url: "/users/deletedbtoken",
+                method: 'POST',
+                body: user
+            })
+        }),
+
         getUsers: builder.query({
             query: () => '/users'
         }),
@@ -52,4 +60,4 @@ export const apiSlice = createApi({
 // Note:
 // GetOwnUser configured as mutation to allow being called inside useEffect
 
-export const {useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;
+export const {useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation, useDeleteDBTokenMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;

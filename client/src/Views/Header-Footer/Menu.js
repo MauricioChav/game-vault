@@ -62,7 +62,10 @@ function Menu() {
         </div>
 
         <div className="col-2">
+          <div style={{color: 'white'}}>
           {userContent}
+          </div>
+          
           <NavLink
             className="btn btn-small btn-login my-2 my-sm-0"
             to={nav_routes.LOGIN}
