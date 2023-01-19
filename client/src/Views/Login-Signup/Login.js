@@ -13,7 +13,6 @@ import { useLoginUserMutation } from "../../Api/apiSlice";
 import "./Login-Signup.css";
 
 function Login() {
-
   let navigate = useNavigate();
   const [loginUser] = useLoginUserMutation();
   const [alert, setAlert] = useState({});
@@ -33,7 +32,6 @@ function Login() {
 
       //Register the user in the localStorage
       localStorage.setItem("user", JSON.stringify(logUser));
-      console.log(localStorage.getItem("user"));
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
 
       //Redirect to home
@@ -46,24 +44,6 @@ function Login() {
       }
     }
   };
-
-  // const array = [
-  //   {
-  //     token: "THIS IS 1 TOKEN",
-  //     id: "01"
-  //   },{
-  //     token: "THIS IS 2 TOKEN",
-  //     id: "02"
-  //   }
-  // ];
-
-  // const checkToken1 = (token)=>{
-  //   return token.token !== "THIS IS 1 TOKEN";
-  // }
-  // console.log("ARRAYTEST");
-  // console.log(array);
-  // //If it returns false, the token still exists
-  // console.log("TOKEN NON EXISTANT: ", array.every(checkToken1));
 
   return (
     <Card className="gray-round-border" width="380px">

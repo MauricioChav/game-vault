@@ -1,6 +1,6 @@
 let ReviewTableTest = [
   {
-    id: 0,
+    _id: 0,
     game_id: 0,
     user_name: "Mix_Controller",
     user_profile_picture: "https://media.contentapi.ea.com/content/dam/eacom/dead-space/images/2022/10/dead-space-featured-image.adapt.crop191x100.1200w",
@@ -16,7 +16,7 @@ let ReviewTableTest = [
     },
   },
   {
-    id: 1,
+    _id: 1,
     game_id: 0,
     user_name: "Mix_Controller2",
     user_profile_picture: "https://media.contentapi.ea.com/content/dam/eacom/dead-space/images/2022/10/dead-space-featured-image.adapt.crop191x100.1200w",

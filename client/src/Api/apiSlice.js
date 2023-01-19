@@ -32,9 +32,9 @@ export const apiSlice = createApi({
             })
         }),
 
-        getOwnUser: builder.mutation({
+        validateUser: builder.mutation({
             query: (user) => ({
-                url: "/users/me",
+                url: "/users/validate",
                 method: 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + user.token,
@@ -50,6 +50,16 @@ export const apiSlice = createApi({
             })
         }),
 
+        getOwnUser: builder.mutation({
+            query: (user) => ({
+                url: "/users/me",
+                method: 'GET',
+                headers: {
+                    'Authorization' : 'Bearer ' + user.token,
+                },
+            })
+        }),
+
         getUsers: builder.query({
             query: () => '/users'
         }),
@@ -60,4 +70,4 @@ export const apiSlice = createApi({
 // Note:
 // GetOwnUser configured as mutation to allow being called inside useEffect
 
-export const {useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation, useDeleteDBTokenMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;
+export const {useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation, useValidateUserMutation, useDeleteDBTokenMutation, useGetOwnUserMutation, useGetUsersQuery} = apiSlice;

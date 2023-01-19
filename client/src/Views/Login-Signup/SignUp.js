@@ -3,7 +3,7 @@ import Card from "../../Components/Card/Card";
 import NotificationCard, {
   NotificationMessage,
 } from "../../Components/NotificationCard/NotificationCard";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
 import { useCreateUserMutation } from "../../Api/apiSlice";
@@ -11,10 +11,10 @@ import { useCreateUserMutation } from "../../Api/apiSlice";
 import "./Login-Signup.css";
 
 function SignUp() {
-  const [alert, setAlert] = useState({});
-
+  let navigate = useNavigate();
   const [createUser] = useCreateUserMutation();
-
+  const [alert, setAlert] = useState({});
+  
   //Validate account creation type
   const route = useParams();
   let userType = 0;
@@ -52,13 +52,12 @@ function SignUp() {
         },
       }).unwrap();
 
-      //Register cookie
-      document.cookie = `apitoken=${newUser.token}; max-age=${
-        60 * 3
-      }; path=/; samesite=strict`;
-      console.log(document.cookie);
-      console.log(document.cookie.token);
-      console.log("TOKEN IS: " + newUser.token);
+      //Register the user in the localStorage
+      localStorage.setItem("user", JSON.stringify(newUser));
+      setAlert(NotificationMessage("success", "Logged in succesfully!"));
+
+      //Redirect to home
+      navigate(nav_routes.HOME);
 
       setAlert(NotificationMessage("success", "User registered succesfully!"));
     } catch (e) {

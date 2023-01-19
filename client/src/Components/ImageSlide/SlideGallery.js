@@ -7,7 +7,7 @@ function SlideGallery(props) {
     <div className="col-4">
       <div className="slide_element">
         <img
-          src={props.info}
+          src={props.info.img}
           alt=""
         ></img>
       </div>

@@ -4,7 +4,7 @@ import { nav_routes } from "../../routes";
 // import { Buffer } from "buffer";
 
 import {
-  useGetOwnUserMutation,
+  useValidateUserMutation,
   useDeleteDBTokenMutation,
 } from "../../Api/apiSlice";
 
@@ -20,25 +20,12 @@ import {
 
 function AuthVerify() {
   let navigate = useNavigate();
+  const [authUser] = useValidateUserMutation();
   const [logoutUser] = useDeleteDBTokenMutation();
-  const [authUser] = useGetOwnUserMutation();
 
   let location = useLocation();
 
   useEffect(() => {
-    
-    //Log Out
-    const logOut = () => {
-      console.log("EXECUTE LOG OUT");
-
-      //Remove from the localStorage
-      localStorage.removeItem("user");
-      console.log("LOGOUT SUCCESFUL!");
-
-      //Redirect to home
-      navigate(nav_routes.HOME);
-    };
-
     //Validate token with auth
     async function validateToken(user) {
       try {
@@ -51,28 +38,28 @@ function AuthVerify() {
         console.log("AUTH FAILED ", e);
 
         //Verify the token in the DB
-        try{
+        try {
           const dbToken = await logoutUser({
             _id: user.user._id,
-            token: user.token
+            token: user.token,
           }).unwrap();
 
           console.log(dbToken);
-          console.log("CLIENT TOKEN NOT IN THE DB ANYMORE");
-
-        }catch(e){
+        } catch (e) {
           console.log(e);
           console.log("FAILED TO DELETE TOKEN");
-
         }
-        logOut();
+
+        //Remove from the localStorage
+        localStorage.removeItem("user");
+        console.log("LOGOUT SUCCESFUL!");
+
+        //Redirect to home
+        navigate(nav_routes.HOME);
       }
     }
 
-    //VALIDATION FUNCTION END
-
     const user = JSON.parse(localStorage.getItem("user"));
-
     if (user) {
       validateToken(user);
     }

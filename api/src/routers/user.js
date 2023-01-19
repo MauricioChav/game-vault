@@ -46,6 +46,11 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
+//Validate User
+router.get("/users/validate", auth, async (req, res) => {
+  res.send({message: "User validated correctly"});
+});
+
 //ELIMINATE TOKEN IF IT IS ON DB
 router.post("/users/deletedbtoken", async (req, res) => {
   const user = await User.findById(req.body._id);

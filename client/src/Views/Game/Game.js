@@ -17,7 +17,7 @@ function Game(props) {
   const route = useParams();
   const game_info = GameTableTest.find((o) => o.short_title === route.name);
   const game_reviews = ReviewTableTest.filter(
-    (o) => o.game_id === game_info.id
+    (o) => o.game_id === game_info._id
   );
 
   //Reviews
@@ -27,7 +27,7 @@ function Game(props) {
     reviewContent = (
       <>
         {game_reviews.map((review) => (
-          <ReviewBox review_info={review} />
+          <ReviewBox key={review._id} review_info={review} />
         ))}
 
         <NavLink
@@ -46,8 +46,6 @@ function Game(props) {
       </h5>
     );
   }
-
-  console.log(reviewContent);
 
   return (
     <Card>
