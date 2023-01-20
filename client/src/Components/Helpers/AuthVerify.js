@@ -29,11 +29,11 @@ function AuthVerify() {
     //Validate token with auth
     async function validateToken(user) {
       try {
-        const auth = await authUser({
+        await authUser({
           token: user.token,
-        }).unwrap();
+        });
 
-        return console.log("AUTH SUCCESSFUL ", auth);
+        //return console.log("AUTH SUCCESSFUL ", auth);
       } catch (e) {
         console.log("AUTH FAILED ", e);
 

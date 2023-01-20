@@ -119,6 +119,17 @@ nav a:hover {
 background-color: #0949b0;
 }
 
+/*Profile Homebar*/
+.user-info{
+  display: flex;
+  background-color: transparent;
+  color: white;
+  border: none;
+  width: 100%;
+  
+  align-items: center;
+}
+
 /*Profile*/
 .profile-banner{
   padding: 20px;

@@ -14,7 +14,7 @@ function Reviews() {
   const route = useParams();
   const game_info = GameTableTest.find((o) => o.short_title === route.name);
   const game_reviews = ReviewTableTest.filter(
-    (o) => o.game_id === game_info.id
+    (o) => o.game_id === game_info._id
   );
 
   return (
@@ -35,7 +35,7 @@ function Reviews() {
 
       <NewReview />
       {game_reviews.length !== 0 ? (
-        game_reviews.map((review) => <ReviewBox review_info={review} />)
+        game_reviews.map((review) => <ReviewBox key={review._id} review_info={review} />)
       ) : (
         <h5>
           Currently there are no reviews for this game. Be te first one to

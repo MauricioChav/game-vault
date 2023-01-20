@@ -1,22 +1,79 @@
-import React, {useState, useEffect} from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
+
+import ProfilePicture from "../../Components/ProfilePicture/ProfilePicture";
+
+import { useLogoutUserMutation } from "../../Api/apiSlice";
 
 import "../../App.css";
 
 function Menu() {
-
   let location = useLocation();
-  const [userContent, setUserContent] = useState(<div>NO content</div>);
-  //let userContent = <div>No content</div>;
-  
-  useEffect(()=>{
-    if(localStorage.getItem('user') !== null){
-      setUserContent(<div>Content</div>);
-    }else{
-      setUserContent(<div>NO Content</div>);
-    }
+  let navigate = useNavigate();
+  const [logoutUser] = useLogoutUserMutation();
 
+  const [userContent, setUserContent] = useState(<div>NO content</div>);
+
+  const logOutHandler = async () => {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    try {
+      await logoutUser({
+        token,
+      });
+
+      //Delete the user from the localStorage
+      localStorage.removeItem("user");
+      //setAlert(NotificationMessage("success", "Logged in succesfully!"));
+
+      //Redirect to home
+      navigate(nav_routes.HOME);
+    } catch (e) {
+      if (e.hasOwnProperty("data.message")) {
+        //setAlert(NotificationMessage("error", e.data.message));
+      } else {
+        //setAlert(NotificationMessage("error", "Error. Login attempt failed!"));
+      }
+    }
+  };
+
+  const userMenu = () => {
+    console.log("User Menu Open");
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("user") !== null) {
+      //User Loged In
+      const user = JSON.parse(localStorage.getItem("user")).user;
+      setUserContent(
+        <>
+          <button onClick={userMenu} className="user-info">
+            <ProfilePicture
+              img="https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
+              img_title="user_profile_pic"
+            />
+
+            <h6 className="user-info">{user.user_name}</h6>
+          </button>
+
+          <button
+            className="btn btn-small btn-cancel my-2 my-sm-0"
+            onClick={logOutHandler}
+          >
+            Logout
+          </button>
+        </>
+      );
+    } else {
+      setUserContent(
+        <NavLink
+          className="btn btn-small btn-login my-2 my-sm-0"
+          to={nav_routes.LOGIN}
+        >
+          Login
+        </NavLink>
+      );
+    }
   }, [location]);
 
   return (
@@ -46,7 +103,6 @@ function Menu() {
             </li>
           </ul>
         </div>
-
         <div className="col-8">
           <form className="">
             <input
@@ -61,19 +117,7 @@ function Menu() {
           </form>
         </div>
 
-        <div className="col-2">
-          <div style={{color: 'white'}}>
-          {userContent}
-          </div>
-          
-          <NavLink
-            className="btn btn-small btn-login my-2 my-sm-0"
-            to={nav_routes.LOGIN}
-          >
-            Login
-          </NavLink>
-
-        </div>
+        <div className="col-2">{userContent}</div>
       </div>
     </nav>
   );
