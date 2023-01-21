@@ -7,7 +7,7 @@ import ImageSlide from "../../Components/ImageSlide/ImageSlide";
 import DevTableTest from "../../DB/DevTableTest";
 import GameTableTest from "../../DB/GameTableTest";
 
-function Profile_Dev(props) {
+function ProfileDev(props) {
   const route = useParams();
   let dev_info = DevTableTest.find((o) => o.short_name === route.name);
   let dev_games = GameTableTest.filter((o)=> o.developer_short === route.name);
@@ -42,4 +42,4 @@ function Profile_Dev(props) {
   );
 }
 
-export default Profile_Dev;
+export default ProfileDev;

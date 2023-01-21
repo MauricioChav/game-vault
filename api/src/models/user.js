@@ -11,6 +11,7 @@ const userSchema = mongoose.Schema({
   },
   user_name: {
     type: String,
+    unique: true,
     required: true,
     trim: true,
   },
@@ -66,6 +67,9 @@ userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
 
+  //Hide email
+  delete userObject.email;
+  
   delete userObject.password;
   delete userObject.tokens;
 

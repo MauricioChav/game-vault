@@ -2,7 +2,10 @@ export const nav_routes = {
     HOME: '/',
     LOGIN: '/login',
     SIGNUP: '/signup/',
-    GAME: '/game/',
+    GAME: '/games/',
+    GAME_EDIT: '/games/edit/',
     REVIEWS: '/reviews/',
-    PROFILE_DEV: '/dev/'
+    PROFILE_DEV: '/games/dev/',
+    PROFILE_REVIEWER: '/profile/',
+    PROFILE_EDIT: '/users/edit/'
   }

@@ -57,6 +57,10 @@ nav a:hover {
   margin: 0 2%;
 }
 
+.t-center{
+  text-align: center;
+}
+
 /*General styles*/
 
 .gray-round-border {
@@ -93,41 +97,69 @@ nav a:hover {
 }
 
 .btn-submit{
-    background-color: #23a60f;
+    background-color: #23a60f !important;
     color: white;
 }
 
 .btn-submit:hover{
-  background-color: #136b05;
+  background-color: #136b05 !important;
 }
 
 .btn-cancel{
-    background-color: #c93030;
-    color: white;
+    background-color: #c93030 !important;
+    color: white !important;
 }
 
 .btn-cancel:hover{
-  background-color: #941616;
+  background-color: #941616 !important;
 }
 
 .btn-login{
-  background-color: #2370eb;
-  color: white;
+  background-color: #2370eb !important;
+  color: white !important;
 }
 
 .btn-login:hover{
-background-color: #0949b0;
+background-color: #0949b0 !important;
 }
 
 /*Profile Homebar*/
+.user-dropdown{
+  display: none;
+  padding-top: 10px;
+  width: calc(100% - 30px);
+  position: absolute;
+  z-index: 1;
+}
+
 .user-info{
   display: flex;
   background-color: transparent;
   color: white;
   border: none;
   width: 100%;
-  
   align-items: center;
+  padding: 0;
+}
+
+.user-info:hover{
+  background-color: rgba(0, 0, 00, 0.4);
+  color: white;
+  cursor: pointer;
+}
+
+.user-info table{
+  width: 100%;
+}
+
+.user-info-icon{
+  width: 20%;
+  text-align: center;
+}
+
+.user-info-text{
+  width: 80%;
+  text-align: left;
 }
 
 /*Profile*/

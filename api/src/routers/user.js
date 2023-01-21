@@ -46,9 +46,9 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
-//Validate User
+//VALIDATE USER
 router.get("/users/validate", auth, async (req, res) => {
-  res.send({message: "User validated correctly"});
+  res.send({ message: "User validated correctly" });
 });
 
 //ELIMINATE TOKEN IF IT IS ON DB
@@ -57,27 +57,26 @@ router.post("/users/deletedbtoken", async (req, res) => {
   const token = req.body.token;
 
   //Function to verify if the token is on the DB
-  const checkToken = (tokenCheck) =>{
+  const checkToken = (tokenCheck) => {
     return tokenCheck.token !== token;
-  }
+  };
 
   try {
     //If it returns false, the token still exists
-    if(!user.tokens.every(checkToken)){
+    if (!user.tokens.every(checkToken)) {
       //Eliminate token from DB
       user.tokens = user.tokens.filter(checkToken);
       await user.save();
-      res.send({message: "Token eliminated"});
-    }else{
-      res.send({message: "Token not on DB"});
+      res.send({ message: "Token eliminated" });
+    } else {
+      res.send({ message: "Token not on DB" });
     }
-    
   } catch (e) {
     res.status(500).send(e);
   }
 });
 
-//LOG OUT FROM ALL USERS
+//LOG OUT FROM ALL SESSIONS
 router.post("/users/logoutAll", auth, async (req, res) => {
   try {
     req.user.tokens = [];
@@ -89,9 +88,26 @@ router.post("/users/logoutAll", auth, async (req, res) => {
   }
 });
 
-//GET OWN PROFILE
+//GET OWN PROFILE. NOT USED AT THE MOMENT
 router.get("/users/me", auth, async (req, res) => {
   res.send(req.user);
+});
+
+//GET USER PROFILE
+router.get("/users/:name", async (req, res) => {
+  const user_name = req.params.name;
+
+  try {
+    const user = await User.findOne({ user_name });
+
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
 });
 
 //GET ALL USERS
@@ -101,23 +117,6 @@ router.get("/users/", auth, async (req, res) => {
   try {
     const users = await User.find({});
     res.send(users);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-//GET A USER
-router.get("/users/:id", async (req, res) => {
-  const _id = req.params.id;
-
-  try {
-    const user = await User.findById(_id);
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.send(user);
   } catch (e) {
     res.status(500).send();
   }
