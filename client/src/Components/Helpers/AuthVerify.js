@@ -31,7 +31,7 @@ function AuthVerify() {
       try {
         await authUser({
           token: user.token,
-        });
+        }).unwrap();
 
         //return console.log("AUTH SUCCESSFUL ", auth);
       } catch (e) {
