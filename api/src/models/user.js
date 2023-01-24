@@ -7,6 +7,8 @@ const userSchema = mongoose.Schema({
   user_type: {
     type: Number,
     required: true,
+    min:0,
+    max:1,
     default: 0,
   },
   user_name: {
@@ -14,9 +16,16 @@ const userSchema = mongoose.Schema({
     unique: true,
     required: true,
     trim: true,
+    maxlenght: 20,
+    validate(value) {
+      if ((/\s/).test(value)) {
+        throw new Error("The username can't have any white space.");
+      }
+    },
   },
-  full_name: {
+  legal_name: {
     type: String,
+    maxlenght: 30,
     trim: true,
   },
   email: {
@@ -52,8 +61,16 @@ const userSchema = mongoose.Schema({
   ],
   birthday: {
     type: Date,
+    required: true,
   },
   description: {
+    type: String,
+  },
+  img_profile: {
+    type: String,
+    trim: true,
+  },
+  img_banner: {
     type: String,
     trim: true,
   },

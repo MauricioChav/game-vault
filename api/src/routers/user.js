@@ -110,7 +110,7 @@ router.get("/users/:name", async (req, res) => {
   }
 });
 
-//GET ALL USERS
+//GET ALL USERS. NOT USED AT THE MOMENT
 router.get("/users/", auth, async (req, res) => {
   User.find({});
 
