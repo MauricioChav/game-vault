@@ -4,7 +4,7 @@ import { nav_routes } from "../../routes";
 
 import ProfilePicture from "../../Components/ProfilePicture/ProfilePicture";
 
-import { useLogoutUserMutation } from "../../Api/apiSlice";
+import { useLogoutUserMutation } from "../../Api/userEndpoints";
 
 import "../../App.css";
 
@@ -141,7 +141,7 @@ function Menu() {
       } else {
         setUserContent(
           <NavLink
-            className="btn btn-small btn-login my-2 my-sm-0"
+            className="btn btn-small btn-option my-2 my-sm-0"
             to={nav_routes.LOGIN}
           >
             Login &nbsp; <i className="fa-solid fa-arrow-right-to-bracket"></i>

@@ -122,16 +122,18 @@ router.get("/users/", auth, async (req, res) => {
   }
 });
 
-//UPDATE A USER
+//UPDATE USER
 router.patch("/users/:id", async (req, res) => {
   const _id = req.params.id;
 
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "user_name",
-    "full_name",
+    "legal_name",
     "password",
     "birthday",
+    "img_profile",
+    "img_banner",
     "description",
   ];
   const isValidOperation = updates.every((update) =>
@@ -158,7 +160,7 @@ router.patch("/users/:id", async (req, res) => {
   }
 });
 
-//DELETE A USER
+//DELETE USER
 router.delete("/users/:id", async (req, res) => {
   const _id = req.params.id;
   try {

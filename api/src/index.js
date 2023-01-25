@@ -3,6 +3,7 @@ const cors = require('cors');
 //Loads mongoose to connect to db
 require("./db/mongoose");
 const userRouter = require('./routers/user');
+const gameRouter = require('./routers/game');
 
 //Express Port
 const app = express();
@@ -12,8 +13,10 @@ app.use(cors());
 
 //Automatically parse JSON to object
 app.use(express.json());
+
 //App Routers
 app.use(userRouter);
+app.use(gameRouter);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);

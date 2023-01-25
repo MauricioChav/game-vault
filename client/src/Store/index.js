@@ -1,22 +1,9 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import {apiSlice} from '../Api/apiSlice';
-
-const initialState = { currentWindow: "home" };
-
-const windowSlice = createSlice({
-  name: "window",
-  initialState,
-  reducers: {
-    changeWindow(state, action) {
-      state.currentWindow = action.payload;
-    },
-  },
-});
 
 const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
-    window: windowSlice.reducer,
+    [apiSlice.reducerPath]: apiSlice.reducer
   },
 
   middleware: (getDefaultMiddleware) => {
@@ -24,5 +11,4 @@ const store = configureStore({
   }
 });
 
-export const windowActions = windowSlice.actions;
 export default store;

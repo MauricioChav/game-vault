@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 
-const userSchema = mongoose.Schema(
+const gameSchema = mongoose.Schema(
   {
     title: {
       type: String,
@@ -106,6 +105,6 @@ const userSchema = mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
+const Game = mongoose.model("Game", gameSchema);
 
-module.exports = User;
+module.exports = Game;

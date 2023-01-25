@@ -15,8 +15,9 @@ import SignUp from "./Views/Login-Signup/SignUp";
 import Game from "./Views/Game/Game";
 import GameEdit from "./Views/Game/GameEdit";
 import Reviews from "./Views/Reviews/Reviews";
-import ProfileReviewer from "./Views/ProfileReviewer/ProfileReviewer";
-import ProfileDev from "./Views/ProfileDev/ProfileDev";
+import ProfileReviewer from "./Views/UserProfile/ProfileReviewer";
+import ProfileDev from "./Views/UserProfile/ProfileDev";
+import ProfileEdit from "./Views/UserProfile/ProfileEdit";
 
 import Menu from "./Views/Header-Footer/Menu";
 import Footer from "./Views/Header-Footer/Footer";
@@ -35,7 +36,10 @@ function App() {
             <Route path={nav_routes.LOGIN} element={<Login />} />
             <Route path={nav_routes.SIGNUP + ":type"} element={<SignUp />} />
             <Route path={nav_routes.GAME + ":name/"} element={<Game />} />
-            <Route path={nav_routes.GAME_EDIT + ":name/"} element={<GameEdit />} />
+            <Route
+              path={nav_routes.GAME_EDIT + ":name/"}
+              element={<GameEdit />}
+            />
             <Route path={nav_routes.REVIEWS + ":name/"} element={<Reviews />} />
             <Route
               path={nav_routes.PROFILE_REVIEWER + ":name/"}
@@ -44,6 +48,10 @@ function App() {
             <Route
               path={nav_routes.PROFILE_DEV + ":name/"}
               element={<ProfileDev />}
+            />
+            <Route
+              path={nav_routes.PROFILE_EDIT + ":name/"}
+              element={<ProfileEdit />}
             />
           </Routes>
         </div>

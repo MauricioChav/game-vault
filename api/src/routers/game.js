@@ -1,13 +1,26 @@
 const express = require("express");
 const Game = require("../models/game");
-
+const auth = require("../Middleware/auth");
+const typeValidation = require("../Middleware/companyValidation")
 const router = new express.Router();
 
-//Users router
+//Games router
+
+//CREATE GAME
+router.post("/games/", [auth, typeValidation], async (req, res) => {
+  const game = new Game(req.body);
+
+  try {
+    await game.save();
+    res.status(201).send(game);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 
 //GET ALL GAMES
 router.get("/games/", async (req, res) => {
-  User.find({});
+  Game.find({});
 
   try {
     const games = await Game.find({});
@@ -17,12 +30,12 @@ router.get("/games/", async (req, res) => {
   }
 });
 
-//GET A USER
-router.get("/games/:id", async (req, res) => {
-  const _id = req.params.id;
+//GET A GAME
+router.get("/games/:title", async (req, res) => {
+  const title = req.params.title;
 
   try {
-    const game = await Game.findById(_id);
+    const game = await Game.findOne({title});
 
     if (!game) {
       return res.status(404).send();
@@ -34,29 +47,22 @@ router.get("/games/:id", async (req, res) => {
   }
 });
 
-//POST A USER
-router.post("/games/", async (req, res) => {
-  const game = new Game(req.body);
-
-  try {
-    await game.save();
-    res.status(201).send(game);
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
-
-//UPDATE A USER
-router.patch("/games/:id", async (req, res) => {
+//UPDATE GAME
+router.patch("/games/:id", auth, async (req, res) => {
   const _id = req.params.id;
 
   const updates = Object.keys(req.body);
   const allowedUpdates = [
-    "user_name",
-    "full_name",
-    "password",
-    "birthday",
-    "description",
+    "title",
+    "developers",
+    "producers",
+    "release_date",
+    "genres",
+    "player_count",
+    "plattforms",
+    "cover_image",
+    "synopsis",
+    "gallery",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -82,8 +88,8 @@ router.patch("/games/:id", async (req, res) => {
   }
 });
 
-//DELETE A USER
-router.delete("/games/:id", async (req, res) => {
+//DELETE GAME
+router.delete("/games/:id", auth, async (req, res) => {
   const _id = req.params.id;
   try {
     const game = await Game.findByIdAndDelete(_id);

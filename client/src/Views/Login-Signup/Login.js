@@ -8,7 +8,7 @@ import NotificationCard, {
 import { NavLink, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
-import { useLoginUserMutation } from "../../Api/apiSlice";
+import { useLoginUserMutation } from "../../Api/userEndpoints";
 
 import "./Login-Signup.css";
 
@@ -55,7 +55,7 @@ function Login() {
         <input type="email" id="email" name="email" />
 
         <label className="fname">Password:</label>
-        <input type="text" id="password" name="password" />
+        <input type="password" id="password" name="password" />
 
         <button className="submit-btn" type="submit">
           Log in

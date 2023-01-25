@@ -6,7 +6,7 @@ import { nav_routes } from "../../routes";
 import {
   useValidateUserMutation,
   useDeleteDBTokenMutation,
-} from "../../Api/apiSlice";
+} from "../../Api/userEndpoints";
 
 //Parse the user/duration token info
 // const parseJwt = (token) => {

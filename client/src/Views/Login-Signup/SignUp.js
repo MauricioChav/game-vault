@@ -7,7 +7,7 @@ import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
 import moment from "moment";
 
-import { useCreateUserMutation } from "../../Api/apiSlice";
+import { useCreateUserMutation } from "../../Api/userEndpoints";
 
 import "./Login-Signup.css";
 
@@ -120,11 +120,11 @@ function SignUp() {
         />
 
         <label className="fname">Password:</label>
-        <input type="text" id="password" name="password" required={true} />
+        <input type="password" id="password" name="password" required={true} />
 
         <label className="fname">Confirm Password:</label>
         <input
-          type="text"
+          type="password"
           id="password_confirm"
           name="password_confirm"
           required={true}
