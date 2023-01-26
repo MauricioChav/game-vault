@@ -6,7 +6,7 @@ const userEndpoints = apiSlice.injectEndpoints({
       query: (user) => ({
         url: "/users/",
         method: "POST",
-        body: user.data,
+        body: user,
       }),
     }),
 

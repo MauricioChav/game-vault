@@ -8,7 +8,7 @@ function SlideGallery(props) {
       <div className="slide_element">
         <img
           src={props.info.img}
-          alt=""
+          alt={props.info.name}
         ></img>
       </div>
     </div>

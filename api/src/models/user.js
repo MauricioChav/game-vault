@@ -79,6 +79,12 @@ const userSchema = mongoose.Schema({
   },
 });
 
+userSchema.virtual('games', {
+  ref: 'Game',
+  localField: '_id',
+  foreignField: 'developer_id'
+});
+
 //Hide important information in the response
 userSchema.methods.toJSON = function () {
   const user = this;

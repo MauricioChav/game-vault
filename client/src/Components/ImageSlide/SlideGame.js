@@ -14,7 +14,7 @@ function SlideGame(props) {
           alt={props.info.short_title}
         ></img>
         <h3>{props.info.title}</h3>
-        <p>Score: {props.info.score.average}</p>
+        <p>Score: {props.info.score_general}</p>
       </div>
     </NavLink>
     </div>

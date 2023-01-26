@@ -20,7 +20,7 @@ function SignUp() {
   const route = useParams();
   let userType = 0;
 
-  if (route.type === "company") userType = 1;
+  if (route.type === "developer") userType = 1;
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -53,19 +53,16 @@ function SignUp() {
 
     //Legal name
     let legal_name = "";
-    if(userType === 1)
-    legal_name = event.target.elements.legal_name.value;
+    if (userType === 1) legal_name = event.target.elements.legal_name.value;
 
     try {
       const newUser = await createUser({
-        data: {
-          user_type,
-          user_name,
-          legal_name,
-          email,
-          password,
-          birthday,
-        },
+        user_type,
+        user_name,
+        legal_name,
+        email,
+        password,
+        birthday,
       }).unwrap();
 
       //Register the user in the localStorage
@@ -102,7 +99,12 @@ function SignUp() {
         {userType === 1 && (
           <>
             <label className="fname">Legal Name:</label>
-            <input type="text" id="legal_name" name="legal_name" required={true} />
+            <input
+              type="text"
+              id="legal_name"
+              name="legal_name"
+              required={true}
+            />
           </>
         )}
 

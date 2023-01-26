@@ -1,7 +1,7 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { nav_routes } from "../../routes";
+import moment from "moment";
 
 import Card from "../../Components/Card/Card";
 import ImageSlide from "../../Components/ImageSlide/ImageSlide";
@@ -10,42 +10,53 @@ import NewReview from "../../Components/ReviewComponents/NewReview";
 
 import "./Game.css";
 
-import GameTableTest from "../../DB/GameTableTest";
-import ReviewTableTest from "../../DB/ReviewTableTest";
+import { useGetGameQuery } from "../../Api/gameEndpoints";
 
 function Game(props) {
   const route = useParams();
-  const game_info = GameTableTest.find((o) => o.short_title === route.name);
-  const game_reviews = ReviewTableTest.filter(
-    (o) => o.game_id === game_info._id
+  const { data, isError, isLoading, error } = useGetGameQuery(route.short_title);
+
+  const errorContent = (
+    <Card className="text-center">
+      <h1 className="t-center" style={{ marginTop: "20px" }}>
+        Game not found!
+      </h1>
+    </Card>
   );
 
-  //Reviews
-  let reviewContent = <div></div>;
-
-  if (game_reviews.length !== 0) {
-    reviewContent = (
-      <>
-        {game_reviews.map((review) => (
-          <ReviewBox key={review._id} review_info={review} />
-        ))}
-
-        <NavLink
-          to={nav_routes.REVIEWS + game_info.short_title}
-          className="btn btn-big"
-        >
-          See all reviews
-        </NavLink>
-      </>
-    );
-  } else {
-    reviewContent = (
-      <h5>
-        Currently there are no reviews for this game. Be te first one to review
-        it!
-      </h5>
-    );
+  if (isError) {
+    console.log("Error", error);
+    return errorContent;
+  } else if (isLoading) {
+    return <h1>Getting Game data...</h1>;
   }
+
+  //Reviews
+  // let reviewContent = <div></div>;
+
+  // if (game_reviews.length !== 0) {
+  //   reviewContent = (
+  //     <>
+  //       {game_reviews.map((review) => (
+  //         <ReviewBox key={review._id} review_info={review} />
+  //       ))}
+
+  //       <NavLink
+  //         to={nav_routes.REVIEWS + data.short_title}
+  //         className="btn btn-big"
+  //       >
+  //         See all reviews
+  //       </NavLink>
+  //     </>
+  //   );
+  // } else {
+  //   reviewContent = (
+  //     <h5>
+  //       Currently there are no reviews for this game. Be te first one to review
+  //       it!
+  //     </h5>
+  //   );
+  // }
 
   return (
     <Card>
@@ -54,54 +65,54 @@ function Game(props) {
           <div className="col-4">
             <img
               className="cover-img"
-              src={game_info.cover_image}
-              alt={game_info.short_title}
+              src={data.cover_image}
+              alt={data.short_title}
             ></img>
           </div>
           <div className="col-4">
-            <h2>{game_info.title}</h2>
+            <h2>{data.title}</h2>
 
             <h4>
               Developer:{" "}
-              <NavLink to={nav_routes.PROFILE_DEV + game_info.developer_short}>
-                {game_info.developer}
-              </NavLink>
+              {/* <NavLink to={nav_routes.PROFILE_DEV + data.developer_short}>
+                {data.developer}
+              </NavLink> */}
             </h4>
-            <h4>Release Date: {game_info.release_date}</h4>
+            <h4>Release Date: {moment(data.release_date).format("MMMM DD, YYYY")}</h4>
             <h4>
               Genres:{" "}
-              {game_info.genres.map(
-                (genre) => genre + (game_info.genres.length <= 1 ? "" : ", ")
+              {data.genres.map(
+                (genre) => genre + (data.genres.length <= 1 ? "" : ", ")
               )}
             </h4>
-            <h4>No. of players: {game_info.player_count}</h4>
+            <h4>No. of players: {data.player_count}</h4>
           </div>
 
           <div className="col-4">
-            <h2>General Score: {game_info.score.average}</h2>
-            <h4>Gameplay: {game_info.score.gameplay}</h4>
-            <h4>Graphics: {game_info.score.graphics}</h4>
-            <h4>Sound/Music: {game_info.score.sound}</h4>
-            <h4>Narrative: {game_info.score.narrative}</h4>
+            <h2>General Score: {data.score_general}</h2>
+            <h4>Gameplay: {data.score_gameplay}</h4>
+            <h4>Graphics: {data.score_graphics}</h4>
+            <h4>Sound/Music: {data.score_sound}</h4>
+            <h4>Narrative: {data.score_narrative}</h4>
           </div>
 
           <div className="col-12 synopsis-div">
             <h2>Synopsis:</h2>
-            <p>{game_info.summary}</p>
+            <p>{data.synopsis}</p>
           </div>
 
           <div className="col-12">
             <ImageSlide
               title="Gallery"
               type="gallery"
-              array={game_info.gallery}
+              array={data.gallery}
             />
           </div>
 
           <div className="col-12">
             <h2>Reviews:</h2>
             <NewReview />
-            {reviewContent}
+            {/* {reviewContent} */}
           </div>
         </div>
       </div>

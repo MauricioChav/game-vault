@@ -35,9 +35,9 @@ function App() {
             <Route exact path={nav_routes.HOME} element={<Home />} />
             <Route path={nav_routes.LOGIN} element={<Login />} />
             <Route path={nav_routes.SIGNUP + ":type"} element={<SignUp />} />
-            <Route path={nav_routes.GAME + ":name/"} element={<Game />} />
+            <Route path={nav_routes.GAME + ":short_title/"} element={<Game />} />
             <Route
-              path={nav_routes.GAME_EDIT + ":name/"}
+              path={nav_routes.GAME_EDIT + ":short_title/"}
               element={<GameEdit />}
             />
             <Route path={nav_routes.REVIEWS + ":name/"} element={<Reviews />} />

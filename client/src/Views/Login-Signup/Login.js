@@ -52,10 +52,10 @@ function Login() {
       <form className="user-form" onSubmit={loginHandler}>
         <h3 className="form-title">Log into your account</h3>
         <label className="fname">Email:</label>
-        <input type="email" id="email" name="email" />
+        <input type="email" id="email" name="email" required={true}/>
 
         <label className="fname">Password:</label>
-        <input type="password" id="password" name="password" />
+        <input type="password" id="password" name="password" required={true}/>
 
         <button className="submit-btn" type="submit">
           Log in
@@ -69,8 +69,8 @@ function Login() {
             </NavLink>
           </li>
           <li>
-            <NavLink to={nav_routes.SIGNUP + "company"}>
-              Create a company account
+            <NavLink to={nav_routes.SIGNUP + "developer"}>
+              Create a developer account
             </NavLink>
           </li>
         </ul>

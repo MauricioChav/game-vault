@@ -1,4 +1,4 @@
-const companyValidation = (req, res, next) => {
+const developerValidation = (req, res, next) => {
   try {
     const userType = req.user.user_type;
 
@@ -16,4 +16,4 @@ const companyValidation = (req, res, next) => {
   }
 };
 
-module.exports = companyValidation;
+module.exports = developerValidation;

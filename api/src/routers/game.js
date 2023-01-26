@@ -1,14 +1,17 @@
 const express = require("express");
 const Game = require("../models/game");
 const auth = require("../Middleware/auth");
-const typeValidation = require("../Middleware/companyValidation")
+const typeValidation = require("../Middleware/developerValidation")
 const router = new express.Router();
 
 //Games router
 
 //CREATE GAME
 router.post("/games/", [auth, typeValidation], async (req, res) => {
-  const game = new Game(req.body);
+  const game = new Game({
+    ...req.body,
+    developer_id: req.user._id
+  })
 
   try {
     await game.save();
@@ -20,6 +23,18 @@ router.post("/games/", [auth, typeValidation], async (req, res) => {
 
 //GET ALL GAMES
 router.get("/games/", async (req, res) => {
+
+  try {
+    const games = await Game.find({});
+    res.send(games);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//GET ALL DEVELOPER GAMES
+//NOT YET FUNCTIONAL
+router.get("/games/dev", async (req, res) => {
   Game.find({});
 
   try {
@@ -30,16 +45,19 @@ router.get("/games/", async (req, res) => {
   }
 });
 
-//GET A GAME
-router.get("/games/:title", async (req, res) => {
-  const title = req.params.title;
+//GET GAME
+router.get("/games/:short_title", async (req, res) => {
+  const short_title = req.params.short_title;
 
   try {
-    const game = await Game.findOne({title});
+    const game = await Game.findOne({short_title});
 
     if (!game) {
       return res.status(404).send();
     }
+
+    //Get developer info
+    await game.populate("developer_id");
 
     res.send(game);
   } catch (e) {

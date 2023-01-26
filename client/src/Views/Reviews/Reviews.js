@@ -1,6 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
 import Card from "../../Components/Card/Card";
