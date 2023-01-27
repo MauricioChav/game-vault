@@ -69,13 +69,16 @@ nav a:hover {
 }
 
 .btn{
-  border: 1px gray solid;
   border-radius: 10px;
-  color: black;
   text-decoration: none;
 }
 
-.btn:hover {
+.btn-classic{
+  color: black;
+  border: 1px gray solid;
+}
+
+.btn-classic:hover {
   background-color: gray;
   color: white;
   text-decoration: none;

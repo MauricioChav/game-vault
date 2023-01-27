@@ -14,6 +14,10 @@ const gameEndpoints = apiSlice.injectEndpoints({
         query: () => "/games/",
       }),
 
+      getDevGames: builder.query({
+        query: (developer_id) => `/games/dev/${developer_id}`,
+      }),
+
       getGame: builder.query({
         query: (short_title) => `/games/${short_title}`,
       }),
@@ -22,4 +26,4 @@ const gameEndpoints = apiSlice.injectEndpoints({
   overrideExisting: false,
 });
 
-export const {useCreateGameMutation, useGetAllGamesQuery, useGetGameQuery} = gameEndpoints;
+export const {useCreateGameMutation, useGetAllGamesQuery, useGetDevGamesQuery, useGetGameQuery} = gameEndpoints;

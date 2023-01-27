@@ -1,17 +1,37 @@
 const express = require("express");
 const Game = require("../models/game");
 const auth = require("../Middleware/auth");
-const typeValidation = require("../Middleware/developerValidation")
+const typeValidation = require("../Middleware/developerValidation");
 const router = new express.Router();
 
 //Games router
 
 //CREATE GAME
 router.post("/games/", [auth, typeValidation], async (req, res) => {
+  //Check forbidden information (score and review_count)
+  const updates = Object.keys(req.body);
+  const forbiddenInfo = [
+    "sum_score_general",
+    "sum_score_gameplay",
+    "sum_score_graphics",
+    "sum_score_sound",
+    "sum_score_narrative",
+    "review_count",
+  ];
+  const isInvalidOperation = updates.some((update) =>
+    forbiddenInfo.includes(update)
+  );
+
+  console.log(isInvalidOperation);
+
+  if (isInvalidOperation) {
+    return res.status(400).send({ error: "Invalid info." });
+  }
+
   const game = new Game({
     ...req.body,
-    developer_id: req.user._id
-  })
+    developer_id: req.user._id,
+  });
 
   try {
     await game.save();
@@ -23,7 +43,6 @@ router.post("/games/", [auth, typeValidation], async (req, res) => {
 
 //GET ALL GAMES
 router.get("/games/", async (req, res) => {
-
   try {
     const games = await Game.find({});
     res.send(games);
@@ -32,13 +51,13 @@ router.get("/games/", async (req, res) => {
   }
 });
 
-//GET ALL DEVELOPER GAMES
-//NOT YET FUNCTIONAL
-router.get("/games/dev", async (req, res) => {
-  Game.find({});
+//GET DEVELOPER GAMES
+//NOT USED AT THE MOMENT
+router.get("/games/dev/:developer_id", async (req, res) => {
+  const developer_id = req.params.developer_id;
 
   try {
-    const games = await Game.find({});
+    const games = await Game.find({ developer_id });
     res.send(games);
   } catch (e) {
     res.status(500).send();
@@ -50,14 +69,11 @@ router.get("/games/:short_title", async (req, res) => {
   const short_title = req.params.short_title;
 
   try {
-    const game = await Game.findOne({short_title});
+    const game = await Game.findOne({ short_title }).populate("developer_id", "_id user_name legal_name");
 
     if (!game) {
       return res.status(404).send();
     }
-
-    //Get developer info
-    await game.populate("developer_id");
 
     res.send(game);
   } catch (e) {

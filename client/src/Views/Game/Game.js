@@ -14,7 +14,9 @@ import { useGetGameQuery } from "../../Api/gameEndpoints";
 
 function Game(props) {
   const route = useParams();
-  const { data, isError, isLoading, error } = useGetGameQuery(route.short_title);
+  const { data, isError, isLoading, error } = useGetGameQuery(
+    route.short_title
+  );
 
   const errorContent = (
     <Card className="text-center">
@@ -73,14 +75,18 @@ function Game(props) {
             <h2>{data.title}</h2>
 
             <h4>
-              Developer:{" "}
-              {/* <NavLink to={nav_routes.PROFILE_DEV + data.developer_short}>
-                {data.developer}
-              </NavLink> */}
+              Developer:&nbsp;
+              <NavLink
+                to={nav_routes.PROFILE_DEV + data.developer_id.user_name}
+              >
+                {data.developer_id.legal_name}
+              </NavLink>
             </h4>
-            <h4>Release Date: {moment(data.release_date).format("MMMM DD, YYYY")}</h4>
             <h4>
-              Genres:{" "}
+              Release Date: {moment(data.release_date).format("MMMM DD, YYYY")}
+            </h4>
+            <h4>
+              Genres:&nbsp;
               {data.genres.map(
                 (genre) => genre + (data.genres.length <= 1 ? "" : ", ")
               )}
@@ -89,11 +95,11 @@ function Game(props) {
           </div>
 
           <div className="col-4">
-            <h2>General Score: {data.score_general}</h2>
-            <h4>Gameplay: {data.score_gameplay}</h4>
-            <h4>Graphics: {data.score_graphics}</h4>
-            <h4>Sound/Music: {data.score_sound}</h4>
-            <h4>Narrative: {data.score_narrative}</h4>
+            <h2>General Score: {data.scores.score_general}</h2>
+            <h4>Gameplay: {data.scores.score_gameplay}</h4>
+            <h4>Graphics: {data.scores.score_graphics}</h4>
+            <h4>Sound/Music: {data.scores.score_sound}</h4>
+            <h4>Narrative: {data.scores.score_narrative}</h4>
           </div>
 
           <div className="col-12 synopsis-div">
@@ -102,11 +108,7 @@ function Game(props) {
           </div>
 
           <div className="col-12">
-            <ImageSlide
-              title="Gallery"
-              type="gallery"
-              array={data.gallery}
-            />
+            <ImageSlide title="Gallery" type="gallery" array={data.gallery} />
           </div>
 
           <div className="col-12">

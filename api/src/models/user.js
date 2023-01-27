@@ -3,86 +3,93 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const userSchema = mongoose.Schema({
-  user_type: {
-    type: Number,
-    required: true,
-    min:0,
-    max:1,
-    default: 0,
-  },
-  user_name: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true,
-    maxlenght: 20,
-    validate(value) {
-      if ((/\s/).test(value)) {
-        throw new Error("The username can't have any white space.");
-      }
+const userSchema = mongoose.Schema(
+  {
+    user_type: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1,
+      default: 0,
     },
-  },
-  legal_name: {
-    type: String,
-    maxlenght: 30,
-    trim: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Email is invalid");
-      }
-    },
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 7,
-    validate(value) {
-      if (value.toLowerCase().includes("password")) {
-        throw new Error("The password cannot contain the word 'password'.");
-      }
-    },
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+    user_name: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      maxlenght: 20,
+      validate(value) {
+        if (/\s/.test(value)) {
+          throw new Error("The username can't have any white space.");
+        }
       },
     },
-  ],
-  birthday: {
-    type: Date,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-  img_profile: {
-    type: String,
-    trim: true,
-  },
-  img_banner: {
-    type: String,
-    trim: true,
-  },
-  follower_count: {
-    type: Number,
-  },
-});
+    legal_name: {
+      type: String,
+      maxlenght: 30,
+      trim: true,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid");
+        }
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 7,
+      validate(value) {
+        if (value.toLowerCase().includes("password")) {
+          throw new Error("The password cannot contain the word 'password'.");
+        }
+      },
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    birthday: {
+      type: Date,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
+    img_profile: {
+      type: String,
+      trim: true,
+    },
+    img_banner: {
+      type: String,
+      trim: true,
+    },
+    follower_count: {
+      type: Number,
+      default: 0,
+    },
+  }
+);
 
-userSchema.virtual('games', {
-  ref: 'Game',
-  localField: '_id',
-  foreignField: 'developer_id'
+//Schema options allow to bring the virtuals into the response automatically. They also allow for deep population of getters
+userSchema.set("toJSON", { getters: true, virtuals: true });
+userSchema.set("toObject", { getters: true, virtuals: true });
+
+userSchema.virtual("games", {
+  ref: "Game",
+  localField: "_id",
+  foreignField: "developer_id",
 });
 
 //Hide important information in the response
@@ -91,8 +98,9 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
 
   //Hide email
+  //**Set email to only show on create user or edit user
   delete userObject.email;
-  
+
   delete userObject.password;
   delete userObject.tokens;
 
