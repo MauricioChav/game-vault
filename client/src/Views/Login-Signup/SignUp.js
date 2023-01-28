@@ -25,7 +25,7 @@ function SignUp() {
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    //Populate data
+    //Asign data
     const user_type = userType;
 
     const user_name = event.target.elements.user_name.value;
@@ -93,12 +93,12 @@ function SignUp() {
 
       <form className="user-form" onSubmit={submitHandler}>
         <h3 className="form-title">Create a {route.type} account</h3>
-        <label className="fname">Username:</label>
+        <label>Username:</label>
         <input type="text" id="user_name" name="user_name" required={true} />
 
         {userType === 1 && (
           <>
-            <label className="fname">Legal Name:</label>
+            <label>Legal Name:</label>
             <input
               type="text"
               id="legal_name"
@@ -108,10 +108,10 @@ function SignUp() {
           </>
         )}
 
-        <label className="fname">Email:</label>
+        <label>Email:</label>
         <input type="email" id="email" name="email" required={true} />
 
-        <label className="fname">Birthday:</label>
+        <label>Birthday:</label>
         <input
           type="date"
           id="birthday"
@@ -121,10 +121,10 @@ function SignUp() {
           required={true}
         />
 
-        <label className="fname">Password:</label>
+        <label>Password:</label>
         <input type="password" id="password" name="password" required={true} />
 
-        <label className="fname">Confirm Password:</label>
+        <label>Confirm Password:</label>
         <input
           type="password"
           id="password_confirm"

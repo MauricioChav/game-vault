@@ -99,7 +99,7 @@ router.get("/users/:name", async (req, res) => {
 
   try {
     //Populate the user with their games. Only brings basic game info
-    const user = await User.findOne({ user_name }).populate("games", "_id title cover_image scores");
+    const user = await User.findOne({ user_name }).populate("games", "_id title short_title cover_image scores");
 
     if (!user) {
       return res.status(404).send();

@@ -20,7 +20,7 @@ function Login() {
   const loginHandler = async (event) => {
     event.preventDefault();
 
-    //Populate data
+    //Asign data
     const email = event.target.elements.email.value;
     const password = event.target.elements.password.value;
 
@@ -51,10 +51,10 @@ function Login() {
 
       <form className="user-form" onSubmit={loginHandler}>
         <h3 className="form-title">Log into your account</h3>
-        <label className="fname">Email:</label>
+        <label>Email:</label>
         <input type="email" id="email" name="email" required={true}/>
 
-        <label className="fname">Password:</label>
+        <label>Password:</label>
         <input type="password" id="password" name="password" required={true}/>
 
         <button className="submit-btn" type="submit">

@@ -6,7 +6,10 @@ const gameEndpoints = apiSlice.injectEndpoints({
       query: (game) => ({
         url: "/games/",
         method: "POST",
-        body: game,
+        body: game.data,
+        headers: {
+          Authorization: "Bearer " + game.token,
+        },
       }),
     }),
 
