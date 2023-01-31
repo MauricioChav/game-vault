@@ -8,24 +8,25 @@ const router = new express.Router();
 
 //CREATE GAME
 router.post("/games/", [auth, typeValidation], async (req, res) => {
-  //Check forbidden information (score and review_count)
-  const updates = Object.keys(req.body);
-  const forbiddenInfo = [
-    "sum_score_general",
-    "sum_score_gameplay",
-    "sum_score_graphics",
-    "sum_score_sound",
-    "sum_score_narrative",
-    "review_count",
+  const fields = Object.keys(req.body);
+  const allowedFields = [
+    "title",
+    "publisher",
+    "release_date",
+    "genres",
+    "isSinglePlayer",
+    "isMultiPlayer",
+    "platforms",
+    "cover_image",
+    "synopsis",
+    "gallery",
   ];
-  const isInvalidOperation = updates.some((update) =>
-    forbiddenInfo.includes(update)
+  const isValidOperation = fields.every((field) =>
+    allowedFields.includes(field)
   );
 
-  console.log(isInvalidOperation);
-
-  if (isInvalidOperation) {
-    return res.status(400).send({ error: "Invalid info." });
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid data" });
   }
 
   const game = new Game({
@@ -83,17 +84,16 @@ router.get("/games/:short_title", async (req, res) => {
 
 //UPDATE GAME
 router.patch("/games/:id", auth, async (req, res) => {
-  const _id = req.params.id;
 
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "title",
-    "developers",
-    "producers",
+    "publisher",
     "release_date",
     "genres",
-    "player_count",
-    "plattforms",
+    "isSinglePlayer",
+    "isMultiPlayer",
+    "platforms",
     "cover_image",
     "synopsis",
     "gallery",
@@ -107,15 +107,18 @@ router.patch("/games/:id", auth, async (req, res) => {
   }
 
   try {
-    const game = await Game.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
+    const game = await Game.findOne({
+      _id: req.params.id,
+      developer_id: req.user._id
     });
 
     if (!game) {
       return res.status(404).send(e);
     }
 
+    updates.forEach((update) => (game[update] = req.body[update]));
+    await game.save();
+    
     res.send(game);
   } catch (e) {
     res.status(400).send(e);

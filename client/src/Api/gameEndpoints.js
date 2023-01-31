@@ -25,8 +25,19 @@ const gameEndpoints = apiSlice.injectEndpoints({
         query: (short_title) => `/games/${short_title}`,
       }),
 
+      updateGame: builder.mutation({
+        query: (game) => ({
+          url: "/games/",
+          method: "PATCH",
+          body: game.data,
+          headers: {
+            Authorization: "Bearer " + game.token,
+          },
+        }),
+      }),
+
   }),
   overrideExisting: false,
 });
 
-export const {useCreateGameMutation, useGetAllGamesQuery, useGetDevGamesQuery, useGetGameQuery} = gameEndpoints;
+export const {useCreateGameMutation, useGetAllGamesQuery, useGetDevGamesQuery, useGetGameQuery, useUpdateGameMutation} = gameEndpoints;

@@ -3,20 +3,26 @@ import Card from "../../Components/Card/Card";
 import NotificationCard, {
   NotificationMessage,
 } from "../../Components/NotificationCard/NotificationCard";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
 import TagsInput from "react-tagsinput";
+import moment from "moment";
 
-import { useCreateGameMutation } from "../../Api/gameEndpoints";
+import {
+  useGetGameQuery,
+  useCreateGameMutation,
+  useUpdateGameMutation,
+} from "../../Api/gameEndpoints";
 
 function GameEdit() {
+  //Set basic variables
   let navigate = useNavigate();
   const [createGame] = useCreateGameMutation();
   const [alert, setAlert] = useState({});
   const loggedUser = JSON.parse(localStorage.getItem("user"));
 
-  //Genre tags array
+  //Genre variables
   const [genreTags, setGenreTags] = useState({ genres: [] });
 
   const handleGenreTags = (genres) => {
@@ -35,8 +41,61 @@ function GameEdit() {
 
   //Get Game Data for Edit Game
   const route = useParams();
-  const short_title = route.short_title;
+  const route_title = route.route_title;
+  const {
+    data: game,
+    isError,
+    isLoading,
+    error,
+  } = useGetGameQuery(route_title);
 
+  //Set the genres if it is an edit
+  useEffect(() => {
+    if (route_title !== "new" && !isError && !isLoading) {
+      setGenreTags({ genres: game.genres });
+    }
+  }, [game, isError, isLoading, route_title]);
+
+  //Edit view validation
+  if (route_title !== "new") {
+    if (isError) {
+      console.log("Error", error);
+      if (error.status === 404) {
+        return (
+          <Card className="text-center">
+            <h1>The game you are trying to edit doesn't exist</h1>
+            <br></br>
+            <NavLink className="btn btn-info" to={nav_routes.GAME_EDIT + "new"}>
+              Create new Game
+            </NavLink>
+          </Card>
+        );
+      } else {
+        return (
+          <Card className="text-center">
+            <h1>There was an error with the server. Try later.</h1>
+            <br></br>
+            <NavLink className="btn btn-info" to={nav_routes.HOME}>
+              Return to Home
+            </NavLink>
+          </Card>
+        );
+      }
+    } else if (isLoading) {
+      return (
+        <Card className="text-center">
+          <h1>Fetching game data...</h1>
+        </Card>
+      );
+    } else {
+      //Validate if the loggedUser is the game developer
+      if (loggedUser.user._id !== game.developer_id._id) {
+        navigate(nav_routes.HOME);
+      }
+    }
+  }
+
+  //GAME HANDLER
   const gameHandler = async (event) => {
     event.preventDefault();
 
@@ -101,7 +160,7 @@ function GameEdit() {
     });
 
     //Create new game
-    if (short_title === "new") {
+    if (route_title === "new") {
       try {
         const newGame = await createGame({
           data: {
@@ -122,7 +181,6 @@ function GameEdit() {
 
         //Redirect to the new game Page
         navigate(nav_routes.GAME + newGame.short_title);
-        
       } catch (e) {
         if (e.hasOwnProperty("data.message")) {
           setAlert(NotificationMessage("error", e.data.message));
@@ -134,13 +192,23 @@ function GameEdit() {
       }
     } else {
       //Edit existing game
+      console.log({
+        title,
+        publisher,
+        release_date,
+        synopsis,
+        isSinglePlayer,
+        isMultiPlayer,
+        cover_image,
+        genres,
+        platforms,
+      });
     }
   };
-
   return (
     <Card className="text-center">
       <h1>
-        {short_title === "new" ? "Create new Game" : "Edit " + short_title}
+        {route_title === "new" ? "Create new Game" : "Edit: " + game.title}
       </h1>
 
       <NotificationCard notification={alert} />
@@ -154,7 +222,13 @@ function GameEdit() {
           <div className="col-3">
             <label className="fg-label">Title:</label>
             <br></br>
-            <input type="text" id="title" name="title" required />
+            <input
+              type="text"
+              id="title"
+              name="title"
+              required
+              defaultValue={route_title !== "new" ? game.title : ""}
+            />
           </div>
           <div className="col-3">
             <label className="fg-label">Developer:</label>
@@ -162,7 +236,13 @@ function GameEdit() {
           </div>
           <div className="col-3">
             <label className="fg-label">Publisher:</label>
-            <input type="text" id="publisher" name="publisher" />
+            <input
+              type="text"
+              id="publisher"
+              name="publisher"
+              required
+              defaultValue={route_title !== "new" ? game.publisher : ""}
+            />
           </div>
           <div className="col-3">
             <label className="fg-label">Release Date:</label>
@@ -171,7 +251,12 @@ function GameEdit() {
               id="release_date"
               name="release_date"
               min="1900-01-01"
-              required={true}
+              required
+              defaultValue={
+                route_title !== "new"
+                  ? moment(game.release_date).format("YYYY-MM-DD")
+                  : ""
+              }
             />
           </div>
         </div>
@@ -179,7 +264,11 @@ function GameEdit() {
         <div className="row fg-space">
           <div className="col-9">
             <label className="fg-label">Synopsis:</label>
-            <textarea id="synopsis" name="synopsis"></textarea>
+            <textarea
+              id="synopsis"
+              name="synopsis"
+              defaultValue={route_title !== "new" ? game.synopsis : ""}
+            ></textarea>
           </div>
           <div className="col-3">
             <label className="fg-label">Genres:</label>
@@ -187,6 +276,7 @@ function GameEdit() {
               value={genreTags.genres}
               onChange={handleGenreTags}
               addKeys={[188]}
+              onlyUnique={true}
               inputProps={{ placeholder: "Add a genre" }}
             />
             <p>*Insert a genre with a comma</p>
@@ -205,6 +295,9 @@ function GameEdit() {
                       type="checkbox"
                       id="isSinglePlayer"
                       name="isSinglePlayer"
+                      defaultChecked={
+                        route_title !== "new" && game.isSinglePlayer
+                      }
                     ></input>
                     <label htmlFor="isSinglePlayer">Single-Player</label>
                   </td>
@@ -216,6 +309,9 @@ function GameEdit() {
                       type="checkbox"
                       id="isMultiPlayer"
                       name="isMultiPlayer"
+                      defaultChecked={
+                        route_title !== "new" && game.isMultiPlayer
+                      }
                     ></input>
                     <label htmlFor="isMultiPlayer">Multiplayer</label>
                   </td>
@@ -236,6 +332,10 @@ function GameEdit() {
                       id="pt-playstation5"
                       name="pt-playstation5"
                       value="Playstation 5"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Playstation 5")
+                      }
                     ></input>
                     <label htmlFor="pt-playstation5">Playstation 5</label>
                   </td>
@@ -246,6 +346,10 @@ function GameEdit() {
                       id="pt-xboxseriesx"
                       name="pt-xboxseriesx"
                       value="Xbox Series X"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Xbox Series X")
+                      }
                     ></input>
                     <label htmlFor="pt-xboxseriesx">Xbox Series X</label>
                   </td>
@@ -256,6 +360,10 @@ function GameEdit() {
                       id="pt-nintendoswitch"
                       name="pt-nintendoswitch"
                       value="Nintendo Switch"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Nintendo Switch")
+                      }
                     ></input>
                     <label htmlFor="pt-nintendoswitch">Nintendo Switch</label>
                   </td>
@@ -266,6 +374,9 @@ function GameEdit() {
                       id="pt-pc"
                       name="pt-pc"
                       value="PC"
+                      defaultChecked={
+                        route_title !== "new" && game.platforms.includes("PC")
+                      }
                     ></input>
                     <label htmlFor="PC">PC</label>
                   </td>
@@ -278,6 +389,10 @@ function GameEdit() {
                       id="pt-playstation4"
                       name="pt-playstation4"
                       value="Playstation 4"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Playstation 4")
+                      }
                     ></input>
                     <label htmlFor="pt-playstation4">Playstation 4</label>
                   </td>
@@ -289,6 +404,10 @@ function GameEdit() {
                       id="pt-xboxone"
                       name="pt-xboxone"
                       value="Xbox One"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Xbox One")
+                      }
                     ></input>
                     <label htmlFor="pt-xboxone">Xbox One</label>
                   </td>
@@ -304,7 +423,12 @@ function GameEdit() {
           </div>
           <div className="col-4">
             <label className="fg-label">Cover Image:</label>
-            <input type="text" id="cover_image" name="cover_image" />
+            <input
+              type="text"
+              id="cover_image"
+              name="cover_image"
+              defaultValue={route_title !== "new" ? game.cover_image : ""}
+            />
           </div>
           <div className="col-4">
             <label className="fg-label">Gallery:</label>
@@ -312,7 +436,7 @@ function GameEdit() {
         </div>
 
         <button className="submit-btn" type="submit">
-          {short_title === "new" ? "Create new Game" : "Save Changes"}
+          {route_title === "new" ? "Create new Game" : "Save Changes"}
         </button>
       </form>
     </Card>

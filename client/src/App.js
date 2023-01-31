@@ -37,7 +37,7 @@ function App() {
             <Route path={nav_routes.SIGNUP + ":type"} element={<SignUp />} />
             <Route path={nav_routes.GAME + ":short_title/"} element={<Game />} />
             <Route
-              path={nav_routes.GAME_EDIT + ":short_title/"}
+              path={nav_routes.GAME_EDIT + ":route_title/"}
               element={<GameEdit />}
             />
             <Route path={nav_routes.REVIEWS + ":name/"} element={<Reviews />} />
