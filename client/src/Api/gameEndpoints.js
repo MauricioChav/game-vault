@@ -27,7 +27,7 @@ const gameEndpoints = apiSlice.injectEndpoints({
 
       updateGame: builder.mutation({
         query: (game) => ({
-          url: "/games/",
+          url: `/games/${game.id}`,
           method: "PATCH",
           body: game.data,
           headers: {

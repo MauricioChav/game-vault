@@ -19,6 +19,7 @@ function GameEdit() {
   //Set basic variables
   let navigate = useNavigate();
   const [createGame] = useCreateGameMutation();
+  const [updateGame] = useUpdateGameMutation();
   const [alert, setAlert] = useState({});
   const loggedUser = JSON.parse(localStorage.getItem("user"));
 
@@ -192,17 +193,40 @@ function GameEdit() {
       }
     } else {
       //Edit existing game
-      console.log({
-        title,
-        publisher,
-        release_date,
-        synopsis,
-        isSinglePlayer,
-        isMultiPlayer,
-        cover_image,
-        genres,
-        platforms,
-      });
+      try {
+        const editGame = await updateGame({
+          id: game._id,
+          data: {
+            title,
+            publisher,
+            release_date,
+            synopsis,
+            isSinglePlayer,
+            isMultiPlayer,
+            cover_image,
+            genres,
+            platforms,
+          },
+          token: loggedUser.token,
+        }).unwrap();
+
+        setAlert(NotificationMessage("success", "Game Edited Successfully!"));
+
+        //Redirect to the new game Page after 1 seconds
+        //The page needs to reload in order to update the cache
+        setTimeout(() => {
+          navigate(nav_routes.GAME + editGame.short_title);
+          console.log("Change page");
+          navigate(0);
+        }, 1000);
+      } catch (e) {
+        if (e.hasOwnProperty("data.message")) {
+          setAlert(NotificationMessage("error", e.data.message));
+        } else {
+          console.log(error);
+          setAlert(NotificationMessage("error", "Error. Game Edit failed!"));
+        }
+      }
     }
   };
   return (

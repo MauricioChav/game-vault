@@ -5,8 +5,6 @@ import { nav_routes } from "../../routes";
 import "./ImageSlide.css";
 
 function SlideGame(props) {
-  if(props.info.cover_image === "")
-  console.log(props.info.short_title, props.info.cover_image);
   return (
     <div className="col-2">
     <NavLink to={nav_routes.GAME + props.info.short_title}>

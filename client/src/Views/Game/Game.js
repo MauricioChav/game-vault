@@ -33,7 +33,7 @@ function Game(props) {
     console.log("Error", error);
     return errorContent;
   } else if (isLoading) {
-    return <h1>Getting Game data...</h1>;
+    return <Card><h1>Getting Game data...</h1></Card>;
   }
 
   //Game dev validation
@@ -130,6 +130,19 @@ function Game(props) {
                   </td>
                   <td>
                     <h4>{moment(game.release_date).format("MMMM DD, YYYY")}</h4>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h4 style={{ fontWeight: "bold" }}>Platforms:</h4>
+                  </td>
+                  <td>
+                    <h4>
+                      {game.platforms.map(
+                        (platform, index) =>
+                        platform + (index + 1 < game.platforms.length ? ", " : "")
+                      )}
+                    </h4>
                   </td>
                 </tr>
                 <tr>

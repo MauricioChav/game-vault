@@ -67,12 +67,12 @@ function SignUp() {
 
       //Register the user in the localStorage
       localStorage.setItem("user", JSON.stringify(newUser));
-      setAlert(NotificationMessage("success", "Logged in succesfully!"));
-
-      //Redirect to home
-      navigate(nav_routes.HOME);
-
       setAlert(NotificationMessage("success", "User registered succesfully!"));
+
+      //Redirect to home after 1 seconds
+      setTimeout(() => {
+        navigate(nav_routes.HOME);
+      }, 1000);
     } catch (e) {
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));

@@ -34,8 +34,10 @@ function Login() {
       localStorage.setItem("user", JSON.stringify(logUser));
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
 
-      //Redirect to home
-      navigate(nav_routes.HOME);
+      //Redirect to home after 1 seconds
+      setTimeout(() => {
+        navigate(nav_routes.HOME);
+      }, 1000);
     } catch (e) {
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));
@@ -52,10 +54,10 @@ function Login() {
       <form className="user-form" onSubmit={loginHandler}>
         <h3 className="form-title">Log into your account</h3>
         <label>Email:</label>
-        <input type="email" id="email" name="email" required={true}/>
+        <input type="email" id="email" name="email" required={true} />
 
         <label>Password:</label>
-        <input type="password" id="password" name="password" required={true}/>
+        <input type="password" id="password" name="password" required={true} />
 
         <button className="submit-btn" type="submit">
           Log in
