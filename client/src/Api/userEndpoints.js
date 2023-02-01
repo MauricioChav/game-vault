@@ -51,19 +51,28 @@ const userEndpoints = apiSlice.injectEndpoints({
     }),
 
     getOwnUser: builder.query({
-        query: (user) => ({
-            url: "/users/me",
-            headers: {
-                Authorization: "Bearer " + user.token,
-              },
-        }) 
+      query: (user) => ({
+        url: "/users/me",
+        headers: {
+          Authorization: "Bearer " + user.token,
+        },
       }),
+    }),
 
     getUsers: builder.query({
       query: () => "/users",
     }),
   }),
-  overrideExisting: false
+  overrideExisting: false,
 });
 
-export const {useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation, useValidateUserMutation, useDeleteDBTokenMutation, useGetUserQuery, useGetOwnUserQuery, useGetUsersQuery} = userEndpoints;
+export const {
+  useCreateUserMutation,
+  useLoginUserMutation,
+  useLogoutUserMutation,
+  useValidateUserMutation,
+  useDeleteDBTokenMutation,
+  useGetUserQuery,
+  useGetOwnUserQuery,
+  useGetUsersQuery,
+} = userEndpoints;

@@ -2,6 +2,7 @@ const express = require("express");
 const Game = require("../models/game");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/developerValidation");
+const User = require("../models/user");
 const router = new express.Router();
 
 //Games router
@@ -53,13 +54,33 @@ router.get("/games/", async (req, res) => {
 });
 
 //GET DEVELOPER GAMES
-//NOT USED AT THE MOMENT
-router.get("/games/dev/:developer_id", async (req, res) => {
-  const developer_id = req.params.developer_id;
+router.get("/games/dev/:developer_name", async (req, res) => {
+  const user_name = req.params.developer_name;
 
+  //Get the developer info
   try {
-    const games = await Game.find({ developer_id });
-    res.send(games);
+    const user = await User.findOne({ user_name });
+
+    //Validate if the user exist and is a developer
+    if (!user || (user && user.user_type !== 1)) {
+      return res.status(404).send();
+    }
+
+    //Get games with developer_id
+    const developer_id = user._id;
+
+    try {
+      const games = await Game.find({ developer_id });
+      res.send({
+        user: {
+          _id: developer_id,
+          legal_name: user.legal_name,
+        },
+        games,
+      });
+    } catch (e) {
+      res.status(500).send();
+    }
   } catch (e) {
     res.status(500).send();
   }
@@ -70,7 +91,10 @@ router.get("/games/:short_title", async (req, res) => {
   const short_title = req.params.short_title;
 
   try {
-    const game = await Game.findOne({ short_title }).populate("developer_id", "_id user_name legal_name");
+    const game = await Game.findOne({ short_title }).populate(
+      "developer_id",
+      "_id user_name legal_name"
+    );
 
     if (!game) {
       return res.status(404).send();
@@ -84,7 +108,6 @@ router.get("/games/:short_title", async (req, res) => {
 
 //UPDATE GAME
 router.patch("/games/:id", auth, async (req, res) => {
-
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "title",
@@ -109,7 +132,7 @@ router.patch("/games/:id", auth, async (req, res) => {
   try {
     const game = await Game.findOne({
       _id: req.params.id,
-      developer_id: req.user._id
+      developer_id: req.user._id,
     });
 
     if (!game) {
@@ -118,7 +141,7 @@ router.patch("/games/:id", auth, async (req, res) => {
 
     updates.forEach((update) => (game[update] = req.body[update]));
     await game.save();
-    
+
     res.send(game);
   } catch (e) {
     res.status(400).send(e);

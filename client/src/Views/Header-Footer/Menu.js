@@ -11,16 +11,14 @@ import "../../App.css";
 function Menu() {
   let location = useLocation();
   let navigate = useNavigate();
-
+  //Dropdown user Menu
+  const ref = useRef(null);
   const [userContent, setUserContent] = useState(<div>NO content</div>);
 
   const [logoutUser] = useLogoutUserMutation();
 
-  //Dropdown user Menu
-  const ref = useRef(null);
-
-  const userMenu = () => {
-    //Show the menu
+  //Open close the menu
+  const openCloseMenu = () => {
     const element = ref.current;
 
     if (element.style.display === "" || element.style.display === "none") {
@@ -30,6 +28,17 @@ function Menu() {
     }
   };
 
+  //Close the menu by clicking an era other than the dropdown
+  const closeMenu = (e) => {
+    const element = ref.current;
+    const parent = ref.current.parentElement;
+
+    if (element && !parent.contains(e.target)) {
+      element.style.display = "none";
+    }
+  };
+
+  //User log in validation
   useEffect(() => {
     async function checkLogin() {
       const logOutHandler = async () => {
@@ -41,27 +50,27 @@ function Menu() {
 
           //Delete the user from the localStorage
           localStorage.removeItem("user");
-          //setAlert(NotificationMessage("success", "Logged in succesfully!"));
 
           //Redirect to home
           navigate(nav_routes.HOME);
         } catch (e) {
-          if (e.hasOwnProperty("data.message")) {
-            //setAlert(NotificationMessage("error", e.data.message));
-          } else {
-            //setAlert(NotificationMessage("error", "Error. Login attempt failed!"));
-          }
+          console.log("Error", e);
         }
       };
 
       if (localStorage.getItem("user") !== null) {
+        document.addEventListener("mousedown", closeMenu);
         //User Loged In
         const user = JSON.parse(localStorage.getItem("user")).user;
         setUserContent(
-          <>
-            <button onClick={userMenu} className="user-info">
+          <div>
+            <button onClick={openCloseMenu} className="user-info">
               <ProfilePicture
-                img={user.hasOwnProperty('img_profile') ? user.img_profile : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"}
+                img={
+                  user.hasOwnProperty("img_profile")
+                    ? user.img_profile
+                    : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
+                }
                 img_title="user_profile_pic"
               />
 
@@ -76,6 +85,7 @@ function Menu() {
                     ? nav_routes.PROFILE_REVIEWER
                     : nav_routes.PROFILE_DEV) + user.user_name
                 }
+                onClick={openCloseMenu}
               >
                 <table>
                   <tbody>
@@ -90,9 +100,27 @@ function Menu() {
               </NavLink>
 
               {user.user_type === 1 && (
+                <>
                 <NavLink
                   className="user-info"
                   to={nav_routes.GAME_EDIT + "new"}
+                  onClick={openCloseMenu}
+                >
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td className="user-info-icon">
+                          <i className="fa-solid fa-plus"></i>
+                        </td>
+                        <td className="user-info-text">Add new Game</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </NavLink>
+                <NavLink
+                  className="user-info"
+                  to={nav_routes.PROFILE_DEV + user.user_name + "/games"}
+                  onClick={openCloseMenu}
                 >
                   <table>
                     <tbody>
@@ -100,16 +128,19 @@ function Menu() {
                         <td className="user-info-icon">
                           <i className="fa-solid fa-gamepad"></i>
                         </td>
-                        <td className="user-info-text">Add new Game</td>
+                        <td className="user-info-text">My Games</td>
                       </tr>
                     </tbody>
                   </table>
                 </NavLink>
+                </>
+                
               )}
 
               <NavLink
                 className="user-info"
                 to={nav_routes.PROFILE_EDIT + user.user_name}
+                onClick={openCloseMenu}
               >
                 <table>
                   <tbody>
@@ -136,7 +167,7 @@ function Menu() {
                 </table>
               </button>
             </div>
-          </>
+          </div>
         );
       } else {
         setUserContent(

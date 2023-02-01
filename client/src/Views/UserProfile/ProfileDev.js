@@ -72,6 +72,7 @@ function ProfileDev(props) {
         <br></br>
         <div className="row">
           {Object.keys(userData.games).length  > 0 ? <ImageSlide title="Latest Releases" type="game" array={userData.games} /> : <h1>This developer has no games registered</h1>}
+          <NavLink to={nav_routes.PROFILE_DEV + userData.user_name + "/games"} className="btn btn-classic"> More Games from {userData.legal_name}</NavLink>
           
         </div>
       </Card>
