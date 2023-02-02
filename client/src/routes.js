@@ -7,5 +7,5 @@ export const nav_routes = {
     REVIEWS: '/reviews/',
     PROFILE_DEV: '/dev/',
     PROFILE_REVIEWER: '/profile/',
-    PROFILE_EDIT: '/users/edit/'
+    PROFILE_EDIT: '/editProfile/'
   }

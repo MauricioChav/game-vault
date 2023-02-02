@@ -48,11 +48,11 @@ function NewReview(props) {
         </div>
 
         <div>
-          <button className="btn btn-small btn-cancel" onClick={() => reviewModalHandler(0)}>
+          <button className="btn btn-small btn-danger" onClick={() => reviewModalHandler(0)}>
             Cancel
           </button>
 
-          <button className="btn btn-small btn-submit" type="submit">
+          <button className="btn btn-small btn-success" type="submit">
             Post review
           </button>
         </div>

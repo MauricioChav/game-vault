@@ -89,7 +89,7 @@ function GameEdit() {
         </Card>
       );
     } else {
-      //Validate if the loggedUser is the game developer
+      //Validate if the loggedUser is the owner game developer
       if (loggedUser.user._id !== game.developer_id._id) {
         navigate(nav_routes.HOME);
       }
@@ -237,7 +237,7 @@ function GameEdit() {
 
       <NotificationCard notification={alert} />
 
-      <form className="game-form" onSubmit={gameHandler}>
+      <form className="large-form" onSubmit={gameHandler}>
         <div className="row fg-space">
           <div className="col-12">
             <h3 className="fg-space">Basic Information</h3>

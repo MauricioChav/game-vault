@@ -28,6 +28,7 @@ const userSchema = mongoose.Schema(
       type: String,
       maxlenght: 30,
       trim: true,
+      default: "",
     },
     email: {
       type: String,
@@ -64,16 +65,19 @@ const userSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
-    description: {
+    about_me: {
       type: String,
+      default: "",
     },
     img_profile: {
       type: String,
       trim: true,
+      default: "",
     },
     img_banner: {
       type: String,
       trim: true,
+      default: "",
     },
     follower_count: {
       type: Number,

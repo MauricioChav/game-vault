@@ -107,7 +107,7 @@ router.get("/games/:short_title", async (req, res) => {
 });
 
 //UPDATE GAME
-router.patch("/games/:id", auth, async (req, res) => {
+router.patch("/games/:id", [auth, typeValidation], async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "title",

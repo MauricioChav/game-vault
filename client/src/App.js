@@ -55,7 +55,7 @@ function App() {
               element={<ProfileDev />}
             />
             <Route
-              path={nav_routes.PROFILE_EDIT + ":name/"}
+              path={nav_routes.PROFILE_EDIT}
               element={<ProfileEdit />}
             />
           </Routes>

@@ -36,6 +36,10 @@ function SignUp() {
         NotificationMessage("error", "The username can't have any white space.")
       );
 
+    //Legal name
+    let legal_name = "";
+    if (userType === 1) legal_name = event.target.elements.legal_name.value;
+
     const password = event.target.elements.password.value;
     const password_confirm = event.target.password_confirm.value;
 
@@ -50,10 +54,6 @@ function SignUp() {
 
     const email = event.target.elements.email.value;
     const birthday = event.target.elements.birthday.value;
-
-    //Legal name
-    let legal_name = "";
-    if (userType === 1) legal_name = event.target.elements.legal_name.value;
 
     try {
       const newUser = await createUser({
@@ -111,7 +111,7 @@ function SignUp() {
         <label>Email:</label>
         <input type="email" id="email" name="email" required={true} />
 
-        <label>Birthday:</label>
+        <label>{userType === 1 ? "Founded" : "Birthday"}:</label>
         <input
           type="date"
           id="birthday"

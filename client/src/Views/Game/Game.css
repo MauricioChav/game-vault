@@ -24,7 +24,7 @@ h4 {
 }
 
 /*GAME FORM*/
-.game-form{
+.large-form{
   margin-top: 40px;
   text-align: left;
 }
@@ -38,11 +38,11 @@ h4 {
   font-weight: bold;
 }
 
-.game-form input{
+.large-form input{
   width: 100%;
 }
 
-.game-form textarea{
+.large-form textarea{
   width: 100%;
   height: 100px;
 }

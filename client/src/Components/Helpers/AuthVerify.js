@@ -8,16 +8,6 @@ import {
   useDeleteDBTokenMutation,
 } from "../../Api/userEndpoints";
 
-//Parse the user/duration token info
-// const parseJwt = (token) => {
-//   try {
-//     const buff = new Buffer.from(token.split(".")[1], "base64");
-//     return JSON.parse(buff.toString("utf-8"));
-//   } catch (e) {
-//     return null;
-//   }
-// };
-
 function AuthVerify() {
   let navigate = useNavigate();
   const [authUser] = useValidateUserMutation();

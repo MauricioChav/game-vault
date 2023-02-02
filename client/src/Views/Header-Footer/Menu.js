@@ -58,6 +58,8 @@ function Menu() {
         }
       };
 
+      //Check. Image only avaiable from the localStorageInfo. Does not update if the image changes while you are logged in
+
       if (localStorage.getItem("user") !== null) {
         document.addEventListener("mousedown", closeMenu);
         //User Loged In
@@ -67,7 +69,7 @@ function Menu() {
             <button onClick={openCloseMenu} className="user-info">
               <ProfilePicture
                 img={
-                  user.hasOwnProperty("img_profile")
+                  user.img_profile !== ""
                     ? user.img_profile
                     : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
                 }
@@ -139,7 +141,7 @@ function Menu() {
 
               <NavLink
                 className="user-info"
-                to={nav_routes.PROFILE_EDIT + user.user_name}
+                to={nav_routes.PROFILE_EDIT}
                 onClick={openCloseMenu}
               >
                 <table>
@@ -172,7 +174,7 @@ function Menu() {
       } else {
         setUserContent(
           <NavLink
-            className="btn btn-small btn-option my-2 my-sm-0"
+            className="btn btn-small btn-primary my-2 my-sm-0"
             to={nav_routes.LOGIN}
           >
             Login &nbsp; <i className="fa-solid fa-arrow-right-to-bracket"></i>

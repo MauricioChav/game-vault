@@ -46,6 +46,18 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
+//LOG OUT FROM ALL SESSIONS
+router.post("/users/logoutAll", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+
+    await req.user.save();
+    res.send();
+  } catch (e) {
+    req.status(500).send();
+  }
+});
+
 //VALIDATE USER
 router.get("/users/validate", auth, async (req, res) => {
   res.send({ message: "User validated correctly" });
@@ -76,19 +88,7 @@ router.post("/users/deletedbtoken", async (req, res) => {
   }
 });
 
-//LOG OUT FROM ALL SESSIONS
-router.post("/users/logoutAll", auth, async (req, res) => {
-  try {
-    req.user.tokens = [];
-
-    await req.user.save();
-    res.send();
-  } catch (e) {
-    req.status(500).send();
-  }
-});
-
-//GET OWN PROFILE. NOT USED AT THE MOMENT
+//GET USER PROFILE
 router.get("/users/me", auth, async (req, res) => {
   res.send(req.user);
 });
@@ -124,38 +124,30 @@ router.get("/users/", auth, async (req, res) => {
 });
 
 //UPDATE USER
-router.patch("/users/:id", async (req, res) => {
-  const _id = req.params.id;
-
+router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "user_name",
     "legal_name",
     "password",
     "birthday",
+    "about_me",
     "img_profile",
     "img_banner",
-    "description",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
 
   if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid updates" });
+    return res.status(400).send({ error: "Invalid updates!" });
   }
 
   try {
-    const user = await User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    updates.forEach((update) => (req.user[update] = req.body[update]));
+    await req.user.save();
 
-    if (!user) {
-      return res.status(404).send(e);
-    }
-
-    res.send(user);
+    res.send(req.user);
   } catch (e) {
     res.status(400).send(e);
   }

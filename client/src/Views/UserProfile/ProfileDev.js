@@ -8,15 +8,19 @@ import { useGetUserQuery } from "../../Api/userEndpoints";
 
 function ProfileDev(props) {
   const route = useParams();
-  const { data: userData, isError, isLoading, error } = useGetUserQuery(route.name);
+  const {
+    data: userData,
+    isError,
+    isLoading,
+    error,
+  } = useGetUserQuery(route.name);
 
   const loggedUser = JSON.parse(localStorage.getItem("user"));
   let loggedId = "";
 
-  if(loggedUser !== null){
+  if (loggedUser !== null) {
     loggedId = loggedUser.user._id;
   }
-  
 
   const errorContent = (
     <Card className="text-center">
@@ -30,7 +34,11 @@ function ProfileDev(props) {
     console.log("Error", error);
     return errorContent;
   } else if (isLoading) {
-    return <Card className="text-center"><h1>Getting User data...</h1></Card>;
+    return (
+      <Card className="text-center">
+        <h1>Getting User data...</h1>
+      </Card>
+    );
   } else if (userData.user_type !== 1) {
     return errorContent;
   }
@@ -42,7 +50,7 @@ function ProfileDev(props) {
         style={{
           backgroundImage:
             `url("` +
-            (userData.hasOwnProperty("img_banner")
+            (userData.img_banner !== ""
               ? userData.img_banner
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKpVdlx3oCcTPIYgI3z67cp-MGupBmA1c7Q&usqp=CAU") +
             `")`,
@@ -54,7 +62,7 @@ function ProfileDev(props) {
           <div className="col-9">
             <ProfilePicture
               img={
-                userData.hasOwnProperty("img_profile")
+                userData.img_profile !== ""
                   ? userData.img_profile
                   : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
               }
@@ -65,15 +73,39 @@ function ProfileDev(props) {
             <h5>{userData.follower_count} followers</h5>
           </div>
           <div className="col-3">
-            {loggedId !== userData._id && <button className="btn btn-small btn-classic">Follow +</button>}
-            {loggedId === userData._id && <NavLink to={nav_routes.PROFILE_EDIT + loggedUser.user.user_name} className="btn btn-small btn-info"><i className="fa-solid fa-gear"></i> &nbsp; Account Settings</NavLink>}
+            {loggedId !== userData._id && (
+              <button className="btn btn-small btn-classic">Follow +</button>
+            )}
+            {loggedId === userData._id && (
+              <NavLink
+                to={nav_routes.PROFILE_EDIT}
+                className="btn btn-small btn-info"
+              >
+                <i className="fa-solid fa-gear"></i> &nbsp; Account Settings
+              </NavLink>
+            )}
           </div>
         </div>
         <br></br>
         <div className="row">
-          {Object.keys(userData.games).length  > 0 ? <ImageSlide title="Latest Releases" type="game" array={userData.games} /> : <h1>This developer has no games registered</h1>}
-          <NavLink to={nav_routes.PROFILE_DEV + userData.user_name + "/games"} className="btn btn-classic"> More Games from {userData.legal_name}</NavLink>
-          
+          {Object.keys(userData.games).length > 0 ? (
+            <>
+              <ImageSlide
+                title="Latest Releases"
+                type="game"
+                array={userData.games}
+              />
+              <NavLink
+                to={nav_routes.PROFILE_DEV + userData.user_name + "/games"}
+                className="btn btn-classic"
+              >
+                {" "}
+                More Games from {userData.legal_name}
+              </NavLink>
+            </>
+          ) : (
+            <h1>This developer has no games registered</h1>
+          )}
         </div>
       </Card>
     </>

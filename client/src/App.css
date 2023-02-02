@@ -151,15 +151,6 @@ nav a:hover {
   text-align: center;
 }
 
-.btn-submit{
-    background-color: #23a60f !important;
-    color: white;
-}
-
-.btn-submit:hover{
-  background-color: #136b05 !important;
-}
-
 .btn-cancel{
     background-color: #c93030 !important;
     color: white !important;
@@ -167,15 +158,6 @@ nav a:hover {
 
 .btn-cancel:hover{
   background-color: #941616 !important;
-}
-
-.btn-option{
-  background-color: #2370eb !important;
-  color: white !important;
-}
-
-.btn-option:hover{
-background-color: #0949b0 !important;
 }
 
 /*Profile Homebar*/
