@@ -90,7 +90,7 @@ router.post("/users/deletedbtoken", async (req, res) => {
 
 //GET USER PROFILE
 router.get("/users/me", auth, async (req, res) => {
-  res.send(req.user);
+  res.send({user: req.user, user_email: req.user.email} );
 });
 
 //GET USER PROFILE

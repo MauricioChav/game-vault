@@ -182,6 +182,7 @@ function GameEdit() {
 
         //Redirect to the new game Page
         navigate(nav_routes.GAME + newGame.short_title);
+        navigate(0);
       } catch (e) {
         if (e.hasOwnProperty("data.message")) {
           setAlert(NotificationMessage("error", e.data.message));
@@ -216,9 +217,8 @@ function GameEdit() {
         //The page needs to reload in order to update the cache
         setTimeout(() => {
           navigate(nav_routes.GAME + editGame.short_title);
-          console.log("Change page");
           navigate(0);
-        }, 1000);
+        }, 800);
       } catch (e) {
         if (e.hasOwnProperty("data.message")) {
           setAlert(NotificationMessage("error", e.data.message));

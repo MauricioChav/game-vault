@@ -58,8 +58,6 @@ function Menu() {
         }
       };
 
-      //Check. Image only avaiable from the localStorageInfo. Does not update if the image changes while you are logged in
-
       if (localStorage.getItem("user") !== null) {
         document.addEventListener("mousedown", closeMenu);
         //User Loged In
@@ -103,40 +101,58 @@ function Menu() {
 
               {user.user_type === 1 && (
                 <>
-                <NavLink
-                  className="user-info"
-                  to={nav_routes.GAME_EDIT + "new"}
-                  onClick={openCloseMenu}
-                >
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td className="user-info-icon">
-                          <i className="fa-solid fa-plus"></i>
-                        </td>
-                        <td className="user-info-text">Add new Game</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </NavLink>
-                <NavLink
-                  className="user-info"
-                  to={nav_routes.PROFILE_DEV + user.user_name + "/games"}
-                  onClick={openCloseMenu}
-                >
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td className="user-info-icon">
-                          <i className="fa-solid fa-gamepad"></i>
-                        </td>
-                        <td className="user-info-text">My Games</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </NavLink>
+                  <NavLink
+                    className="user-info"
+                    to={nav_routes.GAME_EDIT + "new"}
+                    onClick={openCloseMenu}
+                  >
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td className="user-info-icon">
+                            <i className="fa-solid fa-plus"></i>
+                          </td>
+                          <td className="user-info-text">Add new Game</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </NavLink>
+                  <NavLink
+                    className="user-info"
+                    to={nav_routes.PROFILE_DEV + user.user_name + "/games"}
+                    onClick={openCloseMenu}
+                  >
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td className="user-info-icon">
+                            <i className="fa-solid fa-gamepad"></i>
+                          </td>
+                          <td className="user-info-text">My Games</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </NavLink>
                 </>
-                
+              )}
+
+              {user.user_type === 0 && (
+                <NavLink
+                  className="user-info"
+                  to={nav_routes.PROFILE_REVIEWER + user.user_name}
+                  onClick={openCloseMenu}
+                >
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td className="user-info-icon">
+                          <i className="fa-solid fa-file-pen"></i>
+                        </td>
+                        <td className="user-info-text">My Reviews</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </NavLink>
               )}
 
               <NavLink

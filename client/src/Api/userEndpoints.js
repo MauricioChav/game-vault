@@ -28,6 +28,16 @@ const userEndpoints = apiSlice.injectEndpoints({
       }),
     }),
 
+    logoutAll: builder.mutation({
+      query: (user) => ({
+        url: "/users/logoutAll",
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + user.token,
+        },
+      }),
+    }),
+
     validateUser: builder.mutation({
       query: (user) => ({
         url: "/users/validate",
@@ -81,6 +91,7 @@ export const {
   useCreateUserMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
+  useLogoutAllMutation,
   useValidateUserMutation,
   useDeleteDBTokenMutation,
   useGetUserQuery,

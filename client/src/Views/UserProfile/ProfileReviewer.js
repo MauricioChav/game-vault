@@ -1,5 +1,6 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
+import { nav_routes } from "../../routes";
 import Card from "../../Components/Card/Card";
 import ProfilePicture from "../../Components/ProfilePicture/ProfilePicture";
 
@@ -8,7 +9,19 @@ import { useGetUserQuery } from "../../Api/userEndpoints";
 function ProfileReviewer(props) {
   //Get user Profile
   const route = useParams();
-  const { data: userData, isError, isLoading, error } = useGetUserQuery(route.name);
+  const {
+    data: userData,
+    isError,
+    isLoading,
+    error,
+  } = useGetUserQuery(route.name);
+
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+  let loggedId = "";
+
+  if (loggedUser !== null) {
+    loggedId = loggedUser.user._id;
+  }
 
   const errorContent = (
     <Card className="text-center">
@@ -22,7 +35,11 @@ function ProfileReviewer(props) {
     console.log("Error", error);
     return errorContent;
   } else if (isLoading) {
-    return <Card className="text-center"><h1>Getting User data...</h1></Card>;
+    return (
+      <Card className="text-center">
+        <h1>Getting User data...</h1>
+      </Card>
+    );
   } else if (userData.user_type !== 0) {
     return errorContent;
   }
@@ -33,7 +50,11 @@ function ProfileReviewer(props) {
         <div className="row">
           <div className="col-9">
             <ProfilePicture
-              img="https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
+              img={
+                userData.img_profile !== ""
+                  ? userData.img_profile
+                  : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
+              }
               img_title={userData.user_name + "_profile_pic"}
               size={100}
             />
@@ -41,8 +62,21 @@ function ProfileReviewer(props) {
             <h5>{userData.follower_count} followers</h5>
           </div>
           <div className="col-3">
-            <button className="btn btn-small">Follow +</button>
+          {loggedId !== userData._id && (
+              <button className="btn btn-small btn-classic">Follow +</button>
+            )}
+            {loggedId === userData._id && (
+              <NavLink
+                to={nav_routes.PROFILE_EDIT}
+                className="btn btn-small btn-info"
+              >
+                <i className="fa-solid fa-gear"></i> &nbsp; Account Settings
+              </NavLink>
+            )}
           </div>
+        </div>
+        <div className="row">
+          <p className="profile-about">{userData.about_me}</p>
         </div>
       </Card>
     </>

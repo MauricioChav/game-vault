@@ -52,7 +52,7 @@ const GameList = () => {
           array={data.games}
         />
       )}
-      <NavLink to={nav_routes.PROFILE_DEV + route.name} className="btn btn-classic"> Back to {data.user.legal_name} Profile</NavLink>
+      <NavLink to={nav_routes.PROFILE_DEV + route.name} className="btn btn-classic"> Back to {data.user.legal_name.endsWith("s") ? data.user.legal_name + "'" : data.user.legal_name + "'s"} Profile</NavLink>
     </Card>
   );
 };

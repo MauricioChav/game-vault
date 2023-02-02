@@ -206,3 +206,8 @@ nav a:hover {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.profile-about{
+  font-size: 20px;
+  padding-top: 40px;
+}

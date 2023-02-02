@@ -48,7 +48,7 @@ function SignUp() {
       return setAlert(
         NotificationMessage(
           "error",
-          "Please verify that the passwords fields are the same"
+          "Please verify that the password fields are the same"
         )
       );
 
@@ -69,10 +69,8 @@ function SignUp() {
       localStorage.setItem("user", JSON.stringify(newUser));
       setAlert(NotificationMessage("success", "User registered succesfully!"));
 
-      //Redirect to home after 1 seconds
-      setTimeout(() => {
-        navigate(nav_routes.HOME);
-      }, 1000);
+      //Redirect to home
+      navigate(nav_routes.HOME);
     } catch (e) {
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));

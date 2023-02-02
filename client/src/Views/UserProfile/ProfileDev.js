@@ -86,7 +86,9 @@ function ProfileDev(props) {
             )}
           </div>
         </div>
-        <br></br>
+        <div className="row">
+          <p className="profile-about">{userData.about_me}</p>
+        </div>
         <div className="row">
           {Object.keys(userData.games).length > 0 ? (
             <>

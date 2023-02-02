@@ -35,9 +35,7 @@ function Login() {
       setAlert(NotificationMessage("success", "Logged in succesfully!"));
 
       //Redirect to home after 1 seconds
-      setTimeout(() => {
-        navigate(nav_routes.HOME);
-      }, 1000);
+      navigate(nav_routes.HOME);
     } catch (e) {
       if (e.hasOwnProperty("data.message")) {
         setAlert(NotificationMessage("error", e.data.message));
