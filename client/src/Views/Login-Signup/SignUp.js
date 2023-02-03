@@ -12,7 +12,7 @@ import { useCreateUserMutation } from "../../Api/userEndpoints";
 import "./Login-Signup.css";
 
 function SignUp() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [createUser] = useCreateUserMutation();
   const [alert, setAlert] = useState({});
 

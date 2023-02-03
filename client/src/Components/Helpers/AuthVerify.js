@@ -9,11 +9,11 @@ import {
 } from "../../Api/userEndpoints";
 
 function AuthVerify() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [authUser] = useValidateUserMutation();
   const [logoutUser] = useDeleteDBTokenMutation();
 
-  let location = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
     //Validate token with auth

@@ -17,7 +17,7 @@ import {
 
 function GameEdit() {
   //Set basic variables
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [createGame] = useCreateGameMutation();
   const [updateGame] = useUpdateGameMutation();
   const [alert, setAlert] = useState({});

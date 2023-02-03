@@ -9,8 +9,8 @@ import { useLogoutUserMutation } from "../../Api/userEndpoints";
 import "../../App.css";
 
 function Menu() {
-  let location = useLocation();
-  let navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
   //Dropdown user Menu
   const ref = useRef(null);
   const [userContent, setUserContent] = useState(<div>NO content</div>);
