@@ -126,6 +126,12 @@ const gameSchema = mongoose.Schema(
 gameSchema.set("toJSON", { getters: true, virtuals: true });
 gameSchema.set("toObject", { getters: true, virtuals: true });
 
+gameSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "game_id",
+});
+
 //Hide unimportant information in the response
 gameSchema.methods.toJSON = function () {
   const game = this;

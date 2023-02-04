@@ -1,11 +1,9 @@
 const express = require("express");
 const Game = require("../models/game");
+const User = require("../models/user");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/developerValidation");
-const User = require("../models/user");
 const router = new express.Router();
-
-//Games router
 
 //CREATE GAME
 router.post("/games/", [auth, typeValidation], async (req, res) => {
@@ -44,6 +42,7 @@ router.post("/games/", [auth, typeValidation], async (req, res) => {
 });
 
 //GET ALL GAMES
+//Check for populate implementation
 router.get("/games/", async (req, res) => {
   try {
     const games = await Game.find({});

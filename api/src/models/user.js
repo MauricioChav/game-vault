@@ -96,6 +96,12 @@ userSchema.virtual("games", {
   foreignField: "developer_id",
 });
 
+userSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "reviewer_id",
+});
+
 //Hide important information in the response
 userSchema.methods.toJSON = function () {
   const user = this;

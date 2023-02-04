@@ -4,6 +4,7 @@ const cors = require('cors');
 require("./db/mongoose");
 const userRouter = require('./routers/user');
 const gameRouter = require('./routers/game');
+const reviewRouter = require('./routers/review');
 
 //Express Port
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 //App Routers
 app.use(userRouter);
 app.use(gameRouter);
+app.use(reviewRouter);
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
