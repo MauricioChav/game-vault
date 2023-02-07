@@ -1,46 +1,39 @@
 import React from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { nav_routes } from "../../routes";
+import { useParams } from "react-router-dom";
 
 import Card from "../../Components/Card/Card";
-import ReviewBox from "../../Components/ReviewComponents/ReviewBox";
+import ReviewWall from "../../Components/ReviewComponents/ReviewsWall";
 import NewReview from "../../Components/ReviewComponents/NewReview";
 
-import GameTableTest from "../../DB/GameTableTest";
-import ReviewTableTest from "../../DB/ReviewTableTest";
+import { useGetGameQuery } from "../../Api/gameEndpoints";
 
 function Reviews() {
   const route = useParams();
-  const game_info = GameTableTest.find((o) => o.short_title === route.name);
-  const game_reviews = ReviewTableTest.filter(
-    (o) => o.game_id === game_info._id
+  const { data: game, isError, isLoading, error } = useGetGameQuery(route.name);
+
+  const errorContent = (
+    <Card className="text-center">
+      <h1 className="t-center" style={{ marginTop: "20px" }}>
+        Game not found!
+      </h1>
+    </Card>
   );
+
+  if (isError) {
+    console.log("Error", error);
+    return errorContent;
+  } else if (isLoading) {
+    return (
+      <Card>
+        <h1>Getting Game reviews...</h1>
+      </Card>
+    );
+  }
 
   return (
     <Card>
-      <div className="row">
-        <div className="col-9">
-          <h1>{game_info.title} reviews</h1>
-        </div>
-        <div className="col-3">
-          <NavLink
-            to={nav_routes.GAME + game_info.short_title}
-            className="btn btn-small"
-          >
-            Back to game page
-          </NavLink>
-        </div>
-      </div>
-
       <NewReview />
-      {game_reviews.length !== 0 ? (
-        game_reviews.map((review) => <ReviewBox key={review._id} review_info={review} />)
-      ) : (
-        <h5>
-          Currently there are no reviews for this game. Be te first one to
-          review it!
-        </h5>
-      )}
+      <ReviewWall game_id={game._id} short_title={game.short_title} />
     </Card>
   );
 }

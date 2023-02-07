@@ -5,7 +5,7 @@ import moment from "moment";
 
 import Card from "../../Components/Card/Card";
 import ImageSlide from "../../Components/ImageSlide/ImageSlide";
-// import ReviewBox from "../../Components/ReviewComponents/ReviewBox";
+import ReviewWall from "../../Components/ReviewComponents/ReviewsWall";
 import NewReview from "../../Components/ReviewComponents/NewReview";
 
 import "./Game.css";
@@ -33,7 +33,11 @@ function Game(props) {
     console.log("Error", error);
     return errorContent;
   } else if (isLoading) {
-    return <Card><h1>Getting Game data...</h1></Card>;
+    return (
+      <Card>
+        <h1>Getting Game data...</h1>
+      </Card>
+    );
   }
 
   //Game dev validation
@@ -61,33 +65,6 @@ function Game(props) {
         </>
       );
 
-  //Reviews
-  // let reviewContent = <div></div>;
-
-  // if (game_reviews.length !== 0) {
-  //   reviewContent = (
-  //     <>
-  //       {game_reviews.map((review) => (
-  //         <ReviewBox key={review._id} review_info={review} />
-  //       ))}
-
-  //       <NavLink
-  //         to={nav_routes.REVIEWS + data.short_title}
-  //         className="btn btn-big"
-  //       >
-  //         See all reviews
-  //       </NavLink>
-  //     </>
-  //   );
-  // } else {
-  //   reviewContent = (
-  //     <h5>
-  //       Currently there are no reviews for this game. Be te first one to review
-  //       it!
-  //     </h5>
-  //   );
-  // }
-
   return (
     <Card>
       <div className="container">
@@ -95,7 +72,11 @@ function Game(props) {
           <div className="col-5">
             <img
               className="cover-img"
-              src={game.cover_image === "" || game.cover_image === undefined ? "https://vglist.co/packs/media/images/no-cover-369ad8f0ea82dde5923c942ba1a26482.png": game.cover_image}
+              src={
+                game.cover_image === "" || game.cover_image === undefined
+                  ? "https://vglist.co/packs/media/images/no-cover-369ad8f0ea82dde5923c942ba1a26482.png"
+                  : game.cover_image
+              }
               alt={game.short_title}
             ></img>
           </div>
@@ -140,7 +121,8 @@ function Game(props) {
                     <h4>
                       {game.platforms.map(
                         (platform, index) =>
-                        platform + (index + 1 < game.platforms.length ? ", " : "")
+                          platform +
+                          (index + 1 < game.platforms.length ? ", " : "")
                       )}
                     </h4>
                   </td>
@@ -234,7 +216,7 @@ function Game(props) {
           <div className="col-12">
             <h2>Reviews:</h2>
             <NewReview />
-            {/* {reviewContent} */}
+            <ReviewWall game_id={game._id} short_title={game.short_title}/>
           </div>
         </div>
       </div>
