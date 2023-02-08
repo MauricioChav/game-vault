@@ -83,7 +83,8 @@ const userSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-  }
+  },
+  { timestamps: true }
 );
 
 //Schema options allow to bring the virtuals into the response automatically. They also allow for deep population of getters

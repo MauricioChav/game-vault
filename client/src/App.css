@@ -160,6 +160,22 @@ nav a:hover {
   background-color: #941616 !important;
 }
 
+/*Badges*/
+.badge-light-success {
+  color: #28a745;
+  background-color: #e2e4e6;
+}
+
+.badge-light-secondary {
+  color: #6c757d;
+  background-color: #e2e4e6;
+}
+
+.badge-light-danger {
+  color: #dc3545;
+  background-color: #e2e4e6;
+}
+
 /*Profile Homebar*/
 .user-dropdown{
   display: none;

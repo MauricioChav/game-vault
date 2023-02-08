@@ -99,26 +99,27 @@ const gameSchema = mongoose.Schema(
     virtuals: {
       scores: {
         get() {
-          if(this.review_count > 0){
+          if (this.review_count > 0) {
             return {
-              score_general: this.sum_score_general/this.review_count,
-              score_gameplay: this.sum_score_gameplay/this.review_count,
-              score_graphics: this.sum_score_graphics/this.review_count,
-              score_sound: this.sum_score_sound/this.review_count,
-              score_narrative: this.sum_score_narrative/this.review_count,
-            }
-          }else{
-            return{
+              score_general: this.sum_score_general / this.review_count,
+              score_gameplay: this.sum_score_gameplay / this.review_count,
+              score_graphics: this.sum_score_graphics / this.review_count,
+              score_sound: this.sum_score_sound / this.review_count,
+              score_narrative: this.sum_score_narrative / this.review_count,
+            };
+          } else {
+            return {
               score_general: 0,
               score_gameplay: 0,
               score_graphics: 0,
               score_sound: 0,
-              score_narrative: 0
-            }
+              score_narrative: 0,
+            };
           }
         },
       },
     },
+    timestamps: true,
   }
 );
 

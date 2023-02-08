@@ -34,7 +34,7 @@ function ReviewWall(props) {
 
         <NavLink
           to={nav_routes.REVIEWS + props.short_title}
-          className="btn btn-big"
+          className="btn btn-classic btn-big"
         >
           See all reviews
         </NavLink>

@@ -8,8 +8,8 @@
   border: 1px black solid;
 }
 
-.review-body{
-    padding: 15px 0;
+.review-body {
+  padding: 15px 0;
 }
 
 .new-review-button {
@@ -31,10 +31,18 @@
   height: 100px;
 }
 
-.score-selectors{
-    margin-top: 20px;
+.score-selectors {
+  margin-top: 20px;
 }
 
-.selector{
-    margin: 0 10px;
+.selector {
+  margin: 0 10px;
+}
+
+.review-score-table{
+  width: 100%;
+}
+
+.user-title{
+  margin: 0;
 }

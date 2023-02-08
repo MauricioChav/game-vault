@@ -29,7 +29,7 @@ function NewReview(props) {
     return (
       <div>
         <button
-          className="new-review-button"
+          className="btn btn-classic new-review-button"
           onClick={() => reviewModalHandler(1)}
         >
           Write a review
