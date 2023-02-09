@@ -15,6 +15,7 @@ const reviewSchema = mongoose.Schema(
     review_body: {
       type: String,
       required: true,
+      maxLength: 500
     },
     recommendation: {
       type: Number,
@@ -39,32 +40,32 @@ const reviewSchema = mongoose.Schema(
     },
     score_general: {
       type: Number,
-      min: 1,
-      max: 10,
+      min: 0.5,
+      max: 5,
       default: 1,
     },
     score_gameplay: {
       type: Number,
-      min: 1,
-      max: 10,
+      min: 0.5,
+      max: 5,
       default: 1,
     },
     score_graphics: {
       type: Number,
-      min: 1,
-      max: 10,
+      min: 0.5,
+      max: 5,
       default: 1,
     },
     score_sound: {
       type: Number,
-      min: 1,
-      max: 10,
+      min: 0.5,
+      max: 5,
       default: 1,
     },
     score_narrative: {
       type: Number,
-      min: 1,
-      max: 10,
+      min: 0.5,
+      max: 5,
       default: 1,
     },
   },

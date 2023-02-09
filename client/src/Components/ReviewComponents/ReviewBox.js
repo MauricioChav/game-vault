@@ -6,6 +6,7 @@ import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import "./ReviewComponents.css";
 
 import moment from "moment";
+import { Rating } from "@mui/material";
 
 function ReviewBox(props) {
   let recommendedMessage = <h6>Recommended</h6>;
@@ -44,7 +45,7 @@ function ReviewBox(props) {
   return (
     <div className="mainBox">
       <div className="row">
-        <div className="short-description col-9">
+        <div className="short-description col-8">
           <NavLink
             to={
               nav_routes.PROFILE_REVIEWER +
@@ -76,7 +77,7 @@ function ReviewBox(props) {
             <h6 className="badge badge-danger">Contains Spoilers</h6>
           )}
         </div>
-        <div className="col-3">
+        <div className="col-4">
           <div>
             <table className="review-score-table">
               <tbody>
@@ -84,50 +85,65 @@ function ReviewBox(props) {
                   <td>
                     <h5 style={{ textAlign: "left" }}>General Score:</h5>
                   </td>
-                  <td>
-                    <h5 style={{ textAlign: "right" }}>
-                      {props.review_info.score_general}
-                    </h5>
+                  <td style={{textAlign: "right"}}>
+                    <Rating
+                      name="score_general"
+                      precision={0.5}
+                      value={props.review_info.score_general}
+                      readOnly
+                    />
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <h6 style={{ textAlign: "left" }}>Gameplay:</h6>
                   </td>
-                  <td>
-                    <h6 style={{ textAlign: "right" }}>
-                      {props.review_info.score_gameplay}
-                    </h6>
+                  <td style={{textAlign: "right"}}>
+                    <Rating
+                      name="score_general"
+                      precision={0.5}
+                      value={props.review_info.score_gameplay}
+                      readOnly
+                    />
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <h6 style={{ textAlign: "left" }}>Graphics:</h6>
                   </td>
-                  <td>
-                    <h6 style={{ textAlign: "right" }}>
-                      {props.review_info.score_graphics}
-                    </h6>
+                  <td style={{textAlign: "right"}}>
+                    <Rating
+                      name="score_general"
+                      precision={0.5}
+                      value={props.review_info.score_graphics}
+                      readOnly
+                    />
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <h6 style={{ textAlign: "left" }}>Sound/Music:</h6>
                   </td>
-                  <td>
-                    <h6 style={{ textAlign: "right" }}>
-                      {props.review_info.score_sound}
-                    </h6>
+                  <td style={{textAlign: "right"}}>
+                    <Rating
+                      name="score_general"
+                      precision={0.5}
+                      value={props.review_info.score_sound}
+                      readOnly
+                    />
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <h6 style={{ textAlign: "left" }}>Narrative:</h6>
                   </td>
-                  <td>
-                    <h6 style={{ textAlign: "right" }}>
-                      {props.review_info.score_narrative}
-                    </h6>
+                  <td style={{textAlign: "right"}}>
+                    <Rating
+                      name="score_general"
+                      precision={0.5}
+                      value={props.review_info.score_narrative}
+                      readOnly
+                    />
                   </td>
                 </tr>
               </tbody>

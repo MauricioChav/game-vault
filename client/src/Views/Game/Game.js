@@ -13,6 +13,14 @@ import "./Game.css";
 import { useGetGameQuery } from "../../Api/gameEndpoints";
 
 function Game(props) {
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+  //Validate user type if the user is loggedIn
+  let userType = -1;
+  if (loggedUser !== null) {
+    userType = loggedUser.user.user_type;
+  }
+
   const route = useParams();
   const {
     data: game,
@@ -41,7 +49,6 @@ function Game(props) {
   }
 
   //Game dev validation
-  const loggedUser = JSON.parse(localStorage.getItem("user"));
   let editGameContent = (
     <div className="col-12">
       <h2 className="game-title">{game.title}</h2>
@@ -215,8 +222,19 @@ function Game(props) {
 
           <div className="col-12">
             <h2>Reviews:</h2>
-            <NewReview />
-            <ReviewWall game_id={game._id} short_title={game.short_title}/>
+            {loggedUser !== null && userType === 0 && <NewReview game_id={game._id}/>}
+            {loggedUser === null && (
+
+                <NavLink
+                  to={nav_routes.LOGIN}
+                  className="btn btn-primary btn-big fg-space"
+                >
+                  Login to create a review
+                </NavLink>
+
+            )}
+
+            <ReviewWall game_id={game._id} short_title={game.short_title} />
           </div>
         </div>
       </div>

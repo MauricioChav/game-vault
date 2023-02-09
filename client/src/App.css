@@ -114,6 +114,10 @@ nav a:hover {
 }
 
 /*General styles*/
+.i-checkbox{
+  width: auto !important;
+  margin-right:10px;
+}
 
 .gray-round-border {
   border: solid #c2c2c2 2px;
