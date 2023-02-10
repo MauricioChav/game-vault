@@ -4,7 +4,7 @@ import { nav_routes } from "../../routes";
 
 import Card from "../../Components/Card/Card";
 import ReviewWall from "../../Components/ReviewComponents/ReviewsWall";
-import NewReview from "../../Components/ReviewComponents/NewReview";
+import NewReview from "../../Components/ReviewComponents/ReviewForm";
 
 import { useGetGameQuery } from "../../Api/gameEndpoints";
 

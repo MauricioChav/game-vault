@@ -23,7 +23,7 @@ function ReviewBox(props) {
 
     case 1:
       recommendedMessage = (
-        <h6 className="badge badge-light-secondary">
+        <h6 className="badge badge-light-secondary" style={{ fontSize: "18px" }}>
           <i className="fa-regular fa-star-half-stroke"></i> Mixed Feelings
         </h6>
       );
@@ -31,7 +31,7 @@ function ReviewBox(props) {
 
     case 2:
       recommendedMessage = (
-        <h6 className="badge badge-light-danger">
+        <h6 className="badge badge-light-danger" style={{ fontSize: "18px" }}>
           <i className="fa-regular fa-star"></i> Not Recommended
         </h6>
       );
@@ -41,6 +41,8 @@ function ReviewBox(props) {
       recommendedMessage = <h6>Recommended</h6>;
       break;
   }
+
+  // console.log(props.review_info);
 
   return (
     <div className="mainBox">
@@ -78,77 +80,75 @@ function ReviewBox(props) {
           )}
         </div>
         <div className="col-4">
-          <div>
-            <table className="review-score-table">
-              <tbody>
-                <tr>
-                  <td>
-                    <h5 style={{ textAlign: "left" }}>General Score:</h5>
-                  </td>
-                  <td style={{textAlign: "right"}}>
-                    <Rating
-                      name="score_general"
-                      precision={0.5}
-                      value={props.review_info.score_general}
-                      readOnly
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h6 style={{ textAlign: "left" }}>Gameplay:</h6>
-                  </td>
-                  <td style={{textAlign: "right"}}>
-                    <Rating
-                      name="score_general"
-                      precision={0.5}
-                      value={props.review_info.score_gameplay}
-                      readOnly
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h6 style={{ textAlign: "left" }}>Graphics:</h6>
-                  </td>
-                  <td style={{textAlign: "right"}}>
-                    <Rating
-                      name="score_general"
-                      precision={0.5}
-                      value={props.review_info.score_graphics}
-                      readOnly
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h6 style={{ textAlign: "left" }}>Sound/Music:</h6>
-                  </td>
-                  <td style={{textAlign: "right"}}>
-                    <Rating
-                      name="score_general"
-                      precision={0.5}
-                      value={props.review_info.score_sound}
-                      readOnly
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h6 style={{ textAlign: "left" }}>Narrative:</h6>
-                  </td>
-                  <td style={{textAlign: "right"}}>
-                    <Rating
-                      name="score_general"
-                      precision={0.5}
-                      value={props.review_info.score_narrative}
-                      readOnly
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <table className="review-score-table">
+            <tbody>
+              <tr>
+                <td>
+                  <h5 style={{ textAlign: "left" }}>General Score:</h5>
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  <Rating
+                    name="score_general"
+                    precision={0.5}
+                    value={props.review_info.score_general}
+                    readOnly
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h6 style={{ textAlign: "left" }}>Gameplay:</h6>
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  <Rating
+                    name="score_general"
+                    precision={0.5}
+                    value={props.review_info.score_gameplay}
+                    readOnly
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h6 style={{ textAlign: "left" }}>Graphics:</h6>
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  <Rating
+                    name="score_general"
+                    precision={0.5}
+                    value={props.review_info.score_graphics}
+                    readOnly
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h6 style={{ textAlign: "left" }}>Sound/Music:</h6>
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  <Rating
+                    name="score_general"
+                    precision={0.5}
+                    value={props.review_info.score_sound}
+                    readOnly
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h6 style={{ textAlign: "left" }}>Narrative:</h6>
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  <Rating
+                    name="score_general"
+                    precision={0.5}
+                    value={props.review_info.score_narrative}
+                    readOnly
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

@@ -129,10 +129,7 @@ router.patch("/games/:id", [auth, typeValidation], async (req, res) => {
   }
 
   try {
-    const game = await Game.findOne({
-      _id: req.params.id,
-      developer_id: req.user._id,
-    });
+    const game = await Game.findById(req.params.id);
 
     if (!game) {
       return res.status(404).send(e);

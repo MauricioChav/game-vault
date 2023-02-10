@@ -6,7 +6,8 @@ import moment from "moment";
 import Card from "../../Components/Card/Card";
 import ImageSlide from "../../Components/ImageSlide/ImageSlide";
 import ReviewWall from "../../Components/ReviewComponents/ReviewsWall";
-import NewReview from "../../Components/ReviewComponents/NewReview";
+import ReviewForm from "../../Components/ReviewComponents/ReviewForm";
+import ReviewUserBox from "../../Components/ReviewComponents/ReviewUserBox";
 
 import "./Game.css";
 
@@ -221,8 +222,10 @@ function Game(props) {
           </div>
 
           <div className="col-12">
+          
             <h2>Reviews:</h2>
-            {loggedUser !== null && userType === 0 && <NewReview game_id={game._id}/>}
+            {loggedUser !== null && userType === 0 && <ReviewUserBox game_id={game._id}/>}
+            {/* {loggedUser !== null && userType === 0 && <NewReview game_id={game._id}/>} */}
             {loggedUser === null && (
 
                 <NavLink
@@ -234,7 +237,7 @@ function Game(props) {
 
             )}
 
-            <ReviewWall game_id={game._id} short_title={game.short_title} />
+            {/* <ReviewWall game_id={game._id} short_title={game.short_title} /> */}
           </div>
         </div>
       </div>

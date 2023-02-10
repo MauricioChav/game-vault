@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NotificationCard, {
   NotificationMessage,
@@ -7,12 +7,15 @@ import { Rating } from "@mui/material";
 
 import "./ReviewComponents.css";
 
-import { useCreateReviewMutation } from "../../Api/reviewEndpoints";
+import {
+  useCreateReviewMutation,
+  useUpdateReviewMutation,
+} from "../../Api/reviewEndpoints";
 
-function NewReview(props) {
-  console.log(props.game_id);
+function EditReview(props) {
   const navigate = useNavigate();
   const [createReview] = useCreateReviewMutation();
+  const [updateReview] = useUpdateReviewMutation();
   const [alert, setAlert] = useState({});
   const loggedUser = JSON.parse(localStorage.getItem("user"));
 
@@ -23,6 +26,26 @@ function NewReview(props) {
   const [score_sound, setScore_sound] = useState(1);
   const [score_narrative, setScore_narrative] = useState(1);
 
+  //Get Review Data if it is an edit
+  let isEdit = false;
+  let review_data = {};
+
+  if (props.game_edit) {
+    review_data = props.game_edit;
+    isEdit = true;
+  }
+
+  //Set the scores if it is an edit
+  useEffect(() => {
+    if (isEdit) {
+      setScore_general(review_data.score_general);
+      setScore_gameplay(review_data.score_gameplay);
+      setScore_graphics(review_data.score_graphics);
+      setScore_sound(review_data.score_sound);
+      setScore_narrative(review_data.score_narrative);
+    }
+  }, [isEdit]);
+
   //Submit review
   const reviewHandler = async (event) => {
     event.preventDefault();
@@ -32,39 +55,81 @@ function NewReview(props) {
     const recommendation = event.target.elements.recommendation.value;
     const spoilers = event.target.elements.spoilers.checked;
 
-    //Create new review
-    try {
-      await createReview({
-        game_id: props.game_id,
-        data: {
-          review_body,
-          recommendation,
-          spoilers,
-          score_general,
-          score_gameplay,
-          score_graphics,
-          score_sound,
-          score_narrative,
-        },
-        token: loggedUser.token,
-      }).unwrap();
+    //Verify that none of the scores is empty
+    if (
+      score_general === null ||
+      score_gameplay === null ||
+      score_graphics === null ||
+      score_sound === null ||
+      score_narrative === null
+    ) {
+      return setAlert(
+        NotificationMessage("error", "A score rating can't be empty")
+      );
+    }
 
-      //Refresh the page
-      navigate(0);
-    } catch (e) {
-      if (e.hasOwnProperty("data.message")) {
-        setAlert(NotificationMessage("error", e.data.message));
-      } else {
-        setAlert(
-          NotificationMessage("error", "Error. Review Creation failed!")
-        );
+    //Create new review
+    if (!isEdit) {
+      try {
+        await createReview({
+          game_id: props.game_id,
+          data: {
+            review_body,
+            recommendation,
+            spoilers,
+            score_general,
+            score_gameplay,
+            score_graphics,
+            score_sound,
+            score_narrative,
+          },
+          token: loggedUser.token,
+        }).unwrap();
+
+        //Refresh the page
+        navigate(0);
+      } catch (e) {
+        if (e.hasOwnProperty("data.message")) {
+          setAlert(NotificationMessage("error", e.data.message));
+        } else {
+          setAlert(
+            NotificationMessage("error", "Error. Review Creation failed!")
+          );
+        }
+      }
+    } else {
+      //Edit existing review
+      try {
+        await updateReview({
+          id: review_data._id,
+          data: {
+            review_body,
+            recommendation,
+            spoilers,
+            score_general,
+            score_gameplay,
+            score_graphics,
+            score_sound,
+            score_narrative,
+          },
+          token: loggedUser.token,
+        }).unwrap();
+
+        //Refresh the page
+        navigate(0);
+      } catch (e) {
+        if (e.hasOwnProperty("data.message")) {
+          setAlert(NotificationMessage("error", e.data.message));
+        } else {
+          setAlert(NotificationMessage("error", "Error. Review Edit failed!"));
+        }
       }
     }
   };
 
   return (
     <form className="review-form" onSubmit={reviewHandler}>
-      <h3 className="form-title">New review</h3>
+      <h3 className="form-title">{isEdit ? "Edit Review" : "New review"}</h3>
       <NotificationCard notification={alert} />
       <textarea
         className="review-textarea"
@@ -74,6 +139,7 @@ function NewReview(props) {
         required
         id="review_body"
         name="review_body"
+        defaultValue={isEdit ? review_data.review_body : ""}
       ></textarea>
 
       <div className="row score-space">
@@ -170,7 +236,11 @@ function NewReview(props) {
           <div>
             <label>Do you recommend this game? </label>
             <br></br>
-            <select id="recommendation" name="recommendation">
+            <select
+              id="recommendation"
+              name="recommendation"
+              defaultValue={isEdit && review_data.recommendation}
+            >
               <option value={0}>Recommended</option>
               <option value={1}>Mixed Feelings</option>
               <option value={2}>Not Recommended</option>
@@ -185,6 +255,7 @@ function NewReview(props) {
               type="checkbox"
               id="spoilers"
               name="spoilers"
+              defaultChecked={isEdit && review_data.spoilers}
             ></input>
             <label htmlFor="spoilers">Yes</label>
           </div>
@@ -193,11 +264,11 @@ function NewReview(props) {
 
       <div>
         <button className="btn btn-small btn-success" type="submit">
-          Post review
+          {isEdit ? "Update Review" : "Post review"}
         </button>
       </div>
     </form>
   );
 }
 
-export default NewReview;
+export default EditReview;
