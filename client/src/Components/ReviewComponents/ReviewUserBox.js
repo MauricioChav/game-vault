@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 
-import NewReview from "./ReviewForm";
+import ReviewForm from "./ReviewForm";
 import ReviewBox from "./ReviewBox";
 
 import "./ReviewComponents.css";
@@ -8,6 +8,7 @@ import "./ReviewComponents.css";
 import { useVerifyReviewQuery } from "../../Api/reviewEndpoints";
 
 function ReviewUserBox(props) {
+  const [showEditor, setShowEditor] = useState(false);
   const loggedUser = JSON.parse(localStorage.getItem("user"));
 
   const {
@@ -27,18 +28,24 @@ function ReviewUserBox(props) {
   }
 
   //Review Verify Fetched
+  const changeEditorHandler = () => {
+    setShowEditor(!showEditor);
+  };
 
   //Show ReviewBox
   if (review) {
     return (
       <>
-        <ReviewBox key={review._id} review_info={review} />
-        <NewReview game_id={props.game_id} game_edit={review}/>
+        {showEditor ? (
+          <ReviewForm game_id={props.game_id} game_edit={review} onChangeEditor={changeEditorHandler}/>
+        ) : (
+          <ReviewBox key={review._id} review_info={review} readOnly={false} onChangeEditor={changeEditorHandler}/>
+        )}
       </>
     );
   } else {
     //Show NewReview Form
-    return <NewReview game_id={props.game_id} />;
+    return <ReviewForm game_id={props.game_id} />;
   }
 }
 

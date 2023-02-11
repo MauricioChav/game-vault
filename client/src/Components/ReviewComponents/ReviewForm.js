@@ -44,7 +44,7 @@ function EditReview(props) {
       setScore_sound(review_data.score_sound);
       setScore_narrative(review_data.score_narrative);
     }
-  }, [isEdit]);
+  }, [isEdit, review_data.score_general, review_data.score_gameplay, review_data.score_graphics, review_data.score_sound, review_data.score_narrative]);
 
   //Submit review
   const reviewHandler = async (event) => {
@@ -263,6 +263,7 @@ function EditReview(props) {
       </div>
 
       <div>
+        {isEdit && <button className="btn btn-small btn-danger" type="button" onClick={props.onChangeEditor}>Cancel</button>}
         <button className="btn btn-small btn-success" type="submit">
           {isEdit ? "Update Review" : "Post review"}
         </button>

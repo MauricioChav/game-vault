@@ -6,9 +6,15 @@ import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import "./ReviewComponents.css";
 
 import moment from "moment";
-import { Rating } from "@mui/material";
+import { Menu, MenuItem, IconButton, Rating } from "@mui/material";
+import {
+  usePopupState,
+  bindTrigger,
+  bindMenu,
+} from "material-ui-popup-state/hooks";
 
 function ReviewBox(props) {
+  const popupState = usePopupState({ variant: "popover", popupId: "editMenu" });
   let recommendedMessage = <h6>Recommended</h6>;
 
   const recommendation = props.review_info.recommendation;
@@ -23,7 +29,10 @@ function ReviewBox(props) {
 
     case 1:
       recommendedMessage = (
-        <h6 className="badge badge-light-secondary" style={{ fontSize: "18px" }}>
+        <h6
+          className="badge badge-light-secondary"
+          style={{ fontSize: "18px" }}
+        >
           <i className="fa-regular fa-star-half-stroke"></i> Mixed Feelings
         </h6>
       );
@@ -42,12 +51,25 @@ function ReviewBox(props) {
       break;
   }
 
-  // console.log(props.review_info);
+  const editReviewHandler = ()=>{
+    popupState.close();
+    props.onChangeEditor();
+  }
+
+  const deleteReviewHandler = ()=>{
+    popupState.close();
+  }
 
   return (
     <div className="mainBox">
       <div className="row">
-        <div className="short-description col-8">
+        <div
+          className={
+            props.readOnly
+              ? "short-description col-12"
+              : "short-description col-8"
+          }
+        >
           <NavLink
             to={
               nav_routes.PROFILE_REVIEWER +
@@ -69,16 +91,37 @@ function ReviewBox(props) {
           >
             <h4 className="user-title">
               {props.review_info.reviewer_id.user_name}
-            </h4>{" "}
+            </h4>
           </NavLink>
+        </div>
+
+        {!props.readOnly && (
+          <div className="col-4" style={{ textAlign: "right" }}>
+            <IconButton variant="contained" {...bindTrigger(popupState)}>
+              <i className="fa-solid fa-ellipsis-vertical"></i>
+            </IconButton>
+            <Menu {...bindMenu(popupState)}>
+              <MenuItem onClick={editReviewHandler}>
+                <i className="fa-solid fa-pen-to-square"></i> Edit Review
+              </MenuItem>
+              <MenuItem onClick={deleteReviewHandler}>
+                <i className="fa-solid fa-trash"></i>Delete Review
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
+      </div>
+
+      <div className="row">
+        <div className="col-8">
           <h6>{moment(props.review_info.createdAt).format("MMMM DD, YYYY")}</h6>
-          <br></br>
           {recommendedMessage}
           <br></br>
           {props.review_info.spoilers && (
             <h6 className="badge badge-danger">Contains Spoilers</h6>
           )}
         </div>
+
         <div className="col-4">
           <table className="review-score-table">
             <tbody>

@@ -1,23 +1,13 @@
 import React from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { nav_routes } from "../../routes";
+import { useParams } from "react-router-dom";
 
 import Card from "../../Components/Card/Card";
-import ReviewWall from "../../Components/ReviewComponents/ReviewsWall";
-import NewReview from "../../Components/ReviewComponents/ReviewForm";
+import ReviewManager from "../../Components/ReviewComponents/ReviewManager";
 
 import { useGetGameQuery } from "../../Api/gameEndpoints";
 
 function Reviews() {
   const route = useParams();
-  const loggedUser = JSON.parse(localStorage.getItem("user"));
-
-  //Validate user type if the user is loggedIn
-  let userType = -1;
-  if (loggedUser !== null) {
-    userType = loggedUser.user.user_type;
-  }
-
   const { data: game, isError, isLoading, error } = useGetGameQuery(route.name);
 
   const errorContent = (
@@ -41,16 +31,7 @@ function Reviews() {
 
   return (
     <Card>
-      {loggedUser !== null && userType === 0 && <NewReview />}
-      {loggedUser === null && (
-        <NavLink
-          to={nav_routes.LOGIN}
-          className="btn btn-primary btn-big fg-space"
-        >
-          Login to create a review
-        </NavLink>
-      )}
-      <ReviewWall game_id={game._id} short_title={game.short_title} />
+      <ReviewManager game_id={game._id} short_title={game.short_title} allReviewsButton={false}/>
     </Card>
   );
 }

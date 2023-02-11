@@ -147,6 +147,12 @@ nav a:hover {
   margin: 0 10px;
 }
 
+.btn-mini {
+  float: right;
+  font-size: 10px;
+  margin: 0 10px;
+}
+
 .btn-big{
   font-size: 30px;
   padding: 5px 20px;

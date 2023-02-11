@@ -5,9 +5,7 @@ import moment from "moment";
 
 import Card from "../../Components/Card/Card";
 import ImageSlide from "../../Components/ImageSlide/ImageSlide";
-import ReviewWall from "../../Components/ReviewComponents/ReviewsWall";
-import ReviewForm from "../../Components/ReviewComponents/ReviewForm";
-import ReviewUserBox from "../../Components/ReviewComponents/ReviewUserBox";
+import ReviewManager from "../../Components/ReviewComponents/ReviewManager";
 
 import "./Game.css";
 
@@ -15,13 +13,6 @@ import { useGetGameQuery } from "../../Api/gameEndpoints";
 
 function Game(props) {
   const loggedUser = JSON.parse(localStorage.getItem("user"));
-
-  //Validate user type if the user is loggedIn
-  let userType = -1;
-  if (loggedUser !== null) {
-    userType = loggedUser.user.user_type;
-  }
-
   const route = useParams();
   const {
     data: game,
@@ -223,21 +214,8 @@ function Game(props) {
 
           <div className="col-12">
           
-            <h2>Reviews:</h2>
-            {loggedUser !== null && userType === 0 && <ReviewUserBox game_id={game._id}/>}
-            {/* {loggedUser !== null && userType === 0 && <NewReview game_id={game._id}/>} */}
-            {loggedUser === null && (
-
-                <NavLink
-                  to={nav_routes.LOGIN}
-                  className="btn btn-primary btn-big fg-space"
-                >
-                  Login to create a review
-                </NavLink>
-
-            )}
-
-            {/* <ReviewWall game_id={game._id} short_title={game.short_title} /> */}
+            <h1>Reviews:</h1>
+            <ReviewManager game_id={game._id} short_title={game.short_title} allReviewsButton={true}/>
           </div>
         </div>
       </div>
