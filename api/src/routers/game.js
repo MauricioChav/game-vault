@@ -42,7 +42,6 @@ router.post("/games/", [auth, typeValidation], async (req, res) => {
 });
 
 //GET ALL GAMES
-//Check for populate implementation
 router.get("/games/", async (req, res) => {
   try {
     const games = await Game.find({});
@@ -93,7 +92,7 @@ router.get("/games/:short_title", async (req, res) => {
     const game = await Game.findOne({ short_title }).populate(
       "developer_id",
       "_id user_name legal_name"
-    );
+    ).populate("review_count");
 
     if (!game) {
       return res.status(404).send();
@@ -129,10 +128,13 @@ router.patch("/games/:id", [auth, typeValidation], async (req, res) => {
   }
 
   try {
-    const game = await Game.findById(req.params.id);
+    const game = await Game.findOne({
+      _id: req.params.id,
+      developer_id: req.user._id,
+    });
 
     if (!game) {
-      return res.status(404).send(e);
+      return res.status(404).send();
     }
 
     updates.forEach((update) => (game[update] = req.body[update]));

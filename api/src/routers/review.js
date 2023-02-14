@@ -50,10 +50,16 @@ router.post("/reviews/:game_id", [auth, typeValidation], async (req, res) => {
 
     //Create new review
     try {
+      // const game = await Game.findById(game_id);
+
+      // const updatedGame = await Game.findByIdAndUpdate(game_id, {
+      //   sum_score_general: game.sum_score_general + req.body.score_general
+      // });
+
       await review.save();
       res.status(201).send(review);
     } catch (e) {
-      res.status(400).send(e);
+      res.status(400).send();
     }
   } catch (e) {
     res.status(400).send();
@@ -69,6 +75,18 @@ router.get("/reviews/game/:game_id", async (req, res) => {
       "reviewer_id",
       "_id user_name img_profile follower_count"
     );
+    res.send(reviews);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//GET A USER'S REVIEWS
+router.get("/reviews/user/:user_id", async (req, res) => {
+  const reviewer_id = req.params.user_id;
+
+  try {
+    const reviews = await Review.find({ reviewer_id }).populate("game_id");
     res.send(reviews);
   } catch (e) {
     res.status(500).send();
@@ -118,10 +136,13 @@ router.patch("/reviews/:id", [auth, typeValidation], async (req, res) => {
   }
 
   try {
-    const review = await Review.findById(req.params.id);
+    const review = await Review.findOne({
+      _id: req.params.id,
+      reviewer_id: req.user._id,
+    });
 
     if (!review) {
-      return res.status(404).send(e);
+      return res.status(404).send();
     }
 
     updates.forEach((update) => (review[update] = req.body[update]));
@@ -130,6 +151,24 @@ router.patch("/reviews/:id", [auth, typeValidation], async (req, res) => {
     res.send(review);
   } catch (e) {
     res.status(400).send(e);
+  }
+});
+
+//DELETE REVIEW
+router.delete("/reviews/:id", [auth, typeValidation], async (req, res) => {
+  try {
+    const review = await Review.findOneAndDelete({
+      _id: req.params.id,
+      reviewer_id: req.user._id,
+    });
+
+    if (!review) {
+      return res.status(404).send();
+    }
+
+    res.send(review);
+  } catch (e) {
+    res.status(500).send();
   }
 });
 

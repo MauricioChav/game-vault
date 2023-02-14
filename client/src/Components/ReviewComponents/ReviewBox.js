@@ -1,9 +1,14 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, {useState} from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
+import NotificationCard, {
+  NotificationMessage,
+} from "../NotificationCard/NotificationCard";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 
 import "./ReviewComponents.css";
+
+import { useDeleteReviewMutation } from "../../Api/reviewEndpoints";
 
 import moment from "moment";
 import { Menu, MenuItem, IconButton, Rating } from "@mui/material";
@@ -14,6 +19,11 @@ import {
 } from "material-ui-popup-state/hooks";
 
 function ReviewBox(props) {
+  const navigate = useNavigate();
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+  const [deleteReview] = useDeleteReviewMutation();
+  const [alert, setAlert] = useState({});
+
   const popupState = usePopupState({ variant: "popover", popupId: "editMenu" });
   let recommendedMessage = <h6>Recommended</h6>;
 
@@ -51,18 +61,37 @@ function ReviewBox(props) {
       break;
   }
 
-  const editReviewHandler = ()=>{
+  const editReviewHandler = () => {
     popupState.close();
     props.onChangeEditor();
-  }
+  };
 
-  const deleteReviewHandler = ()=>{
+  const deleteReviewHandler = async () => {
     popupState.close();
-  }
+
+    try {
+      await deleteReview({
+        id: props.review_info._id,
+        token: loggedUser.token,
+      }).unwrap();
+
+      //Refresh the page
+      navigate(0);
+    } catch (e) {
+      if (e.hasOwnProperty("data.message")) {
+        setAlert(NotificationMessage("error", e.data.message));
+      } else {
+        setAlert(NotificationMessage("error", "Error. Review Delete failed!"));
+      }
+    }
+  };
 
   return (
     <div className="mainBox">
       <div className="row">
+        <div className="col-12">
+          <NotificationCard notification={alert} />
+        </div>
         <div
           className={
             props.readOnly

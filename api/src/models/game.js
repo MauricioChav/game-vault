@@ -87,13 +87,7 @@ const gameSchema = mongoose.Schema(
       type: Number,
       min: 0,
       default: 0,
-    },
-
-    review_count: {
-      type: Number,
-      min: 0,
-      default: 0,
-    },
+    }
   },
   {
     virtuals: {
@@ -127,10 +121,11 @@ const gameSchema = mongoose.Schema(
 gameSchema.set("toJSON", { getters: true, virtuals: true });
 gameSchema.set("toObject", { getters: true, virtuals: true });
 
-gameSchema.virtual("reviews", {
+gameSchema.virtual("review_count", {
   ref: "Review",
   localField: "_id",
   foreignField: "game_id",
+  count: true,
 });
 
 //Hide unimportant information in the response

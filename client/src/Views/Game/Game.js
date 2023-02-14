@@ -199,6 +199,12 @@ function Game(props) {
                     <h4>{game.scores.score_narrative}</h4>
                   </td>
                 </tr>
+                <tr>
+                  <td colSpan={2}>
+                    <h6>Based on {game.review_count} reviews</h6>
+                  </td>
+                 
+                </tr>
               </tbody>
             </table>
           </div>

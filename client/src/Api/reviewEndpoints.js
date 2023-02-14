@@ -36,6 +36,16 @@ const reviewEndpoints = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    deleteReview: builder.mutation({
+      query: (review) => ({
+        url: `/reviews/${review.id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + review.token,
+        },
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -44,5 +54,6 @@ export const {
   useCreateReviewMutation,
   useGetGameReviewsQuery,
   useVerifyReviewQuery,
-  useUpdateReviewMutation
+  useUpdateReviewMutation,
+  useDeleteReviewMutation,
 } = reviewEndpoints;
