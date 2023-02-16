@@ -11,6 +11,8 @@ import "./Game.css";
 
 import { useGetGameQuery } from "../../Api/gameEndpoints";
 
+import { Rating } from "@mui/material";
+
 function Game(props) {
   const loggedUser = JSON.parse(localStorage.getItem("user"));
   const route = useParams();
@@ -163,8 +165,18 @@ function Game(props) {
                   <td>
                     <h2>Score:</h2>
                   </td>
+
                   <td>
-                    <h2>{game.scores.score_general}</h2>
+                    <Rating
+                      name="score_general"
+                      precision={0.1}
+                      value={game.scores.score_general}
+                      size="large"
+                      readOnly
+                    />
+                  </td>
+                  <td className="t-center">
+                    <h4>{game.scores.score_general}</h4>
                   </td>
                 </tr>
                 <tr>
@@ -172,6 +184,15 @@ function Game(props) {
                     <h4>Gameplay:</h4>
                   </td>
                   <td>
+                    <Rating
+                      name="score_general"
+                      precision={0.1}
+                      value={game.scores.score_gameplay}
+                      size="large"
+                      readOnly
+                    />
+                  </td>
+                  <td className="t-center">
                     <h4>{game.scores.score_gameplay}</h4>
                   </td>
                 </tr>
@@ -180,6 +201,15 @@ function Game(props) {
                     <h4>Graphics:</h4>
                   </td>
                   <td>
+                    <Rating
+                      name="score_general"
+                      precision={0.1}
+                      value={game.scores.score_graphics}
+                      size="large"
+                      readOnly
+                    />
+                  </td>
+                  <td className="t-center">
                     <h4>{game.scores.score_graphics}</h4>
                   </td>
                 </tr>
@@ -188,6 +218,15 @@ function Game(props) {
                     <h4>Sound/Music:</h4>
                   </td>
                   <td>
+                    <Rating
+                      name="score_general"
+                      precision={0.1}
+                      value={game.scores.score_sound}
+                      size="large"
+                      readOnly
+                    />
+                  </td>
+                  <td className="t-center">
                     <h4>{game.scores.score_sound}</h4>
                   </td>
                 </tr>
@@ -196,6 +235,15 @@ function Game(props) {
                     <h4>Narrative:</h4>
                   </td>
                   <td>
+                    <Rating
+                      name="score_general"
+                      precision={0.1}
+                      value={game.scores.score_narrative}
+                      size="large"
+                      readOnly
+                    />
+                  </td>
+                  <td className="t-center">
                     <h4>{game.scores.score_narrative}</h4>
                   </td>
                 </tr>
@@ -203,7 +251,6 @@ function Game(props) {
                   <td colSpan={2}>
                     <h6>Based on {game.review_count} reviews</h6>
                   </td>
-                 
                 </tr>
               </tbody>
             </table>
@@ -219,9 +266,12 @@ function Game(props) {
           </div>
 
           <div className="col-12">
-          
             <h1>Reviews:</h1>
-            <ReviewManager game_id={game._id} short_title={game.short_title} allReviewsButton={true}/>
+            <ReviewManager
+              game_id={game._id}
+              short_title={game.short_title}
+              allReviewsButton={true}
+            />
           </div>
         </div>
       </div>

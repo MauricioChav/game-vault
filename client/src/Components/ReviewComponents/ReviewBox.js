@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
 import NotificationCard, {
@@ -106,7 +106,11 @@ function ReviewBox(props) {
             }
           >
             <ProfilePicture
-              img={props.review_info.reviewer_id.img_profile}
+              img={
+                props.review_info.reviewer_id.img_profile !== "" 
+                  ? props.review_info.reviewer_id.img_profile
+                  : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
+              }
               img_title={
                 props.review_info.reviewer_id.user_name + "_profile_pic"
               }

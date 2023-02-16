@@ -3,6 +3,7 @@ const Review = require("../models/review");
 const Game = require("../models/game");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/reviewerValidation");
+const { default: mongoose } = require("mongoose");
 const router = new express.Router();
 
 //CREATE REVIEW
@@ -48,17 +49,34 @@ router.post("/reviews/:game_id", [auth, typeValidation], async (req, res) => {
       game_id,
     });
 
-    //Create new review
+    //Create new review and update the game score (Using a transaction)
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
-      // const game = await Game.findById(game_id);
+      const game = await Game.findById(game_id);
 
-      // const updatedGame = await Game.findByIdAndUpdate(game_id, {
-      //   sum_score_general: game.sum_score_general + req.body.score_general
-      // });
+      await Game.findByIdAndUpdate(
+        game_id,
+        {
+          sum_score_general: game.sum_score_general + req.body.score_general,
+          sum_score_gameplay: game.sum_score_gameplay + req.body.score_gameplay,
+          sum_score_graphics: game.sum_score_graphics + req.body.score_graphics,
+          sum_score_sound: game.sum_score_sound + req.body.score_sound,
+          sum_score_narrative:
+            game.sum_score_narrative + req.body.score_narrative,
+        },
 
-      await review.save();
+        { session }
+      );
+
+      await review.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
       res.status(201).send(review);
     } catch (e) {
+      await session.abortTransaction();
+      session.endSession();
       res.status(400).send();
     }
   } catch (e) {
@@ -145,10 +163,53 @@ router.patch("/reviews/:id", [auth, typeValidation], async (req, res) => {
       return res.status(404).send();
     }
 
-    updates.forEach((update) => (review[update] = req.body[update]));
-    await review.save();
+    //Update the review and update the game score (Using a transaction)
+    const old_review = review;
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const game = await Game.findById(review.game_id);
 
-    res.send(review);
+      //Substract the old value to the sum and add the new one
+      await Game.findByIdAndUpdate(
+        review.game_id,
+        {
+          sum_score_general:
+            game.sum_score_general -
+            old_review.score_general +
+            req.body.score_general,
+          sum_score_gameplay:
+            game.sum_score_gameplay -
+            old_review.score_gameplay +
+            req.body.score_gameplay,
+          sum_score_graphics:
+            game.sum_score_graphics -
+            old_review.score_graphics +
+            req.body.score_graphics,
+          sum_score_sound:
+            game.sum_score_sound -
+            old_review.score_sound +
+            req.body.score_sound,
+          sum_score_narrative:
+            game.sum_score_narrative -
+            old_review.score_narrative +
+            req.body.score_narrative,
+        },
+
+        { session }
+      );
+
+      updates.forEach((update) => (review[update] = req.body[update]));
+      await review.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
+      res.send(review);
+    } catch (e) {
+      await session.abortTransaction();
+      session.endSession();
+      res.status(400).send();
+    }
   } catch (e) {
     res.status(400).send(e);
   }
@@ -157,7 +218,7 @@ router.patch("/reviews/:id", [auth, typeValidation], async (req, res) => {
 //DELETE REVIEW
 router.delete("/reviews/:id", [auth, typeValidation], async (req, res) => {
   try {
-    const review = await Review.findOneAndDelete({
+    const review = await Review.findOne({
       _id: req.params.id,
       reviewer_id: req.user._id,
     });
@@ -166,7 +227,42 @@ router.delete("/reviews/:id", [auth, typeValidation], async (req, res) => {
       return res.status(404).send();
     }
 
-    res.send(review);
+    //Delete review and update the game score (Using a transaction)
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const game = await Game.findById(review.game_id);
+
+      await Game.findByIdAndUpdate(
+        review.game_id,
+        {
+          sum_score_general: game.sum_score_general - review.score_general,
+          sum_score_gameplay: game.sum_score_gameplay - review.score_gameplay,
+          sum_score_graphics: game.sum_score_graphics - review.score_graphics,
+          sum_score_sound: game.sum_score_sound - review.score_sound,
+          sum_score_narrative:
+            game.sum_score_narrative - review.score_narrative,
+        },
+
+        { session }
+      );
+
+      const deleted_review = await Review.findOneAndDelete(
+        {
+          _id: req.params.id,
+          reviewer_id: req.user._id,
+        },
+        { session }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+      res.send(deleted_review);
+    } catch (e) {
+      await session.abortTransaction();
+      session.endSession();
+      res.status(500).send();
+    }
   } catch (e) {
     res.status(500).send();
   }
