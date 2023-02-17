@@ -11,7 +11,17 @@ import "./ReviewComponents.css";
 import { useDeleteReviewMutation } from "../../Api/reviewEndpoints";
 
 import moment from "moment";
-import { Menu, MenuItem, IconButton, Rating } from "@mui/material";
+import {
+  Menu,
+  MenuItem,
+  IconButton,
+  Rating,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import {
   usePopupState,
   bindTrigger,
@@ -23,6 +33,9 @@ function ReviewBox(props) {
   const loggedUser = JSON.parse(localStorage.getItem("user"));
   const [deleteReview] = useDeleteReviewMutation();
   const [alert, setAlert] = useState({});
+
+  //Delete Alert
+  const [openDelete, setOpenDelete] = React.useState(false);
 
   const popupState = usePopupState({ variant: "popover", popupId: "editMenu" });
   let recommendedMessage = <h6>Recommended</h6>;
@@ -68,7 +81,6 @@ function ReviewBox(props) {
 
   const deleteReviewHandler = async () => {
     popupState.close();
-
     try {
       await deleteReview({
         id: props.review_info._id,
@@ -84,6 +96,14 @@ function ReviewBox(props) {
         setAlert(NotificationMessage("error", "Error. Review Delete failed!"));
       }
     }
+  };
+
+  const handleClickOpen = () => {
+    setOpenDelete(true);
+  };
+
+  const handleClose = () => {
+    setOpenDelete(false);
   };
 
   return (
@@ -107,7 +127,7 @@ function ReviewBox(props) {
           >
             <ProfilePicture
               img={
-                props.review_info.reviewer_id.img_profile !== "" 
+                props.review_info.reviewer_id.img_profile !== ""
                   ? props.review_info.reviewer_id.img_profile
                   : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
               }
@@ -129,19 +149,50 @@ function ReviewBox(props) {
         </div>
 
         {!props.readOnly && (
-          <div className="col-4" style={{ textAlign: "right" }}>
-            <IconButton variant="contained" {...bindTrigger(popupState)}>
-              <i className="fa-solid fa-ellipsis-vertical"></i>
-            </IconButton>
-            <Menu {...bindMenu(popupState)}>
-              <MenuItem onClick={editReviewHandler}>
-                <i className="fa-solid fa-pen-to-square"></i> Edit Review
-              </MenuItem>
-              <MenuItem onClick={deleteReviewHandler}>
-                <i className="fa-solid fa-trash"></i>Delete Review
-              </MenuItem>
-            </Menu>
-          </div>
+          <>
+            <div className="col-4" style={{ textAlign: "right" }}>
+              <IconButton variant="contained" {...bindTrigger(popupState)}>
+                <i className="fa-solid fa-ellipsis-vertical"></i>
+              </IconButton>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={editReviewHandler}>
+                  <i className="fa-solid fa-pen-to-square"></i> Edit Review
+                </MenuItem>
+                <MenuItem onClick={handleClickOpen}>
+                  <i className="fa-solid fa-trash"></i>Delete Review
+                </MenuItem>
+              </Menu>
+            </div>
+
+            <Dialog
+              open={openDelete}
+              onClose={handleClose}
+              aria-labelledby="delete-dialog-title"
+              aria-describedby="delete-dialog-description"
+            >
+              <DialogTitle id="delete-dialog-title">
+                Do you want to delete this review?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="delete-dialog-description">
+                  Deleting the review will permanently remove it. Do you wish to
+                  continue?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <button
+                  className="btn btn-danger"
+                  onClick={deleteReviewHandler}
+                  autoFocus
+                >
+                  Delete
+                </button>
+                <button className="btn btn-classic" onClick={handleClose}>
+                  Cancel
+                </button>
+              </DialogActions>
+            </Dialog>
+          </>
         )}
       </div>
 

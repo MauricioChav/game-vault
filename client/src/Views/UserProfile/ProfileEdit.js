@@ -351,7 +351,6 @@ function ProfileEdit() {
             Log Out
           </button>
         </div>
-        <div></div>
       </div>
     </Card>
   );

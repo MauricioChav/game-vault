@@ -35,6 +35,16 @@ const gameEndpoints = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    deleteGame: builder.mutation({
+      query: (game) => ({
+        url: `/games/${game.id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + game.token,
+        },
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -45,4 +55,5 @@ export const {
   useGetDevGamesQuery,
   useGetGameQuery,
   useUpdateGameMutation,
+  useDeleteGameMutation
 } = gameEndpoints;

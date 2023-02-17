@@ -159,113 +159,129 @@ function Game(props) {
             </table>
             <br></br>
 
-            <table className="score-table">
-              <tbody>
-                <tr>
-                  <td>
-                    <h2>Score:</h2>
-                  </td>
+            {game.scores.score_general <= 0 ? (
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <h4>This game hasn't been reviewed.</h4>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : (
+              <table className="score-table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <h2>Score:</h2>
+                    </td>
 
-                  <td>
-                    <Rating
-                      name="score_general"
-                      precision={0.1}
-                      value={game.scores.score_general}
-                      size="large"
-                      readOnly
-                    />
-                  </td>
-                  <td className="t-center">
-                    <h4>{game.scores.score_general}</h4>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h4>Gameplay:</h4>
-                  </td>
-                  <td>
-                    <Rating
-                      name="score_general"
-                      precision={0.1}
-                      value={game.scores.score_gameplay}
-                      size="large"
-                      readOnly
-                    />
-                  </td>
-                  <td className="t-center">
-                    <h4>{game.scores.score_gameplay}</h4>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h4>Graphics:</h4>
-                  </td>
-                  <td>
-                    <Rating
-                      name="score_general"
-                      precision={0.1}
-                      value={game.scores.score_graphics}
-                      size="large"
-                      readOnly
-                    />
-                  </td>
-                  <td className="t-center">
-                    <h4>{game.scores.score_graphics}</h4>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h4>Sound/Music:</h4>
-                  </td>
-                  <td>
-                    <Rating
-                      name="score_general"
-                      precision={0.1}
-                      value={game.scores.score_sound}
-                      size="large"
-                      readOnly
-                    />
-                  </td>
-                  <td className="t-center">
-                    <h4>{game.scores.score_sound}</h4>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h4>Narrative:</h4>
-                  </td>
-                  <td>
-                    <Rating
-                      name="score_general"
-                      precision={0.1}
-                      value={game.scores.score_narrative}
-                      size="large"
-                      readOnly
-                    />
-                  </td>
-                  <td className="t-center">
-                    <h4>{game.scores.score_narrative}</h4>
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan={2}>
-                    <h6>Based on {game.review_count} reviews</h6>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td>
+                      <Rating
+                        name="score_general"
+                        precision={0.1}
+                        value={game.scores.score_general}
+                        size="large"
+                        readOnly
+                      />
+                    </td>
+                    <td className="t-center">
+                      <h4>{game.scores.score_general}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h4>Gameplay:</h4>
+                    </td>
+                    <td>
+                      <Rating
+                        name="score_general"
+                        precision={0.1}
+                        value={game.scores.score_gameplay}
+                        size="large"
+                        readOnly
+                      />
+                    </td>
+                    <td className="t-center">
+                      <h4>{game.scores.score_gameplay}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h4>Graphics:</h4>
+                    </td>
+                    <td>
+                      <Rating
+                        name="score_general"
+                        precision={0.1}
+                        value={game.scores.score_graphics}
+                        size="large"
+                        readOnly
+                      />
+                    </td>
+                    <td className="t-center">
+                      <h4>{game.scores.score_graphics}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h4>Sound/Music:</h4>
+                    </td>
+                    <td>
+                      <Rating
+                        name="score_general"
+                        precision={0.1}
+                        value={game.scores.score_sound}
+                        size="large"
+                        readOnly
+                      />
+                    </td>
+                    <td className="t-center">
+                      <h4>{game.scores.score_sound}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h4>Narrative:</h4>
+                    </td>
+                    <td>
+                      <Rating
+                        name="score_general"
+                        precision={0.1}
+                        value={game.scores.score_narrative}
+                        size="large"
+                        readOnly
+                      />
+                    </td>
+                    <td className="t-center">
+                      <h4>{game.scores.score_narrative}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <h6>Based on {game.review_count} reviews</h6>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
           </div>
 
-          <div className="col-12 synopsis-div">
-            <h1>Synopsis:</h1>
-            <p>{game.synopsis}</p>
-          </div>
+          {game.synopsis !== "" && (
+            <div className="col-12 synopsis-div">
+              <h1>Synopsis:</h1>
+              <p>{game.synopsis}</p>
+            </div>
+          )}
 
-          <div className="col-12">
-            <ImageSlide title="Gallery" type="gallery" array={game.gallery} />
-          </div>
+          {game.gallery.length > 0 && (
+            <div className="col-12">
+              <ImageSlide title="Gallery" type="gallery" array={game.gallery} />
+            </div>
+          )}
 
-          <div className="col-12">
+          <div className="col-12" style={{marginTop: "20px"}}>
             <h1>Reviews:</h1>
             <ReviewManager
               game_id={game._id}

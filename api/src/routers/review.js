@@ -217,9 +217,10 @@ router.patch("/reviews/:id", [auth, typeValidation], async (req, res) => {
 
 //DELETE REVIEW
 router.delete("/reviews/:id", [auth, typeValidation], async (req, res) => {
+  const _id = req.params.id;
   try {
     const review = await Review.findOne({
-      _id: req.params.id,
+      _id,
       reviewer_id: req.user._id,
     });
 
@@ -249,7 +250,7 @@ router.delete("/reviews/:id", [auth, typeValidation], async (req, res) => {
 
       const deleted_review = await Review.findOneAndDelete(
         {
-          _id: req.params.id,
+          _id,
           reviewer_id: req.user._id,
         },
         { session }

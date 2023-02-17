@@ -6,22 +6,34 @@ import NotificationCard, {
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
-import TagsInput from "react-tagsinput";
-import moment from "moment";
-
 import {
   useGetGameQuery,
   useCreateGameMutation,
   useUpdateGameMutation,
+  useDeleteGameMutation,
 } from "../../Api/gameEndpoints";
+
+import TagsInput from "react-tagsinput";
+import moment from "moment";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 function GameEdit() {
   //Set basic variables
   const navigate = useNavigate();
   const [createGame] = useCreateGameMutation();
   const [updateGame] = useUpdateGameMutation();
+  const [deleteGame] = useDeleteGameMutation();
   const [alert, setAlert] = useState({});
   const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+  //Delete Alert
+  const [openDelete, setOpenDelete] = React.useState(false);
 
   //Genre variables
   const [genreTags, setGenreTags] = useState({ genres: [] });
@@ -96,8 +108,8 @@ function GameEdit() {
     }
   }
 
-  //GAME HANDLER
-  const gameHandler = async (event) => {
+  //EDIT GAME HANDLER
+  const editGameHandler = async (event) => {
     event.preventDefault();
 
     //Asign general data
@@ -229,6 +241,46 @@ function GameEdit() {
       }
     }
   };
+
+  //DELETE GAME HANDLER
+  const deleteGameHandler = async (event) => {
+    event.preventDefault();
+
+    try {
+      await deleteGame({
+        id: game._id,
+        token: loggedUser.token,
+      }).unwrap();
+
+      handleClose();
+      setAlert(NotificationMessage("success", "Game deleted successfully"));
+
+      //Redirect to the games view after some time
+      setTimeout(() => {
+        navigate(nav_routes.PROFILE_DEV + loggedUser.user.user_name + "/games");
+        navigate(0);
+      }, 800);
+    } catch (e) {
+      if (e.hasOwnProperty("data.message")) {
+        setAlert(NotificationMessage("error", e.data.message));
+      } else {
+        setAlert(NotificationMessage("error", "Error. Review Delete failed!"));
+      }
+
+      handleClose();
+    }
+
+    console.log("DELETE GAME");
+  };
+
+  const handleClickOpen = () => {
+    setOpenDelete(true);
+  };
+
+  const handleClose = () => {
+    setOpenDelete(false);
+  };
+
   return (
     <Card className="text-center">
       <h1>
@@ -237,7 +289,7 @@ function GameEdit() {
 
       <NotificationCard notification={alert} />
 
-      <form className="large-form" onSubmit={gameHandler}>
+      <form className="large-form" onSubmit={editGameHandler}>
         <div className="row fg-space">
           <div className="col-12">
             <h3 className="fg-space">Basic Information</h3>
@@ -463,6 +515,49 @@ function GameEdit() {
           {route_title === "new" ? "Create new Game" : "Save Changes"}
         </button>
       </form>
+      <hr></hr>
+
+      {route_title !== "new" && (
+        <>
+          <Dialog
+            open={openDelete}
+            onClose={handleClose}
+            aria-labelledby="delete-dialog-title"
+            aria-describedby="delete-dialog-description"
+          >
+            <DialogTitle id="delete-dialog-title">
+              Do you want to delete the game "{game.title}" ?
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="delete-dialog-description">
+                Deleting the game will permanently remove it from the database
+                alongside all of its reviews. Do you wish to continue?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <button
+                className="btn btn-danger"
+                onClick={deleteGameHandler}
+                autoFocus
+              >
+                Delete
+              </button>
+              <button className="btn btn-classic" onClick={handleClose}>
+                Cancel
+              </button>
+            </DialogActions>
+          </Dialog>
+
+          <div className="row fg-space">
+            <div className="col-12">
+              <h3 className="fg-space">Delete game</h3>
+              <button className="btn btn-danger" onClick={handleClickOpen}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </Card>
   );
 }

@@ -1,8 +1,11 @@
 const express = require("express");
 const Game = require("../models/game");
 const User = require("../models/user");
+const Review = require("../models/review");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/developerValidation");
+const { default: mongoose } = require("mongoose");
+
 const router = new express.Router();
 
 //CREATE GAME
@@ -89,10 +92,9 @@ router.get("/games/:short_title", async (req, res) => {
   const short_title = req.params.short_title;
 
   try {
-    const game = await Game.findOne({ short_title }).populate(
-      "developer_id",
-      "_id user_name legal_name"
-    ).populate("review_count");
+    const game = await Game.findOne({ short_title })
+      .populate("developer_id", "_id user_name legal_name")
+      .populate("review_count");
 
     if (!game) {
       return res.status(404).send();
@@ -147,16 +149,37 @@ router.patch("/games/:id", [auth, typeValidation], async (req, res) => {
 });
 
 //DELETE GAME
-router.delete("/games/:id", auth, async (req, res) => {
+router.delete("/games/:id", [auth, typeValidation], async (req, res) => {
   const _id = req.params.id;
   try {
-    const game = await Game.findByIdAndDelete(_id);
+    const game = await Game.findOne({
+      _id,
+      developer_id: req.user._id,
+    });
 
     if (!game) {
       return res.status(404).send();
     }
 
-    res.send(game);
+    //Delete game and all of its reviews
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const game = await Game.findOneAndDelete(
+        { _id, developer_id: req.user._id },
+        { session }
+      );
+
+      await Review.deleteMany({ game_id: _id }, { session });
+
+      await session.commitTransaction();
+      session.endSession();
+      res.send(game);
+    } catch (e) {
+      await session.abortTransaction();
+      session.endSession();
+      res.status(500).send();
+    }
   } catch (e) {
     res.status(500).send();
   }

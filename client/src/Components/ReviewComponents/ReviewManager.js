@@ -75,12 +75,16 @@ function ReviewManager(props) {
         </NavLink>
       );
     } else {
-      reviewList = (
-        <h5>
-          Currently there are no reviews for this game. Be te first one to
-          review it!
-        </h5>
-      );
+      if (userType !== 1) {
+        reviewList = (
+          <h5>
+            Currently there are no reviews for this game. Be te first one to
+            review it!
+          </h5>
+        );
+      } else {
+        reviewList = <h5>Currently there are no reviews for this game.</h5>;
+      }
     }
   }
 

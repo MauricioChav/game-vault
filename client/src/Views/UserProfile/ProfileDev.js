@@ -92,18 +92,22 @@ function ProfileDev(props) {
         <div className="row">
           {Object.keys(userData.games).length > 0 ? (
             <>
-              <ImageSlide
-                title="Latest Releases"
-                type="game"
-                array={userData.games}
-              />
-              <NavLink
-                to={nav_routes.PROFILE_DEV + userData.user_name + "/games"}
-                className="btn btn-classic"
-              >
-                {" "}
-                More Games from {userData.legal_name}
-              </NavLink>
+              <div className="col-12">
+                <ImageSlide
+                  title="Latest Releases"
+                  type="game"
+                  array={userData.games}
+                />
+              </div>
+
+              <div className="col-12">
+                <NavLink
+                  to={nav_routes.PROFILE_DEV + userData.user_name + "/games"}
+                  className="btn btn-classic"
+                >
+                  More Games from {userData.legal_name}
+                </NavLink>
+              </div>
             </>
           ) : (
             <h1>This developer has no games registered</h1>
