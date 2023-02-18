@@ -39,7 +39,7 @@ function ReviewUserBox(props) {
         {showEditor ? (
           <ReviewForm game_id={props.game_id} game_edit={review} onChangeEditor={changeEditorHandler}/>
         ) : (
-          <ReviewBox key={review._id} review_info={review} readOnly={false} onChangeEditor={changeEditorHandler}/>
+          <ReviewBox key={review._id} review_info={review} readOnly={false} profile={props.profile} onChangeEditor={changeEditorHandler}/>
         )}
       </>
     );

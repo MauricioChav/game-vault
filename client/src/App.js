@@ -16,6 +16,7 @@ import Game from "./Views/Game/Game";
 import GameEdit from "./Views/Game/GameEdit";
 import GameList from "./Views/Game/GameList";
 import Reviews from "./Views/Reviews/Reviews";
+import UserReviews from "./Views/Reviews/UserReviews";
 import ProfileReviewer from "./Views/UserProfile/ProfileReviewer";
 import ProfileDev from "./Views/UserProfile/ProfileDev";
 import ProfileEdit from "./Views/UserProfile/ProfileEdit";
@@ -46,6 +47,10 @@ function App() {
               element={<GameList />}
             />
             <Route path={nav_routes.REVIEWS + ":name/"} element={<Reviews />} />
+            <Route
+              path={nav_routes.PROFILE_REVIEWER + ":name/reviews"}
+              element={<UserReviews />}
+            />
             <Route
               path={nav_routes.PROFILE_REVIEWER + ":name/"}
               element={<ProfileReviewer />}

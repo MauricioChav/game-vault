@@ -105,7 +105,7 @@ function ProfileDev(props) {
                   to={nav_routes.PROFILE_DEV + userData.user_name + "/games"}
                   className="btn btn-classic"
                 >
-                  More Games from {userData.legal_name}
+                  All Games from {userData.legal_name}
                 </NavLink>
               </div>
             </>

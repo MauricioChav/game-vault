@@ -6,6 +6,6 @@ export const nav_routes = {
     GAME_EDIT: '/games/edit/',
     REVIEWS: '/reviews/',
     PROFILE_DEV: '/dev/',
-    PROFILE_REVIEWER: '/profile/',
+    PROFILE_REVIEWER: '/reviewer/',
     PROFILE_EDIT: '/editProfile/'
   }

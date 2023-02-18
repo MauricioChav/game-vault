@@ -60,10 +60,10 @@ router.get("/games/dev/:developer_name", async (req, res) => {
 
   //Get the developer info
   try {
-    const user = await User.findOne({ user_name });
+    const user = await User.findOne({ user_name, user_type: 1 });
 
     //Validate if the user exist and is a developer
-    if (!user || (user && user.user_type !== 1)) {
+    if (!user) {
       return res.status(404).send();
     }
 

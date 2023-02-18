@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import Card from "../../Components/Card/Card";
-import ReviewManager from "../../Components/ReviewComponents/ReviewManager";
+import ReviewManager from "../../Components/ReviewComponents/ReviewGameManager";
 
 import { useGetGameQuery } from "../../Api/gameEndpoints";
 

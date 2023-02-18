@@ -193,6 +193,10 @@ function ProfileEdit() {
     }
   };
 
+  const deleteAccountHandler = async()=>{
+    console.log("DELETE ACCOUNT")
+  }
+
   return (
     <Card>
       <h1>
@@ -347,8 +351,19 @@ function ProfileEdit() {
       <div className="row fg-space">
         <div className="col-12">
           <h3 className="fg-space">Log Out from all active sessions</h3>
-          <button className="btn btn-danger" onClick={logOutAllHandler}>
+          <button className="btn btn-dark" onClick={logOutAllHandler}>
             Log Out
+          </button>
+        </div>
+      </div>
+
+      <hr></hr>
+
+      <div className="row fg-space">
+        <div className="col-12">
+          <h3 className="fg-space">Delete account</h3>
+          <button className="btn btn-danger" onClick={deleteAccountHandler}>
+            Delete
           </button>
         </div>
       </div>

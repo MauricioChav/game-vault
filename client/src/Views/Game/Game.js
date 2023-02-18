@@ -5,7 +5,7 @@ import moment from "moment";
 
 import Card from "../../Components/Card/Card";
 import ImageSlide from "../../Components/ImageSlide/ImageSlide";
-import ReviewManager from "../../Components/ReviewComponents/ReviewManager";
+import ReviewManager from "../../Components/ReviewComponents/ReviewGameManager";
 
 import "./Game.css";
 

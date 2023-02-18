@@ -1,6 +1,7 @@
 const express = require("express");
 const Review = require("../models/review");
 const Game = require("../models/game");
+const User = require("../models/user");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/reviewerValidation");
 const { default: mongoose } = require("mongoose");
@@ -100,12 +101,25 @@ router.get("/reviews/game/:game_id", async (req, res) => {
 });
 
 //GET A USER'S REVIEWS
-router.get("/reviews/user/:user_id", async (req, res) => {
-  const reviewer_id = req.params.user_id;
+router.get("/reviews/user/:user_name", async (req, res) => {
+  const user_name = req.params.user_name;
 
   try {
-    const reviews = await Review.find({ reviewer_id }).populate("game_id");
-    res.send(reviews);
+    const user = await User.findOne({ user_name, user_type: 0 });
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    try {
+      const reviews = await Review.find({ reviewer_id: user._id }).populate(
+        "game_id",
+        "_id title short_title developer_id cover_image"
+      );
+      res.send(reviews);
+    } catch (e) {
+      res.status(500).send();
+    }
   } catch (e) {
     res.status(500).send();
   }

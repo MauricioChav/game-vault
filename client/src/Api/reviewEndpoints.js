@@ -17,6 +17,10 @@ const reviewEndpoints = apiSlice.injectEndpoints({
       query: (game_id) => `/reviews/game/${game_id}`,
     }),
 
+    getUserReviews: builder.query({
+      query: (user_name) => `/reviews/user/${user_name}`,
+    }),
+
     verifyReview: builder.query({
       query: (review) => ({
         url: `/reviews/verify/${review.game_id}`,
@@ -53,6 +57,7 @@ const reviewEndpoints = apiSlice.injectEndpoints({
 export const {
   useCreateReviewMutation,
   useGetGameReviewsQuery,
+  useGetUserReviewsQuery,
   useVerifyReviewQuery,
   useUpdateReviewMutation,
   useDeleteReviewMutation,

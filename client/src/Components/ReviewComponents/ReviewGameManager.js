@@ -23,7 +23,7 @@ function ReviewManager(props) {
   if (loggedUser !== null) {
     userType = loggedUser.user.user_type;
     if (userType === 0) {
-      userReview = <ReviewUserBox game_id={props.game_id} />;
+      userReview = <ReviewUserBox game_id={props.game_id} profile="user"/>;
     }
   }
 
@@ -60,10 +60,11 @@ function ReviewManager(props) {
     }
 
     //Show the Review List only if there is at least 1 element on the full list
+    //With profile prop, the Review List is going to show the user info at the top of every ReviewBox
     if (reviews.length > 0) {
       reviewList = (
         <>
-          <ReviewList reviews={modReviews} short_title={props.short_title} />
+          <ReviewList reviews={modReviews} profile="user"/>
         </>
       );
       showAllReviewsButton = (

@@ -4,6 +4,8 @@ import { nav_routes } from "../../routes";
 import Card from "../../Components/Card/Card";
 import ProfilePicture from "../../Components/ProfilePicture/ProfilePicture";
 
+import ReviewUserManager from "../../Components/ReviewComponents/ReviewUserManager";
+
 import { useGetUserQuery } from "../../Api/userEndpoints";
 
 function ProfileReviewer(props) {
@@ -78,6 +80,12 @@ function ProfileReviewer(props) {
         <div className="row">
           <p className="profile-about">{userData.about_me}</p>
         </div>
+
+        <div>
+          <h2>Recent Reviews</h2>
+          <ReviewUserManager user_name={userData.user_name} allReviewsButton={true}/>
+        </div>
+        
       </Card>
     </>
   );

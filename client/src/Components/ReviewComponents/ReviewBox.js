@@ -119,33 +119,67 @@ function ReviewBox(props) {
               : "short-description col-8"
           }
         >
-          <NavLink
-            to={
-              nav_routes.PROFILE_REVIEWER +
-              props.review_info.reviewer_id.user_name
-            }
-          >
-            <ProfilePicture
-              img={
-                props.review_info.reviewer_id.img_profile !== ""
-                  ? props.review_info.reviewer_id.img_profile
-                  : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
-              }
-              img_title={
-                props.review_info.reviewer_id.user_name + "_profile_pic"
-              }
-            />
-          </NavLink>
-          <NavLink
-            to={
-              nav_routes.PROFILE_REVIEWER +
-              props.review_info.reviewer_id.user_name
-            }
-          >
-            <h4 className="user-title">
-              {props.review_info.reviewer_id.user_name}
-            </h4>
-          </NavLink>
+          {props.profile === "user" && (
+            <>
+              <NavLink
+                to={
+                  nav_routes.PROFILE_REVIEWER +
+                  props.review_info.reviewer_id.user_name
+                }
+              >
+                <ProfilePicture
+                  img={
+                    props.review_info.reviewer_id.img_profile !== ""
+                      ? props.review_info.reviewer_id.img_profile
+                      : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
+                  }
+                  img_title={
+                    props.review_info.reviewer_id.user_name + "_profile_pic"
+                  }
+                />
+              </NavLink>
+              <NavLink
+                to={
+                  nav_routes.PROFILE_REVIEWER +
+                  props.review_info.reviewer_id.user_name
+                }
+              >
+                <h4 className="element-title">
+                  {props.review_info.reviewer_id.user_name}
+                </h4>
+              </NavLink>
+            </>
+          )}
+
+          {props.profile === "game" && (
+            <>
+              <div style={{ float: "left" }}>
+                <NavLink
+                  to={nav_routes.GAME + props.review_info.game_id.short_title}
+                >
+                  <img
+                    style={{ width: "100px" }}
+                    src={
+                      props.review_info.game_id.cover_image !== ""
+                        ? props.review_info.game_id.cover_image
+                        : "https://vglist.co/packs/media/images/no-cover-369ad8f0ea82dde5923c942ba1a26482.png"
+                    }
+                    alt={props.review_info.game_id.short_title + "_cover"}
+                  />
+                </NavLink>
+              </div>
+
+              <div style={{ float: "left", marginLeft: "10px" }}>
+                <NavLink
+                  to={nav_routes.GAME + props.review_info.game_id.short_title}
+                >
+                  <h4 className="element-title">
+                    {props.review_info.game_id.title}
+                  </h4>
+                </NavLink>
+              </div>
+            </>
+          )}
         </div>
 
         {!props.readOnly && (
