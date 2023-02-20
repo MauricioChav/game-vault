@@ -2,8 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
-import ReviewList from "./ReviewList";
-import ReviewUserBox from "./ReviewUserBox";
+import ReviewBox from "./ReviewBox";
+import ValidateReview from "./ValidateReview";
 
 import "./ReviewComponents.css";
 
@@ -23,7 +23,7 @@ function ReviewManager(props) {
   if (loggedUser !== null) {
     userType = loggedUser.user.user_type;
     if (userType === 0) {
-      userReview = <ReviewUserBox game_id={props.game_id} profile="user"/>;
+      userReview = <ValidateReview game_id={props.game_id} profile="user"/>;
     }
   }
 
@@ -62,11 +62,9 @@ function ReviewManager(props) {
     //Show the Review List only if there is at least 1 element on the full list
     //With profile prop, the Review List is going to show the user info at the top of every ReviewBox
     if (reviews.length > 0) {
-      reviewList = (
-        <>
-          <ReviewList reviews={modReviews} profile="user"/>
-        </>
-      );
+      reviewList = modReviews.map((review) => (
+        <ReviewBox key={review._id} review_info={review} profile="user" readOnly />
+      ));
       showAllReviewsButton = (
         <NavLink
           to={nav_routes.REVIEWS + props.short_title}

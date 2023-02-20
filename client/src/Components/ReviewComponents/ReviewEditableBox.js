@@ -5,7 +5,7 @@ import ReviewBox from "./ReviewBox";
 
 import "./ReviewComponents.css";
 
-function ReviewUserProfileBox(props) {
+function ReviewEditableBox(props) {
   const [showEditor, setShowEditor] = useState(false);
   const review = props.review_info;
 
@@ -37,4 +37,4 @@ function ReviewUserProfileBox(props) {
   );
 }
 
-export default ReviewUserProfileBox;
+export default ReviewEditableBox;

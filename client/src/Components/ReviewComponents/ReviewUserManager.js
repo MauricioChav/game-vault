@@ -2,8 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
-import ReviewList from "./ReviewList";
-import ReviewEditBox from "./ReviewEditBox";
+import ReviewBox from "./ReviewBox";
+import ReviewEditableBox from "./ReviewEditableBox";
 import "./ReviewComponents.css";
 
 import { useGetUserReviewsQuery } from "../../Api/reviewEndpoints";
@@ -39,18 +39,16 @@ function ReviewUserManager(props) {
     if (reviews.length > 0) {
       if (userID === reviews[0].reviewer_id) {
         reviewList = reviews.map((review) => (
-          <ReviewEditBox
+          <ReviewEditableBox
             key={review._id}
             review_info={review}
             profile="game"
           />
         ));
       } else {
-        reviewList = (
-          <>
-            <ReviewList reviews={reviews} profile="game" />
-          </>
-        );
+        reviewList = reviews.map((review) => (
+          <ReviewBox key={review._id} review_info={review} profile="game" readOnly />
+        ));
       }
 
       showAllReviewsButton = (

@@ -112,64 +112,68 @@ function ReviewBox(props) {
         <div className="col-12">
           <NotificationCard notification={alert} />
         </div>
-        <div
-          className={
-            props.readOnly
-              ? "short-description col-12"
-              : "short-description col-8"
-          }
-        >
+
+        <div className="col-1">
           {props.profile === "user" && (
-            <>
-              <NavLink
-                to={
-                  nav_routes.PROFILE_REVIEWER +
-                  props.review_info.reviewer_id.user_name
+            <NavLink
+              to={
+                nav_routes.PROFILE_REVIEWER +
+                props.review_info.reviewer_id.user_name
+              }
+            >
+              <ProfilePicture
+                img={
+                  props.review_info.reviewer_id.img_profile !== ""
+                    ? props.review_info.reviewer_id.img_profile
+                    : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
                 }
-              >
-                <ProfilePicture
-                  img={
-                    props.review_info.reviewer_id.img_profile !== ""
-                      ? props.review_info.reviewer_id.img_profile
-                      : "https://le-cdn.hibuwebsites.com/a1921b266e5f44738a779d63a0fb5fa0/dms3rep/multi/opt/cherished-memories-photography--bio-640w.png"
-                  }
-                  img_title={
-                    props.review_info.reviewer_id.user_name + "_profile_pic"
-                  }
-                />
-              </NavLink>
-              <NavLink
-                to={
-                  nav_routes.PROFILE_REVIEWER +
-                  props.review_info.reviewer_id.user_name
+                img_title={
+                  props.review_info.reviewer_id.user_name + "_profile_pic"
                 }
-              >
-                <h4 className="element-title">
-                  {props.review_info.reviewer_id.user_name}
-                </h4>
-              </NavLink>
-            </>
+              />
+            </NavLink>
           )}
 
           {props.profile === "game" && (
-            <>
-              <div style={{ float: "left" }}>
-                <NavLink
-                  to={nav_routes.GAME + props.review_info.game_id.short_title}
-                >
-                  <img
-                    style={{ width: "100px" }}
-                    src={
-                      props.review_info.game_id.cover_image !== ""
-                        ? props.review_info.game_id.cover_image
-                        : "https://vglist.co/packs/media/images/no-cover-369ad8f0ea82dde5923c942ba1a26482.png"
-                    }
-                    alt={props.review_info.game_id.short_title + "_cover"}
-                  />
-                </NavLink>
-              </div>
+            <NavLink
+              to={nav_routes.GAME + props.review_info.game_id.short_title}
+            >
+              <img
+                style={{ width: "100px" }}
+                src={
+                  props.review_info.game_id.cover_image !== ""
+                    ? props.review_info.game_id.cover_image
+                    : "https://vglist.co/packs/media/images/no-cover-369ad8f0ea82dde5923c942ba1a26482.png"
+                }
+                alt={props.review_info.game_id.short_title + "_cover"}
+              />
+            </NavLink>
+          )}
+        </div>
 
-              <div style={{ float: "left", marginLeft: "10px" }}>
+        <div className="col-11">
+          <div className="row">
+            <div
+              className={
+                props.readOnly
+                  ? "short-description col-12"
+                  : "short-description col-10"
+              }
+            >
+              {props.profile === "user" && (
+                <NavLink
+                  to={
+                    nav_routes.PROFILE_REVIEWER +
+                    props.review_info.reviewer_id.user_name
+                  }
+                >
+                  <h4 className="element-title">
+                    {props.review_info.reviewer_id.user_name}
+                  </h4>
+                </NavLink>
+              )}
+
+              {props.profile === "game" && (
                 <NavLink
                   to={nav_routes.GAME + props.review_info.game_id.short_title}
                 >
@@ -177,143 +181,144 @@ function ReviewBox(props) {
                     {props.review_info.game_id.title}
                   </h4>
                 </NavLink>
-              </div>
-            </>
-          )}
-        </div>
-
-        {!props.readOnly && (
-          <>
-            <div className="col-4" style={{ textAlign: "right" }}>
-              <IconButton variant="contained" {...bindTrigger(popupState)}>
-                <i className="fa-solid fa-ellipsis-vertical"></i>
-              </IconButton>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={editReviewHandler}>
-                  <i className="fa-solid fa-pen-to-square"></i> Edit Review
-                </MenuItem>
-                <MenuItem onClick={handleClickOpen}>
-                  <i className="fa-solid fa-trash"></i>Delete Review
-                </MenuItem>
-              </Menu>
+              )}
             </div>
 
-            <Dialog
-              open={openDelete}
-              onClose={handleClose}
-              aria-labelledby="delete-dialog-title"
-              aria-describedby="delete-dialog-description"
-            >
-              <DialogTitle id="delete-dialog-title">
-                Do you want to delete this review?
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="delete-dialog-description">
-                  Deleting the review will permanently remove it. Do you wish to
-                  continue?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <button
-                  className="btn btn-danger"
-                  onClick={deleteReviewHandler}
-                  autoFocus
+            {!props.readOnly && (
+              <>
+                <div className="col-2" style={{ textAlign: "right" }}>
+                  <IconButton variant="contained" {...bindTrigger(popupState)}>
+                    <i className="fa-solid fa-ellipsis-vertical"></i>
+                  </IconButton>
+                  <Menu {...bindMenu(popupState)}>
+                    <MenuItem onClick={editReviewHandler}>
+                      <i className="fa-solid fa-pen-to-square"></i> Edit Review
+                    </MenuItem>
+                    <MenuItem onClick={handleClickOpen}>
+                      <i className="fa-solid fa-trash"></i>Delete Review
+                    </MenuItem>
+                  </Menu>
+                </div>
+
+                <Dialog
+                  open={openDelete}
+                  onClose={handleClose}
+                  aria-labelledby="delete-dialog-title"
+                  aria-describedby="delete-dialog-description"
                 >
-                  Delete
-                </button>
-                <button className="btn btn-classic" onClick={handleClose}>
-                  Cancel
-                </button>
-              </DialogActions>
-            </Dialog>
-          </>
-        )}
-      </div>
+                  <DialogTitle id="delete-dialog-title">
+                    Do you want to delete this review?
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="delete-dialog-description">
+                      Deleting the review will permanently remove it. Do you
+                      wish to continue?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <button
+                      className="btn btn-danger"
+                      onClick={deleteReviewHandler}
+                      autoFocus
+                    >
+                      Delete
+                    </button>
+                    <button className="btn btn-classic" onClick={handleClose}>
+                      Cancel
+                    </button>
+                  </DialogActions>
+                </Dialog>
+              </>
+            )}
+          </div>
 
-      <div className="row">
-        <div className="col-8">
-          <h6>{moment(props.review_info.createdAt).format("MMMM DD, YYYY")}</h6>
-          {recommendedMessage}
-          <br></br>
-          {props.review_info.spoilers && (
-            <h6 className="badge badge-danger">Contains Spoilers</h6>
-          )}
+          <div className="row">
+            <div className="col-8">
+              <h6>
+                {moment(props.review_info.createdAt).format("MMMM DD, YYYY")}
+              </h6>
+              {recommendedMessage}
+              <br></br>
+              {props.review_info.spoilers && (
+                <h6 className="badge badge-danger">Contains Spoilers</h6>
+              )}
+            </div>
+
+            <div className="col-4">
+              <table className="review-score-table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <h5 style={{ textAlign: "left" }}>General Score:</h5>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <Rating
+                        name="score_general"
+                        precision={0.5}
+                        value={props.review_info.score_general}
+                        readOnly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h6 style={{ textAlign: "left" }}>Gameplay:</h6>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <Rating
+                        name="score_general"
+                        precision={0.5}
+                        value={props.review_info.score_gameplay}
+                        readOnly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h6 style={{ textAlign: "left" }}>Graphics:</h6>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <Rating
+                        name="score_general"
+                        precision={0.5}
+                        value={props.review_info.score_graphics}
+                        readOnly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h6 style={{ textAlign: "left" }}>Sound/Music:</h6>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <Rating
+                        name="score_general"
+                        precision={0.5}
+                        value={props.review_info.score_sound}
+                        readOnly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h6 style={{ textAlign: "left" }}>Narrative:</h6>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <Rating
+                        name="score_general"
+                        precision={0.5}
+                        value={props.review_info.score_narrative}
+                        readOnly
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="review-body">{props.review_info.review_body}</p>
         </div>
-
-        <div className="col-4">
-          <table className="review-score-table">
-            <tbody>
-              <tr>
-                <td>
-                  <h5 style={{ textAlign: "left" }}>General Score:</h5>
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  <Rating
-                    name="score_general"
-                    precision={0.5}
-                    value={props.review_info.score_general}
-                    readOnly
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6 style={{ textAlign: "left" }}>Gameplay:</h6>
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  <Rating
-                    name="score_general"
-                    precision={0.5}
-                    value={props.review_info.score_gameplay}
-                    readOnly
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6 style={{ textAlign: "left" }}>Graphics:</h6>
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  <Rating
-                    name="score_general"
-                    precision={0.5}
-                    value={props.review_info.score_graphics}
-                    readOnly
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6 style={{ textAlign: "left" }}>Sound/Music:</h6>
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  <Rating
-                    name="score_general"
-                    precision={0.5}
-                    value={props.review_info.score_sound}
-                    readOnly
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6 style={{ textAlign: "left" }}>Narrative:</h6>
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  <Rating
-                    name="score_general"
-                    precision={0.5}
-                    value={props.review_info.score_narrative}
-                    readOnly
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
-
-      <p className="review-body">{props.review_info.review_body}</p>
     </div>
   );
 }

@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 
 import ReviewForm from "./ReviewForm";
-import ReviewBox from "./ReviewBox";
+import ReviewEditableBox from "./ReviewEditableBox";
 
 import "./ReviewComponents.css";
 
 import { useVerifyReviewQuery } from "../../Api/reviewEndpoints";
 
-function ReviewUserBox(props) {
-  const [showEditor, setShowEditor] = useState(false);
+function ValidateReview(props) {
   const loggedUser = JSON.parse(localStorage.getItem("user"));
 
   const {
@@ -27,26 +26,13 @@ function ReviewUserBox(props) {
     return;
   }
 
-  //Review Verify Fetched
-  const changeEditorHandler = () => {
-    setShowEditor(!showEditor);
-  };
-
   //Show ReviewBox
   if (review) {
-    return (
-      <>
-        {showEditor ? (
-          <ReviewForm game_id={props.game_id} game_edit={review} onChangeEditor={changeEditorHandler}/>
-        ) : (
-          <ReviewBox key={review._id} review_info={review} readOnly={false} profile={props.profile} onChangeEditor={changeEditorHandler}/>
-        )}
-      </>
-    );
+    return <ReviewEditableBox review_info={review} profile="user" />;
   } else {
     //Show NewReview Form
     return <ReviewForm game_id={props.game_id} />;
   }
 }
 
-export default ReviewUserBox;
+export default ValidateReview;
