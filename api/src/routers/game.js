@@ -1,10 +1,10 @@
 const express = require("express");
+const { default: mongoose } = require("mongoose");
 const Game = require("../models/game");
 const User = require("../models/user");
 const Review = require("../models/review");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/developerValidation");
-const { default: mongoose } = require("mongoose");
 
 const router = new express.Router();
 
@@ -161,16 +161,18 @@ router.delete("/games/:id", [auth, typeValidation], async (req, res) => {
       return res.status(404).send();
     }
 
-    //Delete game and all of its reviews
+    //Delete game and all of its reviews (Using a transaction)
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
+      //Delete all of the reviews from the game
+      await Review.deleteMany({ game_id: _id }, { session });
+
+      //Delete game
       const game = await Game.findOneAndDelete(
         { _id, developer_id: req.user._id },
         { session }
       );
-
-      await Review.deleteMany({ game_id: _id }, { session });
 
       await session.commitTransaction();
       session.endSession();

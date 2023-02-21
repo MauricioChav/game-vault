@@ -1,10 +1,10 @@
 const express = require("express");
+const { default: mongoose } = require("mongoose");
 const Review = require("../models/review");
 const Game = require("../models/game");
 const User = require("../models/user");
 const auth = require("../Middleware/auth");
 const typeValidation = require("../Middleware/reviewerValidation");
-const { default: mongoose } = require("mongoose");
 const router = new express.Router();
 
 //CREATE REVIEW
@@ -54,17 +54,16 @@ router.post("/reviews/:game_id", [auth, typeValidation], async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const game = await Game.findById(game_id);
-
       await Game.findByIdAndUpdate(
         game_id,
         {
-          sum_score_general: game.sum_score_general + req.body.score_general,
-          sum_score_gameplay: game.sum_score_gameplay + req.body.score_gameplay,
-          sum_score_graphics: game.sum_score_graphics + req.body.score_graphics,
-          sum_score_sound: game.sum_score_sound + req.body.score_sound,
-          sum_score_narrative:
-            game.sum_score_narrative + req.body.score_narrative,
+          $inc: {
+            sum_score_general: req.body.score_general,
+            sum_score_gameplay: req.body.score_gameplay,
+            sum_score_graphics: req.body.score_graphics,
+            sum_score_sound: req.body.score_sound,
+            sum_score_narrative: req.body.score_narrative,
+          },
         },
 
         { session }
@@ -182,32 +181,21 @@ router.patch("/reviews/:id", [auth, typeValidation], async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const game = await Game.findById(review.game_id);
-
       //Substract the old value to the sum and add the new one
       await Game.findByIdAndUpdate(
         review.game_id,
         {
-          sum_score_general:
-            game.sum_score_general -
-            old_review.score_general +
-            req.body.score_general,
-          sum_score_gameplay:
-            game.sum_score_gameplay -
-            old_review.score_gameplay +
-            req.body.score_gameplay,
-          sum_score_graphics:
-            game.sum_score_graphics -
-            old_review.score_graphics +
-            req.body.score_graphics,
-          sum_score_sound:
-            game.sum_score_sound -
-            old_review.score_sound +
-            req.body.score_sound,
-          sum_score_narrative:
-            game.sum_score_narrative -
-            old_review.score_narrative +
-            req.body.score_narrative,
+          $inc: {
+            sum_score_general:
+              req.body.score_general - old_review.score_general,
+            sum_score_gameplay:
+              req.body.score_gameplay - old_review.score_gameplay,
+            sum_score_graphics:
+              req.body.score_graphics - old_review.score_graphics,
+            sum_score_sound: req.body.score_sound - old_review.score_sound,
+            sum_score_narrative:
+              req.body.score_narrative - old_review.score_narrative,
+          },
         },
 
         { session }
@@ -246,22 +234,23 @@ router.delete("/reviews/:id", [auth, typeValidation], async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const game = await Game.findById(review.game_id);
-
+      //Update the game's score values
       await Game.findByIdAndUpdate(
         review.game_id,
         {
-          sum_score_general: game.sum_score_general - review.score_general,
-          sum_score_gameplay: game.sum_score_gameplay - review.score_gameplay,
-          sum_score_graphics: game.sum_score_graphics - review.score_graphics,
-          sum_score_sound: game.sum_score_sound - review.score_sound,
-          sum_score_narrative:
-            game.sum_score_narrative - review.score_narrative,
+          $inc: {
+            sum_score_general: -review.score_general,
+            sum_score_gameplay: -review.score_gameplay,
+            sum_score_graphics: -review.score_graphics,
+            sum_score_sound: -review.score_sound,
+            sum_score_narrative: -review.score_narrative,
+          },
         },
 
         { session }
       );
 
+      //Delete review
       const deleted_review = await Review.findOneAndDelete(
         {
           _id,

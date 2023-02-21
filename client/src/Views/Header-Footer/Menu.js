@@ -139,7 +139,7 @@ function Menu() {
               {user.user_type === 0 && (
                 <NavLink
                   className="user-info"
-                  to={nav_routes.PROFILE_REVIEWER + user.user_name}
+                  to={nav_routes.PROFILE_REVIEWER + user.user_name + "/reviews"}
                   onClick={openCloseMenu}
                 >
                   <table>
