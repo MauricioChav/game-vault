@@ -6,23 +6,44 @@ import NotificationCard, {
 import { useNavigate } from "react-router-dom";
 import { nav_routes } from "../../routes";
 
-import moment from "moment";
-
 import {
   useGetOwnUserQuery,
   useUpdateUserMutation,
   useLoginUserMutation,
   useLogoutAllMutation,
+  useDeleteUserMutation,
 } from "../../Api/userEndpoints";
+
+import moment from "moment";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 function ProfileEdit() {
   const navigate = useNavigate();
   const [alert, setAlert] = useState({});
   const [alert2, setAlert2] = useState({});
+  const [alert3, setAlert3] = useState({});
+  const [alert4, setAlert4] = useState({});
   const [patchUser] = useUpdateUserMutation();
   const [passwordVerify] = useLoginUserMutation();
   const [logoutAll] = useLogoutAllMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
   const loggedUser = JSON.parse(localStorage.getItem("user"));
+  let userType_number = -1;
+
+  //Set UserType for loggedIn Reviewers
+  if (loggedUser !== null) {
+    userType_number = loggedUser.user.user_type;
+  }
+
+  //Delete Alert
+  const [openDelete, setOpenDelete] = React.useState(false);
 
   //Validate if the user is logged in with a developer account (Both conditions should be met)
   useEffect(() => {
@@ -174,6 +195,12 @@ function ProfileEdit() {
         NotificationMessage("error", "Error. Change password attempt failed!")
       );
     }
+
+    //Reset inputs
+    event.target.elements.new_password.value = "";
+    event.target.elements.password_confirm.value = "";
+    event.target.elements.old_password.value = "";
+
   };
 
   const logOutAllHandler = async () => {
@@ -189,13 +216,59 @@ function ProfileEdit() {
       navigate(nav_routes.HOME);
     } catch (e) {
       console.log("Error", e);
-      setAlert(NotificationMessage("error", "Error. Log out unsuccessful!"));
+      setAlert3(NotificationMessage("error", "Error. Log out unsuccessful!"));
     }
   };
 
-  const deleteAccountHandler = async()=>{
-    console.log("DELETE ACCOUNT")
-  }
+  const deleteAccountHandler = async () => {
+    let userType = "";
+
+    switch (userType_number) {
+      case 0:
+        userType = "reviewer";
+        break;
+
+      case 1:
+        userType = "developer";
+        break;
+
+      default:
+        userType = "";
+        break;
+    }
+
+    try {
+      await deleteUser({
+        userType,
+        token: loggedUser.token,
+      }).unwrap();
+
+      handleClose();
+      setAlert4(NotificationMessage("success", "User deleted successfully"));
+
+      //Redirect to home after some time
+      setTimeout(() => {
+        navigate(nav_routes.HOME);
+        navigate(0);
+      }, 800);
+    } catch (e) {
+      if (e.hasOwnProperty("data.message")) {
+        setAlert4(NotificationMessage("error", e.data.message));
+      } else {
+        setAlert4(NotificationMessage("error", "Error. User Delete failed!"));
+      }
+
+      handleClose();
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpenDelete(true);
+  };
+
+  const handleClose = () => {
+    setOpenDelete(false);
+  };
 
   return (
     <Card>
@@ -314,7 +387,12 @@ function ProfileEdit() {
           </div>
           <div className="col-6 fg-space">
             <label className="fg-label">Old Password:</label>
-            <input type="password" id="old_password" name="old_password" required />
+            <input
+              type="password"
+              id="old_password"
+              name="old_password"
+              required
+            />
           </div>
 
           <div className="col-12">
@@ -351,6 +429,7 @@ function ProfileEdit() {
       <div className="row fg-space">
         <div className="col-12">
           <h3 className="fg-space">Log Out from all active sessions</h3>
+          <NotificationCard notification={alert3} />
           <button className="btn btn-dark" onClick={logOutAllHandler}>
             Log Out
           </button>
@@ -359,10 +438,41 @@ function ProfileEdit() {
 
       <hr></hr>
 
+      <Dialog
+        open={openDelete}
+        onClose={handleClose}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">
+          Do you want to delete your account?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Deleting the account will permanently erase it from the database
+            alongside all of its {userType_number === 1 ? "games" : "reviews"}.{" "}
+            <br></br> Do you wish to continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <button
+            className="btn btn-danger"
+            onClick={deleteAccountHandler}
+            autoFocus
+          >
+            Delete
+          </button>
+          <button className="btn btn-classic" onClick={handleClose}>
+            Cancel
+          </button>
+        </DialogActions>
+      </Dialog>
+
       <div className="row fg-space">
         <div className="col-12">
           <h3 className="fg-space">Delete account</h3>
-          <button className="btn btn-danger" onClick={deleteAccountHandler}>
+          <NotificationCard notification={alert4} />
+          <button className="btn btn-danger" onClick={handleClickOpen}>
             Delete
           </button>
         </div>

@@ -211,8 +211,8 @@ function ReviewBox(props) {
                   </DialogTitle>
                   <DialogContent>
                     <DialogContentText id="delete-dialog-description">
-                      Deleting the review will permanently remove it. Do you
-                      wish to continue?
+                      Deleting the review will permanently remove it. <br></br>{" "}
+                      Do you wish to continue?
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>

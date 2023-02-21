@@ -269,8 +269,6 @@ function GameEdit() {
 
       handleClose();
     }
-
-    console.log("DELETE GAME");
   };
 
   const handleClickOpen = () => {
@@ -531,7 +529,7 @@ function GameEdit() {
             <DialogContent>
               <DialogContentText id="delete-dialog-description">
                 Deleting the game will permanently remove it from the database
-                alongside all of its reviews. Do you wish to continue?
+                alongside all of its reviews. <br></br> Do you wish to continue?
               </DialogContentText>
             </DialogContent>
             <DialogActions>

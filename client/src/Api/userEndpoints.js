@@ -83,6 +83,16 @@ const userEndpoints = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    deleteUser: builder.mutation({
+      query: (user) => ({
+        url: "/users/" + user.userType + "/me",
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + user.token,
+        },
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -97,5 +107,6 @@ export const {
   useGetUserQuery,
   useGetOwnUserQuery,
   useGetAllUsersQuery,
-  useUpdateUserMutation
+  useUpdateUserMutation,
+  useDeleteUserMutation,
 } = userEndpoints;

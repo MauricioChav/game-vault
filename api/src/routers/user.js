@@ -164,7 +164,7 @@ router.patch("/users/me", auth, async (req, res) => {
 
 //DELETE DEVELOPER USER
 router.delete(
-  "/users/dev/me",
+  "/users/developer/me",
   [auth, developerValidation],
   async (req, res) => {
     const user = req.user;
@@ -206,45 +206,46 @@ router.delete(
   async (req, res) => {
     const user = req.user;
 
-    // const session = await mongoose.startSession();
-    // session.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
-      //Find all the reviews and save their game_id in an array
+      //Find all the reviews made by the user
       const reviews = await Review.find({ reviewer_id: user._id });
 
-      const gameIds = reviews.map((review) => {
-        return review.game_id.toString();
-      });
+      //Update all of the reviewed games' scores
+      await Game.bulkWrite(
+        reviews.map((review) => {
+          return {
+            updateOne: {
+              filter: { _id: review.game_id },
+              update: {
+                $inc: {
+                  sum_score_general: -review.score_general,
+                  sum_score_gameplay: -review.score_gameplay,
+                  sum_score_graphics: -review.score_graphics,
+                  sum_score_sound: -review.score_sound,
+                  sum_score_narrative: -review.score_narrative,
+                },
+              },
+            },
+          };
+        }),
+        { session }
+      );
 
-      //Find all of the games info to get the scores
-      const games = await Game.find({ _id: { $in: gameIds } });
+      //Delete all of the reviews from the user
+      await Review.deleteMany({ reviewer_id: user._id }, { session });
 
-      //Update all of the reviewed game's scores
-      // await Game.updateMany(
-      //   { _id: { $in: gameIds } },
-      //   {
-      //     $inc: {
-      //       sum_score_general: -1,
-      //       sum_score_gameplay: -1,
-      //       sum_score_graphics: -1,
-      //       sum_score_sound: -1,
-      //       sum_score_narrative: -1,
-      //     },
-      //   }
-      // );
+      //Delete the user
+      await user.remove({ session });
 
-      // //Delete all of the reviews that belong to the developer's games
-      // await Review.deleteMany({game_id: {$in: gameIds}}, { session });
-
-      // //Delete the user
-      // await user.remove({ session });
-
-      // await session.commitTransaction();
-      // session.endSession();
-      res.send(games);
+      await session.commitTransaction();
+      session.endSession();
+      res.send(user);
     } catch (e) {
-      // await session.abortTransaction();
-      // session.endSession();
+      await session.abortTransaction();
+      session.endSession();
+      console.log(e);
       res.status(500).send();
     }
   }
