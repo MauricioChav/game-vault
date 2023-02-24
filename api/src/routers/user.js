@@ -9,7 +9,55 @@ const reviewerValidation = require("../Middleware/reviewerValidation");
 
 const router = new express.Router();
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    User:
+ *      type: object
+ *      properties:
+ * 
+ *        user_type:
+ *          type: integer
+ *          description: The user type. 0 for reviewer and 1 for developer
+ * 
+ *        user_name:
+ *          type: string
+ *          description: The user name. No spaces allowed
+ * 
+ *        legal_name:
+ *          type: string
+ *          description: The user legal name. Spaces are allowed. Only applies for developer accounts
+ * 
+ *        email:
+ *          type: string
+ *          description: The user email.
+ * 
+ *      example:
+ *        user_name: ElectronicGames
+ *
+ */
+
 //CREATE A USER/ SIGN UP
+/**
+ * @swagger
+ * /users:
+ * post:
+ *  summary: Creates a new user
+ *  tags: [User]
+ *  requestBody:
+ *    required: true
+ *    content: 
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          $ref: '#/components/schemas/User'
+ *  responses:
+ *    201:
+ *      description: User created succesfully
+ *    400:
+ *      description: Bad request
+ */
 router.post("/users/", async (req, res) => {
   const user = new User(req.body);
 

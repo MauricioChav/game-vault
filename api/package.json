@@ -17,6 +17,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.1",
     "validator": "^13.7.0"
   },
   "devDependencies": {
