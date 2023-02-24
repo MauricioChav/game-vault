@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 //Loads mongoose to connect to db
 require("./db/mongoose");
 
@@ -11,20 +10,7 @@ const reviewRouter = require("./routers/review");
 //Swagger
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDocs = require("swagger-jsdoc");
-
-const swaggerSpecs = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Game Vault API",
-      description:
-        "An API designed to manage users, games and reviews for the Game Vault website",
-      version: "1.0.0",
-    },
-    servers: [{ url: "http://localhost:9000" }],
-  },
-  apis: [`${path.join(__dirname, "./routers/*.js")}`],
-};
+const SwaggerConfig = require("./SwaggerConfig");
 
 //Express Port
 const app = express();
@@ -44,7 +30,7 @@ app.use(reviewRouter);
 app.use(
   "/api-docs",
   swaggerUI.serve,
-  swaggerUI.setup(swaggerJsDocs(swaggerSpecs))
+  swaggerUI.setup(swaggerJsDocs(SwaggerConfig))
 );
 
 app.listen(port, () => {

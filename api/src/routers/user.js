@@ -19,22 +19,49 @@ const router = new express.Router();
  * 
  *        user_type:
  *          type: integer
- *          description: The user type. 0 for reviewer and 1 for developer
+ *          description: The user type. 0 for reviewer and 1 for developer.
  * 
  *        user_name:
  *          type: string
- *          description: The user name. No spaces allowed
+ *          description: The user name. No spaces allowed.
  * 
  *        legal_name:
  *          type: string
- *          description: The user legal name. Spaces are allowed. Only applies for developer accounts
+ *          description: The user legal name. Spaces are allowed. Only applies for developer accounts.
  * 
  *        email:
  *          type: string
  *          description: The user email.
  * 
+ *        password:
+ *          type: string
+ *          description: The user password. Must contain at least 7 characters. Its value cannot be password. 
+ *  
+ *        birthday:
+ *          type: date
+ *          description: The user birthday. 
+ *  
+ *        about_me:
+ *          type: string
+ *          description: The user about me. It is presented in the profile section. 
+ *  
+ *        img_profile:
+ *          type: string
+ *          description: The user profile image.
+ *  
+ *        img_banner:
+ *          type: string
+ *          description: The user banner image. Only avaiable for developer accounts.
+ * 
  *      example:
+ *        user_type: 1
  *        user_name: ElectronicGames
+ *        legal_name: Electronic Games
+ *        email: electronicgames@mail.com
+ *        birthday: 23-05-1997
+ *        about_me: This is my profile
+ *        img_profile: img
+ *        img_banner: img
  *
  */
 
@@ -42,21 +69,21 @@ const router = new express.Router();
 /**
  * @swagger
  * /users:
- * post:
- *  summary: Creates a new user
- *  tags: [User]
- *  requestBody:
- *    required: true
- *    content: 
- *      application/json:
- *        schema:
- *          type: object
- *          $ref: '#/components/schemas/User'
- *  responses:
- *    201:
- *      description: User created succesfully
- *    400:
- *      description: Bad request
+ *  post:
+ *    summary: Creates a new user
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content: 
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            $ref: '#/components/schemas/User'
+ *    responses:
+ *      201:
+ *        description: User created succesfully
+ *      400:
+ *        description: Bad request
  */
 router.post("/users/", async (req, res) => {
   const user = new User(req.body);
