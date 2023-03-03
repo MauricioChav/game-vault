@@ -16,52 +16,138 @@ const router = new express.Router();
  *    User:
  *      type: object
  *      properties:
- * 
+ *
  *        user_type:
  *          type: integer
  *          description: The user type. 0 for reviewer and 1 for developer.
- * 
+ *
  *        user_name:
  *          type: string
  *          description: The user name. No spaces allowed.
- * 
+ *
  *        legal_name:
  *          type: string
  *          description: The user legal name. Spaces are allowed. Only applies for developer accounts.
- * 
+ *
  *        email:
  *          type: string
- *          description: The user email.
- * 
+ *          description: The user email. Needs to be unique, and cannot be changed.
+ *
  *        password:
  *          type: string
- *          description: The user password. Must contain at least 7 characters. Its value cannot be password. 
- *  
+ *          description: The user password. Must contain at least 7 characters. Its value cannot be password.
+ *
  *        birthday:
  *          type: date
- *          description: The user birthday. 
- *  
+ *          description: The user birthday.
+ *
  *        about_me:
  *          type: string
- *          description: The user about me. It is presented in the profile section. 
- *  
+ *          description: The user about me. It is presented in the profile section.
+ *
  *        img_profile:
  *          type: string
  *          description: The user profile image.
- *  
+ *
  *        img_banner:
  *          type: string
  *          description: The user banner image. Only avaiable for developer accounts.
- * 
+ *
+ *        follower_count:
+ *          type: integer
+ *          description: The user amount of followers. The user cannot modify its own follower count.
+ *
+ *        createdAt:
+ *          type: date
+ *          description: The date in which the user was created. Cannot be modified.
+ *
+ *        updatedAt:
+ *          type: date
+ *          description: The date in which the user was last modified.
+ *
  *      example:
+ *        _id: 1
  *        user_type: 1
  *        user_name: ElectronicGames
  *        legal_name: Electronic Games
  *        email: electronicgames@mail.com
- *        birthday: 23-05-1997
+ *        birthday: 1997-05-23
  *        about_me: This is my profile
- *        img_profile: img
+ *        img_profile: https://lumiere-a.akamaihd.net/v1/images/marvelspidermanseries-emeagrid_45274dc0.jpeg?region=240,0,480,480
  *        img_banner: img
+ *        follower_count: 0
+ *        createdAt: 2023-03-02T19:18:26.719Z
+ *        updatedAt: 2023-03-02T19:18:26.719Z
+ *
+ *  examples:
+ *    userLogin:
+ *      value:
+ *        user:
+ *          _id: 1
+ *          user_type: 1
+ *          user_name: ElectronicGames
+ *          legal_name: Electronic Games
+ *          birthday: 1997-05-23
+ *          about_me: This is my profile
+ *          img_profile: https://lumiere-a.akamaihd.net/v1/images/marvelspidermanseries-emeagrid_45274dc0.jpeg?region=240,0,480,480
+ *          img_banner: ""
+ *          follower_count: 0
+ *          createdAt: 2023-03-02T19:18:26.719Z
+ *          updatedAt: 2023-03-02T19:18:26.740Z
+ *        token: d45sd5sd51sdMSAJND
+ *      summary: Sample of a succesful user login
+ * 
+ *    userOwnProfile:
+ *      value:
+ *        user:
+ *          _id: 1
+ *          user_type: 1
+ *          user_name: ElectronicGames
+ *          legal_name: Electronic Games
+ *          birthday: 1997-05-23
+ *          about_me: This is my profile
+ *          img_profile: https://lumiere-a.akamaihd.net/v1/images/marvelspidermanseries-emeagrid_45274dc0.jpeg?region=240,0,480,480
+ *          img_banner: ""
+ *          follower_count: 0
+ *          createdAt: 2023-03-02T19:18:26.719Z
+ *          updatedAt: 2023-03-02T19:18:26.740Z
+ *        user_email: electronicgames@mail.com
+ *      summary: Sample of a logged in user profile. Includes the email
+ * 
+ *    userProfile:
+ *      value:
+ *        _id: 1
+ *        user_type: 1
+ *        user_name: ElectronicGames
+ *        legal_name: Electronic Games
+ *        birthday: 1997-05-23
+ *        about_me: This is my profile
+ *        img_profile: https://lumiere-a.akamaihd.net/v1/images/marvelspidermanseries-emeagrid_45274dc0.jpeg?region=240,0,480,480
+ *        img_banner: ""
+ *        follower_count: 0
+ *        createdAt: 2023-03-02T19:18:26.719Z
+ *        updatedAt: 2023-03-02T19:18:26.740Z
+ *      summary: Sample of a user profile fetched
+ *
+ *  responses:
+ *    UnauthorizedError:
+ *      description: Error. The path requires to be logged in.
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              error:
+ *                type: sting
+ *          example:
+ *            error: Please authenticate
+ * 
+ *  securitySchemes:
+ *    bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
+ * 
  *
  */
 
@@ -74,14 +160,27 @@ const router = new express.Router();
  *    tags: [User]
  *    requestBody:
  *      required: true
- *      content: 
+ *      content:
  *        application/json:
  *          schema:
  *            type: object
  *            $ref: '#/components/schemas/User'
  *    responses:
  *      201:
- *        description: User created succesfully
+ *        description: Returns the created User. Also returns a JWT Token.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: '#/components/schemas/User'
+ *                token:
+ *                  type: string
+ *                  description: JWT Token
+ *            examples:
+ *                userLogin:
+ *                  $ref: '#/components/examples/userLogin'
  *      400:
  *        description: Bad request
  */
@@ -99,6 +198,48 @@ router.post("/users/", async (req, res) => {
 });
 
 //LOG IN
+/**
+ * @swagger
+ * /users/login:
+ *  post:
+ *    summary: Log in with a user account
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                description: The user email.
+ *              password:
+ *                type: string
+ *                description: The user password.
+ *            example:
+ *              email: electronicgames@mail.com
+ *              password: 12345678
+ *
+ *    responses:
+ *      200:
+ *        description: User logged in succesfully. Returns a JWT Token.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: '#/components/schemas/User'
+ *                token:
+ *                  type: string
+ *                  description: JWT Token
+ *            examples:
+ *                userLogin:
+ *                  $ref: '#/components/examples/userLogin'
+ *      400:
+ *        description: Bad request
+ */
 router.post("/users/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
@@ -114,6 +255,22 @@ router.post("/users/login", async (req, res) => {
 });
 
 //LOG OUT
+/**
+ * @swagger
+ * /users/logout:
+ *  post:
+ *    summary: Log out from the current session
+ *    security:
+ *      - bearerAuth: []
+ *    tags: [User]
+ *    responses:
+ *      200:
+ *        description: User logged out succesfully.
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      500:
+ *        description: Server error
+ */
 router.post("/users/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
@@ -128,6 +285,22 @@ router.post("/users/logout", auth, async (req, res) => {
 });
 
 //LOG OUT FROM ALL SESSIONS
+/**
+ * @swagger
+ * /users/logoutAll:
+ *  post:
+ *    summary: Log out from all user sessions
+ *    security:
+ *      - bearerAuth: []
+ *    tags: [User]
+ *    responses:
+ *      200:
+ *        description: User logged out from all sessions succesfully.
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      500:
+ *        description: Server error
+ */
 router.post("/users/logoutAll", auth, async (req, res) => {
   try {
     req.user.tokens = [];
@@ -140,6 +313,29 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 });
 
 //VALIDATE USER
+/**
+ * @swagger
+ * /users/validate:
+ *  get:
+ *    summary: Validate if the user is logged in
+ *    security:
+ *      - bearerAuth: []
+ *    tags: [User]
+ *    responses:
+ *      200:
+ *        description: User is logged in.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *            example:
+ *              message: User validated correctly
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.get("/users/validate", auth, async (req, res) => {
   res.send({ message: "User validated correctly" });
 });
@@ -170,11 +366,70 @@ router.post("/users/deletedbtoken", async (req, res) => {
 });
 
 //GET USER PROFILE
+/**
+ * @swagger
+ * /users/me:
+ *  get:
+ *    summary: Get logged in user profile
+ *    security:
+ *      - bearerAuth: []
+ *    tags: [User]
+ *    responses:
+ *      200:
+ *        description: User profile fetched.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: '#/components/schemas/User'
+ *                user_email:
+ *                  type: string
+ *                  description: User email
+ *            examples:
+ *                userOwnProfile:
+ *                  $ref: '#/components/examples/userOwnProfile'
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.get("/users/me", auth, async (req, res) => {
   res.send({ user: req.user, user_email: req.user.email });
 });
 
 //GET USER PROFILE
+/**
+ * @swagger
+ * /users/{userName}:
+ *  get:
+ *    summary: Get a user profile
+ *    parameters:
+ *      - name: userName
+ *        in: path
+ *        description: The name of the user that you are trying to get.
+ *        required: true
+ *    tags: [User]
+ *    responses:
+ *      200:
+ *        description: User profile fetched.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: '#/components/schemas/User'
+ *                user_email:
+ *                  type: string
+ *                  description: User email
+ *            examples:
+ *                userProfile:
+ *                  $ref: '#/components/examples/userProfile'
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Server error
+ */
 router.get("/users/:name", async (req, res) => {
   const user_name = req.params.name;
 
