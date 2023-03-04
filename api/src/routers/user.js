@@ -31,14 +31,17 @@ const router = new express.Router();
  *
  *        email:
  *          type: string
+ *          format: email
  *          description: The user email. Needs to be unique, and cannot be changed.
  *
  *        password:
  *          type: string
+ *          format: password
  *          description: The user password. Must contain at least 7 characters. Its value cannot be password.
  *
  *        birthday:
- *          type: date
+ *          type: string
+ *          format: date
  *          description: The user birthday.
  *
  *        about_me:
@@ -58,11 +61,13 @@ const router = new express.Router();
  *          description: The user amount of followers. The user cannot modify its own follower count.
  *
  *        createdAt:
- *          type: date
+ *          type: string
+ *          format: date
  *          description: The date in which the user was created. Cannot be modified.
  *
  *        updatedAt:
- *          type: date
+ *          type: string
+ *          format: date
  *          description: The date in which the user was last modified.
  *
  *      example:
@@ -71,6 +76,7 @@ const router = new express.Router();
  *        user_name: ElectronicGames
  *        legal_name: Electronic Games
  *        email: electronicgames@mail.com
+ *        password: 1234567
  *        birthday: 1997-05-23
  *        about_me: This is my profile
  *        img_profile: https://lumiere-a.akamaihd.net/v1/images/marvelspidermanseries-emeagrid_45274dc0.jpeg?region=240,0,480,480
@@ -131,16 +137,34 @@ const router = new express.Router();
  *
  *  responses:
  *    UnauthorizedError:
- *      description: Error. The path requires to be logged in.
+ *      description: The path requires to be logged in.
  *      content:
  *        application/json:
  *          schema:
  *            type: object
  *            properties:
  *              error:
- *                type: sting
+ *                type: string
  *          example:
  *            error: Please authenticate
+ * 
+ *    ForbiddenError:
+ *      description: The user does not have the necessary permissions.
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              error:
+ *                type: string
+ *          example:
+ *            error: Your account doesn't have the necesary user permissions
+ * 
+ *    ServerError:
+ *      description: Server error 
+ * 
+ *    RequestError:
+ *      description: Bad request
  * 
  *  securitySchemes:
  *    bearerAuth:
@@ -182,7 +206,7 @@ const router = new express.Router();
  *                userLogin:
  *                  $ref: '#/components/examples/userLogin'
  *      400:
- *        description: Bad request
+ *        $ref: '#/components/responses/RequestError'
  */
 router.post("/users/", async (req, res) => {
   const user = new User(req.body);
@@ -238,7 +262,7 @@ router.post("/users/", async (req, res) => {
  *                userLogin:
  *                  $ref: '#/components/examples/userLogin'
  *      400:
- *        description: Bad request
+ *        $ref: '#/components/responses/RequestError'
  */
 router.post("/users/login", async (req, res) => {
   try {
@@ -365,7 +389,7 @@ router.post("/users/deletedbtoken", async (req, res) => {
   }
 });
 
-//GET USER PROFILE
+//GET OWN USER PROFILE
 /**
  * @swagger
  * /users/me:
@@ -416,12 +440,7 @@ router.get("/users/me", auth, async (req, res) => {
  *          application/json:
  *            schema:
  *              type: object
- *              properties:
- *                user:
- *                  $ref: '#/components/schemas/User'
- *                user_email:
- *                  type: string
- *                  description: User email
+ *              $ref: '#/components/schemas/User'
  *            examples:
  *                userProfile:
  *                  $ref: '#/components/examples/userProfile'
@@ -463,6 +482,77 @@ router.get("/users/", auth, async (req, res) => {
 });
 
 //UPDATE USER
+/**
+ * @swagger
+ * /users/me:
+ *  patch:
+ *    summary: Update logged in user Profile
+ *    security:
+ *      - bearerAuth: []
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:             
+ *              user_name:
+ *                type: string
+ *                description: The user name. No spaces allowed.
+ *
+ *              legal_name:
+ *                type: string
+ *                description: The user legal name. Spaces are allowed. Only applies for developer accounts.
+ *
+ *              password:
+ *                type: string
+ *                format: password
+ *                description: The user password. Must contain at least 7 characters. Its value cannot be password.
+ *
+ *              birthday:
+ *                type: string
+ *                format: date
+ *                description: The user birthday.
+ *
+ *              about_me:
+ *                type: string
+ *                description: The user about me. It is presented in the profile section.
+ *
+ *              img_profile:
+ *                type: string
+ *                description: The user profile image.
+ *
+ *              img_banner:
+ *                type: string
+ *                description: The user banner image. Only avaiable for developer accounts.
+ * 
+ *            example:
+ *              user_name: ElectronicGames
+ *              legal_name: Electronic Games
+ *              password: 1234567
+ *              birthday: 1997-05-23
+ *              about_me: This is my profile
+ *              img_profile: https://lumiere-a.akamaihd.net/v1/images/marvelspidermanseries-emeagrid_45274dc0.jpeg?region=240,0,480,480
+ *              img_banner: ""
+ *
+ *    responses:
+ *      200:
+ *        description: User profile updated.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object     
+ *              $ref: '#/components/schemas/User'
+ *            examples:
+ *                userProfile:
+ *                  $ref: '#/components/examples/userProfile'
+ *      400:
+ *        description: Invalid updates (Or other client related error)
+ * 
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
@@ -493,6 +583,32 @@ router.patch("/users/me", auth, async (req, res) => {
 });
 
 //DELETE DEVELOPER USER
+/**
+ * @swagger
+ * /users/developer/me:
+ *  delete:
+ *    summary: Delete logged in user developer profile (User must be a developer). Also deletes its asociated Games with their reviews.
+ *    security:
+ *      - bearerAuth: []
+ *    tags: [User]
+ *    responses:
+ *      200:
+ *        description: User profile updated.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object     
+ *              $ref: '#/components/schemas/User'
+ *            examples:
+ *                userProfile:
+ *                  $ref: '#/components/examples/userProfile'
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      403:
+ *        $ref: '#/components/responses/ForbiddenError'
+ *      500:
+ *        $ref: '#/components/responses/ServerError'
+ */
 router.delete(
   "/users/developer/me",
   [auth, developerValidation],
