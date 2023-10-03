@@ -486,6 +486,68 @@ function GameEdit() {
                     <label htmlFor="pt-xboxone">Xbox One</label>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                    <input
+                      className="i-checkbox"
+                      type="checkbox"
+                      id="pt-playstation3"
+                      name="pt-playstation3"
+                      value="Playstation 3"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Playstation 3")
+                      }
+                    ></input>
+                    <label htmlFor="pt-playstation3">Playstation 3</label>
+                  </td>
+                  <td>
+                    {" "}
+                    <input
+                      className="i-checkbox"
+                      type="checkbox"
+                      id="pt-xbox360"
+                      name="pt-xbox360"
+                      value="Xbox 360"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Xbox 360")
+                      }
+                    ></input>
+                    <label htmlFor="pt-xbox360">Xbox 360</label>
+                  </td>
+                  <td>
+                    {" "}
+                    <input
+                      className="i-checkbox"
+                      type="checkbox"
+                      id="pt-wii"
+                      name="pt-wii"
+                      value="Wii"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Wii")
+                      }
+                    ></input>
+                    <label htmlFor="pt-wii">Wii</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      className="i-checkbox"
+                      type="checkbox"
+                      id="pt-nintendods"
+                      name="pt-nintendods"
+                      value="Nintendo DS"
+                      defaultChecked={
+                        route_title !== "new" &&
+                        game.platforms.includes("Nintendo DS")
+                      }
+                    ></input>
+                    <label htmlFor="pt-nintendods">Nintendo DS</label>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

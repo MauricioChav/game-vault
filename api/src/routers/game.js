@@ -258,7 +258,8 @@ router.post("/games/", [auth, typeValidation], async (req, res) => {
 //GET ALL GAMES
 router.get("/games/", async (req, res) => {
   try {
-    const games = await Game.find({});
+    const games = await Game.find({})
+    .populate("review_count");
     res.send(games);
   } catch (e) {
     res.status(500).send();

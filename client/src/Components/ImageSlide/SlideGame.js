@@ -4,6 +4,8 @@ import { nav_routes } from "../../routes";
 
 import "./ImageSlide.css";
 
+import { Rating } from "@mui/material";
+
 function SlideGame(props) {
   return (
     <div className="col-2">
@@ -14,7 +16,13 @@ function SlideGame(props) {
           alt={props.info.short_title}
         ></img>
         <h3>{props.info.title}</h3>
-        <p>Score: {props.info.scores.score_general}</p>
+        <Rating
+          name="score_general"
+          precision={0.1}
+          value={props.info.scores.score_general}
+          size="large"
+          readOnly
+        />
       </div>
     </NavLink>
     </div>
